@@ -137,6 +137,61 @@
   .loading-text { font-size:12px; color:var(--dim); }
 
   .info-box { margin:0 14px; padding:10px 14px; background:rgba(61,158,255,.08); border:1px solid rgba(61,158,255,.2); border-radius:10px; font-size:11px; color:var(--blue); line-height:1.5; }
+
+  /* TABS */
+  .tab-nav { display:flex; background:var(--surface); border-bottom:1px solid var(--border); position:sticky; top:72px; z-index:99; }
+  .tab-btn { flex:1; padding:12px 6px; font-size:11px; font-weight:600; color:var(--dim); letter-spacing:.5px; text-align:center; cursor:pointer; border-bottom:2px solid transparent; transition:all .2s; }
+  .tab-btn.active { color:var(--gold); border-bottom-color:var(--gold); }
+  .tab-content { display:none; }
+  .tab-content.active { display:block; }
+
+  /* GUIDE PAGE */
+  .guide-wrap { padding:14px; }
+  .guide-hero { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px; margin-bottom:12px; }
+  .guide-hero-title { font-size:11px; font-weight:600; color:var(--dim); letter-spacing:1px; text-transform:uppercase; margin-bottom:4px; }
+  .guide-price-row { display:flex; align-items:baseline; gap:8px; margin-bottom:12px; }
+  .guide-price { font-size:28px; font-weight:300; color:#fff; }
+  .guide-price-label { font-size:11px; color:var(--dim); }
+
+  .tf-guide-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; margin-bottom:10px; overflow:hidden; }
+  .tf-guide-header { display:flex; align-items:center; justify-content:space-between; padding:12px 14px 10px; border-bottom:1px solid var(--border); }
+  .tf-guide-name { font-size:15px; font-weight:700; color:var(--gold); }
+  .tf-guide-desc { font-size:10px; color:var(--dim); margin-top:1px; }
+  .tf-guide-badge { font-size:10px; font-weight:600; padding:3px 10px; border-radius:20px; }
+  .tf-guide-badge.scalp  { background:rgba(61,158,255,.15);  color:var(--blue); border:1px solid rgba(61,158,255,.3); }
+  .tf-guide-badge.intra  { background:rgba(164,126,255,.15); color:var(--purple); border:1px solid rgba(164,126,255,.3); }
+  .tf-guide-badge.swing  { background:rgba(255,184,48,.15);  color:var(--yellow); border:1px solid rgba(255,184,48,.3); }
+
+  .tf-guide-body { padding:12px 14px; }
+  .tf-row-values { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:10px; }
+  .tf-val-box { background:var(--card); border-radius:10px; padding:10px; text-align:center; }
+  .tf-val-label { font-size:9px; color:var(--dim); letter-spacing:.5px; text-transform:uppercase; margin-bottom:4px; }
+  .tf-val-num { font-size:14px; font-weight:600; }
+  .tf-val-num.sl { color:var(--red); }
+  .tf-val-num.tp { color:var(--green); }
+  .tf-val-num.atr { color:var(--yellow); }
+  .tf-val-pct { font-size:9px; color:var(--dim); margin-top:2px; }
+
+  .sl-tp-visual { position:relative; height:80px; background:var(--card); border-radius:10px; overflow:hidden; margin-bottom:10px; }
+  .zone-tp { position:absolute; left:0; right:0; top:0; display:flex; align-items:center; justify-content:flex-end; padding-right:10px; }
+  .zone-sl { position:absolute; left:0; right:0; bottom:0; display:flex; align-items:center; justify-content:flex-end; padding-right:10px; }
+  .zone-entry { position:absolute; left:0; right:0; display:flex; align-items:center; gap:8px; padding-left:10px; }
+  .zone-line { position:absolute; left:0; right:0; height:1px; }
+  .zone-label { font-size:9px; font-weight:700; letter-spacing:.5px; }
+
+  .tf-rule { font-size:11px; color:var(--text); line-height:1.6; padding:8px 10px; background:rgba(255,184,48,.05); border-radius:8px; border-left:2px solid var(--yellow); }
+
+  .scale-rule { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px; margin-bottom:10px; }
+  .scale-rule-title { font-size:12px; font-weight:700; color:var(--blue); margin-bottom:10px; }
+  .scale-step { display:flex; align-items:flex-start; gap:10px; margin-bottom:8px; }
+  .scale-num { width:22px; height:22px; border-radius:50%; background:var(--blue); color:#fff; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .scale-text { font-size:11px; color:var(--text); line-height:1.5; }
+  .scale-text strong { color:var(--green); }
+
+  .rr-box { background:linear-gradient(135deg,rgba(0,212,160,.08),rgba(61,158,255,.08)); border:1px solid rgba(0,212,160,.2); border-radius:12px; padding:14px; margin-bottom:10px; text-align:center; }
+  .rr-title { font-size:10px; color:var(--dim); letter-spacing:1px; text-transform:uppercase; margin-bottom:6px; }
+  .rr-value { font-size:22px; font-weight:700; color:var(--green); }
+  .rr-sub { font-size:10px; color:var(--dim); margin-top:4px; }
 </style>
 </head>
 <body>
@@ -172,6 +227,16 @@
   </div>
 </div>
 
+
+<!-- TAB NAV -->
+<div class="tab-nav">
+  <div class="tab-btn active" onclick="switchTab('scanner')">📡 SCANNER</div>
+  <div class="tab-btn" onclick="switchTab('guide')">📋 GUIDA SL/TP</div>
+  <div class="tab-btn" onclick="switchTab('log')">📜 LOG</div>
+</div>
+
+<!-- SCANNER TAB -->
+<div class="tab-content active" id="tab-scanner">
 <!-- TF -->
 <div class="section-title">TIMEFRAME ANALISI</div>
 <div class="tf-row" id="tfRow">
@@ -247,13 +312,252 @@
   <button class="btn btn-alert"   id="alertBtn"   onclick="toggleAlerts()">🔔 Alert <span id="alertStatus">OFF</span></button>
 </div>
 
-<div class="info-box">ℹ️ Dati live XAU/USD via Twelve Data. Aggiornamento automatico ogni 60 secondi.</div>
 
-<!-- LOG -->
-<div class="section-title">REGISTRO SEGNALI</div>
-<div class="log-wrap" id="logWrap">
-  <div class="log-entry"><span class="log-time">--:--</span><span class="log-msg">In attesa...</span></div>
+
+
+
+
+</div><!-- end tab-scanner -->
+
+<!-- GUIDE TAB -->
+<div class="tab-content" id="tab-guide">
+<div class="guide-wrap">
+
+  <div class="guide-hero">
+    <div class="guide-hero-title">PREZZO CORRENTE XAU/USD</div>
+    <div class="guide-price-row">
+      <div class="guide-price" id="guidePriceDisplay">—</div>
+      <div class="guide-price-label">USD</div>
+    </div>
+    <div style="font-size:11px;color:var(--dim)">I valori SL/TP qui sotto sono calcolati sul prezzo live e aggiornati ogni 60 secondi.</div>
+  </div>
+
+  <!-- M1 -->
+  <div class="tf-guide-card">
+    <div class="tf-guide-header">
+      <div>
+        <div class="tf-guide-name">M1 — 1 Minuto</div>
+        <div class="tf-guide-desc">Scalping ultrarapido · Durata trade: 1–5 min</div>
+      </div>
+      <div class="tf-guide-badge scalp">SCALPING</div>
+    </div>
+    <div class="tf-guide-body">
+      <div class="tf-row-values">
+        <div class="tf-val-box">
+          <div class="tf-val-label">ATR medio</div>
+          <div class="tf-val-num atr" id="m1atr">—</div>
+          <div class="tf-val-pct" id="m1atrp">±0.02%</div>
+        </div>
+        <div class="tf-val-box">
+          <div class="tf-val-label">Stop Loss</div>
+          <div class="tf-val-num sl" id="m1sl">—</div>
+          <div class="tf-val-pct" id="m1slp">−0.05%</div>
+        </div>
+        <div class="tf-val-box">
+          <div class="tf-val-label">Take Profit</div>
+          <div class="tf-val-num tp" id="m1tp">—</div>
+          <div class="tf-val-pct" id="m1tpp">+0.08%</div>
+        </div>
+      </div>
+      <div class="tf-rule">
+        <strong style="color:var(--yellow)">Regola M1:</strong> SL = 2–3$ sotto il minimo della candela di ingresso. TP = 1.5x il rischio. Non tenere mai oltre 5 minuti — se non si muove, esci.
+      </div>
+    </div>
+  </div>
+
+  <!-- M5 -->
+  <div class="tf-guide-card">
+    <div class="tf-guide-header">
+      <div>
+        <div class="tf-guide-name">M5 — 5 Minuti</div>
+        <div class="tf-guide-desc">Scalping standard · Durata trade: 5–20 min</div>
+      </div>
+      <div class="tf-guide-badge scalp">SCALPING</div>
+    </div>
+    <div class="tf-guide-body">
+      <div class="tf-row-values">
+        <div class="tf-val-box">
+          <div class="tf-val-label">ATR medio</div>
+          <div class="tf-val-num atr" id="m5atr">—</div>
+          <div class="tf-val-pct" id="m5atrp">±0.05%</div>
+        </div>
+        <div class="tf-val-box">
+          <div class="tf-val-label">Stop Loss</div>
+          <div class="tf-val-num sl" id="m5sl">—</div>
+          <div class="tf-val-pct" id="m5slp">−0.12%</div>
+        </div>
+        <div class="tf-val-box">
+          <div class="tf-val-label">Take Profit</div>
+          <div class="tf-val-num tp" id="m5tp">—</div>
+          <div class="tf-val-pct" id="m5tpp">+0.20%</div>
+        </div>
+      </div>
+      <div class="tf-rule">
+        <strong style="color:var(--yellow)">Regola M5:</strong> SL sotto il minimo recente −1.5$. TP minimo 2x il rischio. Questo è il timeframe principale — usa H1 per il bias, M5 per l'ingresso.
+      </div>
+    </div>
+  </div>
+
+  <!-- M15 -->
+  <div class="tf-guide-card">
+    <div class="tf-guide-header">
+      <div>
+        <div class="tf-guide-name">M15 — 15 Minuti</div>
+        <div class="tf-guide-desc">Intraday · Durata trade: 20–60 min</div>
+      </div>
+      <div class="tf-guide-badge intra">INTRADAY</div>
+    </div>
+    <div class="tf-guide-body">
+      <div class="tf-row-values">
+        <div class="tf-val-box">
+          <div class="tf-val-label">ATR medio</div>
+          <div class="tf-val-num atr" id="m15atr">—</div>
+          <div class="tf-val-pct" id="m15atrp">±0.10%</div>
+        </div>
+        <div class="tf-val-box">
+          <div class="tf-val-label">Stop Loss</div>
+          <div class="tf-val-num sl" id="m15sl">—</div>
+          <div class="tf-val-pct" id="m15slp">−0.22%</div>
+        </div>
+        <div class="tf-val-box">
+          <div class="tf-val-label">Take Profit</div>
+          <div class="tf-val-num tp" id="m15tp">—</div>
+          <div class="tf-val-pct" id="m15tpp">+0.40%</div>
+        </div>
+      </div>
+      <div class="tf-rule">
+        <strong style="color:var(--yellow)">Regola M15:</strong> SL sotto swing low −2$. TP 2x rischio. Se H1 e M30 sono allineati, puoi puntare a 3x. Ideale per catturare movimenti di 15–25$.
+      </div>
+    </div>
+  </div>
+
+  <!-- M30 -->
+  <div class="tf-guide-card">
+    <div class="tf-guide-header">
+      <div>
+        <div class="tf-guide-name">M30 — 30 Minuti</div>
+        <div class="tf-guide-desc">Intraday ampio · Durata trade: 1–3 ore</div>
+      </div>
+      <div class="tf-guide-badge intra">INTRADAY</div>
+    </div>
+    <div class="tf-guide-body">
+      <div class="tf-row-values">
+        <div class="tf-val-box">
+          <div class="tf-val-label">ATR medio</div>
+          <div class="tf-val-num atr" id="m30atr">—</div>
+          <div class="tf-val-pct" id="m30atrp">±0.18%</div>
+        </div>
+        <div class="tf-val-box">
+          <div class="tf-val-label">Stop Loss</div>
+          <div class="tf-val-num sl" id="m30sl">—</div>
+          <div class="tf-val-pct" id="m30slp">−0.35%</div>
+        </div>
+        <div class="tf-val-box">
+          <div class="tf-val-label">Take Profit</div>
+          <div class="tf-val-num tp" id="m30tp">—</div>
+          <div class="tf-val-pct" id="m30tpp">+0.60%</div>
+        </div>
+      </div>
+      <div class="tf-rule">
+        <strong style="color:var(--yellow)">Regola M30:</strong> SL sotto il minimo della candela precedente −3$. TP ampio 2.5x. Tieni aperto anche se va contro di 5–8$ — è normale oscillazione.
+      </div>
+    </div>
+  </div>
+
+  <!-- H1 -->
+  <div class="tf-guide-card">
+    <div class="tf-guide-header">
+      <div>
+        <div class="tf-guide-name">H1 — 1 Ora</div>
+        <div class="tf-guide-desc">Swing · Durata trade: 2–8 ore</div>
+      </div>
+      <div class="tf-guide-badge swing">SWING</div>
+    </div>
+    <div class="tf-guide-body">
+      <div class="tf-row-values">
+        <div class="tf-val-box">
+          <div class="tf-val-label">ATR medio</div>
+          <div class="tf-val-num atr" id="h1atr">—</div>
+          <div class="tf-val-pct" id="h1atrp">±0.30%</div>
+        </div>
+        <div class="tf-val-box">
+          <div class="tf-val-label">Stop Loss</div>
+          <div class="tf-val-num sl" id="h1sl">—</div>
+          <div class="tf-val-pct" id="h1slp">−0.55%</div>
+        </div>
+        <div class="tf-val-box">
+          <div class="tf-val-label">Take Profit</div>
+          <div class="tf-val-num tp" id="h1tp">—</div>
+          <div class="tf-val-pct" id="h1tpp">+1.00%</div>
+        </div>
+      </div>
+      <div class="tf-rule">
+        <strong style="color:var(--yellow)">Regola H1:</strong> SL almeno 20–25$ sotto l'ingresso. TP 2x = 40–50$. H1 è il timeframe direzionale — se H1 è BUY, tutti i trade sui timeframe inferiori devono essere BUY.
+      </div>
+    </div>
+  </div>
+
+  <!-- SCALA MOBILE -->
+  <div class="scale-rule">
+    <div class="scale-rule-title">📈 Tecnica Stop a Scala — Come non perdere mai dopo +10$</div>
+    <div class="scale-step">
+      <div class="scale-num">1</div>
+      <div class="scale-text">Apri il trade → Stop al minimo recente −1.5$</div>
+    </div>
+    <div class="scale-step">
+      <div class="scale-num">2</div>
+      <div class="scale-text">+10$ di profitto → <strong>Sposta stop a pareggio</strong> (prezzo di ingresso)</div>
+    </div>
+    <div class="scale-step">
+      <div class="scale-num">3</div>
+      <div class="scale-text">+20$ di profitto → <strong>Stop a +10$</strong> — ora non puoi più perdere</div>
+    </div>
+    <div class="scale-step">
+      <div class="scale-num">4</div>
+      <div class="scale-text">+30$ di profitto → <strong>Chiudi metà</strong> posizione, lascia correre l'altra</div>
+    </div>
+    <div class="scale-step">
+      <div class="scale-num">5</div>
+      <div class="scale-text">Lascia correre con trailing stop da 15$ fino al target finale</div>
+    </div>
+  </div>
+
+  <!-- R:R -->
+  <div class="rr-box">
+    <div class="rr-title">RAPPORTO RISCHIO / RENDIMENTO MINIMO</div>
+    <div class="rr-value">1 : 2</div>
+    <div class="rr-sub">Per ogni 1$ rischiato devi puntare a guadagnare almeno 2$.<br>Sotto 1:1.5 il trade non vale l'apertura.</div>
+  </div>
+
+  <!-- LOTTI -->
+  <div class="scale-rule">
+    <div class="scale-rule-title">💼 Riferimento Lotti su Conto Demo 100.000$</div>
+    <div class="scale-step">
+      <div class="scale-num" style="background:var(--green);font-size:9px">OK</div>
+      <div class="scale-text"><strong style="color:var(--green)">0.01 lotti</strong> = 1$ per pip · Rischio max 2% = 200$ = 200 pip</div>
+    </div>
+    <div class="scale-step">
+      <div class="scale-num" style="background:var(--yellow);font-size:9px">MED</div>
+      <div class="scale-text"><strong style="color:var(--yellow)">0.05 lotti</strong> = 5$ per pip · Rischio max 2% = 200$ = 40 pip</div>
+    </div>
+    <div class="scale-step">
+      <div class="scale-num" style="background:var(--red);font-size:9px">MAX</div>
+      <div class="scale-text"><strong style="color:var(--red)">0.10 lotti</strong> = 10$ per pip · Non superare mai su conto reale iniziale</div>
+    </div>
+  </div>
+
 </div>
+</div><!-- end tab-guide -->
+
+<!-- LOG TAB -->
+<div class="tab-content" id="tab-log">
+<div style="padding:14px">
+  <div class="info-box" style="margin:0 0 12px">ℹ️ Dati live XAU/USD via Twelve Data. Aggiornamento ogni 60 secondi.</div>
+  <div class="log-wrap" id="logWrap" style="max-height:none">
+    <div class="log-entry"><span class="log-time">--:--</span><span class="log-msg">In attesa...</span></div>
+  </div>
+</div>
+</div><!-- end tab-log -->
 
 <!-- STATUS -->
 <div class="status-bar">
@@ -358,6 +662,7 @@ async function fetchData() {
     };
 
     processMarketData(mkt);
+    updateGuide(mkt.price || mkt.closes.at(-1));
     setStatus('ok');
     addLog('Dati live ricevuti — ' + last.toFixed(2), '');
 
@@ -567,6 +872,43 @@ function toggleAlerts() {
   addLog(alertsOn?'Alert sonori attivati':'Alert disattivati','warn');
 }
 
+
+// ─── TAB SWITCHING ──────────────────────────────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  const idx = ['scanner','guide','log'].indexOf(name);
+  document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+}
+
+// ─── UPDATE GUIDE TAB WITH LIVE PRICE ───────────────────────────────────────
+function updateGuide(price) {
+  if (!price) return;
+  document.getElementById('guidePriceDisplay').textContent = price.toFixed(2);
+
+  // ATR multipliers per TF (% of price)
+  const tfs = [
+    { id:'m1',  atrPct:0.020, slPct:0.050, tpPct:0.080 },
+    { id:'m5',  atrPct:0.050, slPct:0.120, tpPct:0.200 },
+    { id:'m15', atrPct:0.100, slPct:0.220, tpPct:0.400 },
+    { id:'m30', atrPct:0.180, slPct:0.350, tpPct:0.600 },
+    { id:'h1',  atrPct:0.300, slPct:0.550, tpPct:1.000 },
+  ];
+
+  tfs.forEach(tf => {
+    const atr = price * tf.atrPct / 100;
+    const sl  = price * tf.slPct  / 100;
+    const tp  = price * tf.tpPct  / 100;
+    const atrEl = document.getElementById(tf.id + 'atr');
+    const slEl  = document.getElementById(tf.id + 'sl');
+    const tpEl  = document.getElementById(tf.id + 'tp');
+    if (atrEl) atrEl.textContent = '±' + atr.toFixed(1) + '$';
+    if (slEl)  slEl.textContent  = '−' + sl.toFixed(1) + '$';
+    if (tpEl)  tpEl.textContent  = '+' + tp.toFixed(1) + '$';
+  });
+}
+
 // ─── TF SWITCH ─────────────────────────────────────────────────────────────
 document.getElementById('tfRow').addEventListener('click',e=>{
   const b=e.target.closest('.tf-btn'); if(!b) return;
@@ -580,5 +922,470 @@ autoTimer = setInterval(fetchData, REFRESH_MS);
 // ─── INIT ──────────────────────────────────────────────────────────────────
 fetchData();
 </script>
+
+<!-- ══════════════════════════════════════════════════════════════
+     GUIDA SL/TP — scheda aggiuntiva
+══════════════════════════════════════════════════════════════ -->
+<div id="guidaBtn" onclick="toggleGuida()" style="
+  position:fixed; bottom:20px; right:16px; z-index:300;
+  width:52px; height:52px; border-radius:50%;
+  background:linear-gradient(135deg,#FFB830,#FF8C00);
+  display:flex; align-items:center; justify-content:center;
+  font-size:22px; box-shadow:0 4px 16px rgba(255,184,48,.4);
+  cursor:pointer; border:none;
+">📋</div>
+
+<div id="guidaPanel" style="
+  display:none; position:fixed; inset:0; z-index:400;
+  background:#080C10; overflow-y:auto;
+  font-family:-apple-system,'SF Pro Display',sans-serif;
+">
+<style>
+  .g-header {
+    background:linear-gradient(135deg,#0E1419,#131A21);
+    border-bottom:1px solid #1E2A35;
+    padding:16px 16px 14px;
+    position:sticky; top:0; z-index:10;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .g-title { font-size:16px; font-weight:700; color:#FFD166; letter-spacing:.5px; }
+  .g-close {
+    width:36px; height:36px; border-radius:50%;
+    background:rgba(255,255,255,.08); border:none;
+    color:#D4E0EC; font-size:18px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .g-sec { padding:14px 14px 0; }
+  .g-sec-title {
+    font-size:9px; font-weight:700; color:#4A6278;
+    letter-spacing:2px; text-transform:uppercase; margin-bottom:10px;
+  }
+
+  /* TF CARDS */
+  .tf-cards { display:flex; flex-direction:column; gap:8px; }
+  .tf-card {
+    background:#131A21; border:1px solid #1E2A35; border-radius:14px;
+    overflow:hidden;
+  }
+  .tf-card-header {
+    display:flex; align-items:center; gap:10px;
+    padding:12px 14px 10px;
+    border-bottom:1px solid #1E2A35;
+  }
+  .tf-badge {
+    font-size:11px; font-weight:700; letter-spacing:.5px;
+    padding:3px 10px; border-radius:20px;
+    background:rgba(61,158,255,.15); color:#3D9EFF;
+    border:1px solid rgba(61,158,255,.3);
+  }
+  .tf-label { font-size:12px; color:#8B949E; }
+  .tf-atr {
+    margin-left:auto; font-size:11px; font-weight:600;
+    color:#FFB830; background:rgba(255,184,48,.1);
+    border:1px solid rgba(255,184,48,.2);
+    padding:2px 8px; border-radius:10px;
+  }
+  .tf-grid {
+    display:grid; grid-template-columns:1fr 1fr 1fr;
+    gap:0;
+  }
+  .tf-cell {
+    padding:10px 12px; border-right:1px solid #1E2A35;
+    text-align:center;
+  }
+  .tf-cell:last-child { border-right:none; }
+  .tf-cell-label { font-size:9px; color:#4A6278; letter-spacing:.8px; text-transform:uppercase; margin-bottom:4px; }
+  .tf-cell-val { font-size:14px; font-weight:600; }
+  .tf-cell-sub { font-size:9px; color:#4A6278; margin-top:2px; }
+  .val-green { color:#00D4A0; }
+  .val-red   { color:#FF4560; }
+  .val-yellow{ color:#FFB830; }
+
+  /* RR BAR */
+  .rr-bar-wrap { padding:10px 14px 12px; }
+  .rr-label { font-size:9px; color:#4A6278; letter-spacing:.8px; text-transform:uppercase; margin-bottom:6px; }
+  .rr-bar {
+    height:8px; border-radius:4px; display:flex; overflow:hidden;
+  }
+  .rr-sl { background:#FF4560; }
+  .rr-tp { background:#00D4A0; }
+  .rr-nums { display:flex; justify-content:space-between; margin-top:4px; font-size:10px; }
+
+  /* RULES BOX */
+  .rules-box {
+    background:#131A21; border:1px solid #1E2A35; border-radius:14px;
+    padding:14px;
+  }
+  .rule-row {
+    display:flex; gap:10px; align-items:flex-start;
+    padding:8px 0; border-bottom:1px solid #1E2A35;
+  }
+  .rule-row:last-child { border-bottom:none; }
+  .rule-icon { font-size:16px; flex-shrink:0; margin-top:1px; }
+  .rule-text { font-size:12px; color:#D4E0EC; line-height:1.6; }
+  .rule-text strong { color:#fff; }
+
+  /* SCALE TECHNIQUE */
+  .scale-box {
+    background:#131A21; border:1px solid #1E2A35; border-radius:14px;
+    overflow:hidden;
+  }
+  .scale-step {
+    display:flex; gap:12px; align-items:flex-start;
+    padding:11px 14px; border-bottom:1px solid #1E2A35;
+    position:relative;
+  }
+  .scale-step:last-child { border-bottom:none; }
+  .scale-num {
+    width:24px; height:24px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:11px; font-weight:700; flex-shrink:0;
+  }
+  .scale-body { flex:1; }
+  .scale-title { font-size:12px; font-weight:600; color:#fff; margin-bottom:2px; }
+  .scale-desc  { font-size:11px; color:#8B949E; line-height:1.5; }
+
+  /* PCT PILL */
+  .pct-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .pct-card {
+    background:#131A21; border:1px solid #1E2A35; border-radius:12px;
+    padding:12px; text-align:center;
+  }
+  .pct-tf   { font-size:10px; color:#4A6278; font-weight:600; letter-spacing:.8px; margin-bottom:6px; }
+  .pct-sl   { font-size:13px; font-weight:700; color:#FF4560; margin-bottom:2px; }
+  .pct-tp   { font-size:13px; font-weight:700; color:#00D4A0; }
+  .pct-rr   { font-size:9px; color:#FFB830; margin-top:4px; font-weight:600; }
+
+  .g-spacer { height:16px; }
+  .g-bottom { height:40px; }
+</style>
+
+<!-- HEADER -->
+<div class="g-header">
+  <div>
+    <div class="g-title">📋 Guida SL / TP</div>
+    <div style="font-size:10px;color:#4A6278;margin-top:2px;">Riferimenti per ogni timeframe</div>
+  </div>
+  <button class="g-close" onclick="toggleGuida()">✕</button>
+</div>
+
+<!-- TF REFERENCE CARDS -->
+<div class="g-sec">
+  <div class="g-sec-title">Movimenti attesi per timeframe</div>
+  <div class="tf-cards">
+
+    <!-- M1 -->
+    <div class="tf-card">
+      <div class="tf-card-header">
+        <span class="tf-badge">M1</span>
+        <span class="tf-label">Scalping veloce</span>
+        <span class="tf-atr">ATR ≈ 0.8–1.5$</span>
+      </div>
+      <div class="tf-grid">
+        <div class="tf-cell">
+          <div class="tf-cell-label">Stop Loss</div>
+          <div class="tf-cell-val val-red">2–3$</div>
+          <div class="tf-cell-sub">≈ 0.05–0.07%</div>
+        </div>
+        <div class="tf-cell">
+          <div class="tf-cell-label">Take Profit</div>
+          <div class="tf-cell-val val-green">4–6$</div>
+          <div class="tf-cell-sub">≈ 0.10–0.15%</div>
+        </div>
+        <div class="tf-cell">
+          <div class="tf-cell-label">R:R minimo</div>
+          <div class="tf-cell-val val-yellow">1 : 2</div>
+          <div class="tf-cell-sub">rischio/profitto</div>
+        </div>
+      </div>
+      <div class="rr-bar-wrap">
+        <div class="rr-label">Rapporto visivo SL / TP</div>
+        <div class="rr-bar">
+          <div class="rr-sl" style="width:33%"></div>
+          <div class="rr-tp" style="width:67%"></div>
+        </div>
+        <div class="rr-nums">
+          <span style="color:#FF4560">◀ SL 2$</span>
+          <span style="color:#00D4A0">TP 4$ ▶</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- M5 -->
+    <div class="tf-card">
+      <div class="tf-card-header">
+        <span class="tf-badge">M5</span>
+        <span class="tf-label">Scalping standard</span>
+        <span class="tf-atr">ATR ≈ 1.5–3$</span>
+      </div>
+      <div class="tf-grid">
+        <div class="tf-cell">
+          <div class="tf-cell-label">Stop Loss</div>
+          <div class="tf-cell-val val-red">4–6$</div>
+          <div class="tf-cell-sub">≈ 0.10–0.15%</div>
+        </div>
+        <div class="tf-cell">
+          <div class="tf-cell-label">Take Profit</div>
+          <div class="tf-cell-val val-green">8–12$</div>
+          <div class="tf-cell-sub">≈ 0.20–0.30%</div>
+        </div>
+        <div class="tf-cell">
+          <div class="tf-cell-label">R:R minimo</div>
+          <div class="tf-cell-val val-yellow">1 : 2</div>
+          <div class="tf-cell-sub">rischio/profitto</div>
+        </div>
+      </div>
+      <div class="rr-bar-wrap">
+        <div class="rr-label">Rapporto visivo SL / TP</div>
+        <div class="rr-bar">
+          <div class="rr-sl" style="width:33%"></div>
+          <div class="rr-tp" style="width:67%"></div>
+        </div>
+        <div class="rr-nums">
+          <span style="color:#FF4560">◀ SL 5$</span>
+          <span style="color:#00D4A0">TP 10$ ▶</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- M15 -->
+    <div class="tf-card">
+      <div class="tf-card-header">
+        <span class="tf-badge">M15</span>
+        <span class="tf-label">Intraday breve</span>
+        <span class="tf-atr">ATR ≈ 3–6$</span>
+      </div>
+      <div class="tf-grid">
+        <div class="tf-cell">
+          <div class="tf-cell-label">Stop Loss</div>
+          <div class="tf-cell-val val-red">8–12$</div>
+          <div class="tf-cell-sub">≈ 0.20–0.30%</div>
+        </div>
+        <div class="tf-cell">
+          <div class="tf-cell-label">Take Profit</div>
+          <div class="tf-cell-val val-green">16–24$</div>
+          <div class="tf-cell-sub">≈ 0.40–0.60%</div>
+        </div>
+        <div class="tf-cell">
+          <div class="tf-cell-label">R:R minimo</div>
+          <div class="tf-cell-val val-yellow">1 : 2</div>
+          <div class="tf-cell-sub">rischio/profitto</div>
+        </div>
+      </div>
+      <div class="rr-bar-wrap">
+        <div class="rr-label">Rapporto visivo SL / TP</div>
+        <div class="rr-bar">
+          <div class="rr-sl" style="width:33%"></div>
+          <div class="rr-tp" style="width:67%"></div>
+        </div>
+        <div class="rr-nums">
+          <span style="color:#FF4560">◀ SL 10$</span>
+          <span style="color:#00D4A0">TP 20$ ▶</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- M30 -->
+    <div class="tf-card">
+      <div class="tf-card-header">
+        <span class="tf-badge">M30</span>
+        <span class="tf-label">Intraday medio</span>
+        <span class="tf-atr">ATR ≈ 5–10$</span>
+      </div>
+      <div class="tf-grid">
+        <div class="tf-cell">
+          <div class="tf-cell-label">Stop Loss</div>
+          <div class="tf-cell-val val-red">12–18$</div>
+          <div class="tf-cell-sub">≈ 0.30–0.45%</div>
+        </div>
+        <div class="tf-cell">
+          <div class="tf-cell-label">Take Profit</div>
+          <div class="tf-cell-val val-green">25–40$</div>
+          <div class="tf-cell-sub">≈ 0.60–1.00%</div>
+        </div>
+        <div class="tf-cell">
+          <div class="tf-cell-label">R:R minimo</div>
+          <div class="tf-cell-val val-yellow">1 : 2</div>
+          <div class="tf-cell-sub">rischio/profitto</div>
+        </div>
+      </div>
+      <div class="rr-bar-wrap">
+        <div class="rr-label">Rapporto visivo SL / TP</div>
+        <div class="rr-bar">
+          <div class="rr-sl" style="width:33%"></div>
+          <div class="rr-tp" style="width:67%"></div>
+        </div>
+        <div class="rr-nums">
+          <span style="color:#FF4560">◀ SL 15$</span>
+          <span style="color:#00D4A0">TP 30$ ▶</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- H1 -->
+    <div class="tf-card">
+      <div class="tf-card-header">
+        <span class="tf-badge" style="background:rgba(164,126,255,.15);color:#A47EFF;border-color:rgba(164,126,255,.3)">H1</span>
+        <span class="tf-label">Swing intraday</span>
+        <span class="tf-atr">ATR ≈ 8–15$</span>
+      </div>
+      <div class="tf-grid">
+        <div class="tf-cell">
+          <div class="tf-cell-label">Stop Loss</div>
+          <div class="tf-cell-val val-red">20–25$</div>
+          <div class="tf-cell-sub">≈ 0.50–0.60%</div>
+        </div>
+        <div class="tf-cell">
+          <div class="tf-cell-label">Take Profit</div>
+          <div class="tf-cell-val val-green">40–60$</div>
+          <div class="tf-cell-sub">≈ 1.00–1.50%</div>
+        </div>
+        <div class="tf-cell">
+          <div class="tf-cell-label">R:R minimo</div>
+          <div class="tf-cell-val val-yellow">1 : 2.5</div>
+          <div class="tf-cell-sub">rischio/profitto</div>
+        </div>
+      </div>
+      <div class="rr-bar-wrap">
+        <div class="rr-label">Rapporto visivo SL / TP</div>
+        <div class="rr-bar">
+          <div class="rr-sl" style="width:28%"></div>
+          <div class="rr-tp" style="width:72%"></div>
+        </div>
+        <div class="rr-nums">
+          <span style="color:#FF4560">◀ SL 22$</span>
+          <span style="color:#00D4A0">TP 55$ ▶</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /tf-cards -->
+</div><!-- /g-sec -->
+
+<div class="g-spacer"></div>
+
+<!-- PERCENTUALI -->
+<div class="g-sec">
+  <div class="g-sec-title">Riferimenti in % sul prezzo</div>
+  <div class="pct-grid">
+    <div class="pct-card">
+      <div class="pct-tf">M1</div>
+      <div class="pct-sl">SL 0.05–0.07%</div>
+      <div class="pct-tp">TP 0.10–0.15%</div>
+      <div class="pct-rr">R:R 1:2</div>
+    </div>
+    <div class="pct-card">
+      <div class="pct-tf">M5</div>
+      <div class="pct-sl">SL 0.10–0.15%</div>
+      <div class="pct-tp">TP 0.20–0.30%</div>
+      <div class="pct-rr">R:R 1:2</div>
+    </div>
+    <div class="pct-card">
+      <div class="pct-tf">M15</div>
+      <div class="pct-sl">SL 0.20–0.30%</div>
+      <div class="pct-tp">TP 0.40–0.60%</div>
+      <div class="pct-rr">R:R 1:2</div>
+    </div>
+    <div class="pct-card">
+      <div class="pct-tf">M30</div>
+      <div class="pct-sl">SL 0.30–0.45%</div>
+      <div class="pct-tp">TP 0.60–1.00%</div>
+      <div class="pct-rr">R:R 1:2</div>
+    </div>
+    <div class="pct-card" style="grid-column:1/-1">
+      <div class="pct-tf">H1</div>
+      <div class="pct-sl">SL 0.50–0.60%</div>
+      <div class="pct-tp">TP 1.00–1.50%</div>
+      <div class="pct-rr">R:R 1:2.5</div>
+    </div>
+  </div>
+</div>
+
+<div class="g-spacer"></div>
+
+<!-- TECNICA A SCALA -->
+<div class="g-sec">
+  <div class="g-sec-title">Tecnica stop a scala</div>
+  <div class="scale-box">
+    <div class="scale-step">
+      <div class="scale-num" style="background:rgba(61,158,255,.2);color:#3D9EFF">1</div>
+      <div class="scale-body">
+        <div class="scale-title">Ingresso</div>
+        <div class="scale-desc">Stop al minimo recente - 1.5$. Target 2x lo stop. Non toccare nulla.</div>
+      </div>
+    </div>
+    <div class="scale-step">
+      <div class="scale-num" style="background:rgba(255,184,48,.2);color:#FFB830">2</div>
+      <div class="scale-body">
+        <div class="scale-title">+50% del target raggiunto</div>
+        <div class="scale-desc">Sposta lo stop al <strong style="color:#fff">prezzo di ingresso</strong> — trade in pareggio. Non puoi perdere.</div>
+      </div>
+    </div>
+    <div class="scale-step">
+      <div class="scale-num" style="background:rgba(0,212,160,.2);color:#00D4A0">3</div>
+      <div class="scale-body">
+        <div class="scale-title">Target raggiunto</div>
+        <div class="scale-desc">Chiudi <strong style="color:#fff">metà posizione</strong>. Sposta stop a +25% del profitto. Lasci correre il resto.</div>
+      </div>
+    </div>
+    <div class="scale-step">
+      <div class="scale-num" style="background:rgba(164,126,255,.2);color:#A47EFF">4</div>
+      <div class="scale-body">
+        <div class="scale-title">Segnale di inversione</div>
+        <div class="scale-desc">Chiudi il resto quando vedi candela contraria + EMA cross opposto.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="g-spacer"></div>
+
+<!-- REGOLE D'ORO -->
+<div class="g-sec">
+  <div class="g-sec-title">Regole d'oro</div>
+  <div class="rules-box">
+    <div class="rule-row">
+      <span class="rule-icon">🎯</span>
+      <div class="rule-text"><strong>Decidi SL e TP PRIMA di entrare.</strong> Mai aprire un trade senza sapere dove esci in perdita e dove esci in profitto.</div>
+    </div>
+    <div class="rule-row">
+      <span class="rule-icon">📏</span>
+      <div class="rule-text"><strong>Stop = minimo recente - 1.5$</strong> su BUY. Stop = massimo recente + 1.5$ su SELL. Mai più vicino.</div>
+    </div>
+    <div class="rule-row">
+      <span class="rule-icon">⚖️</span>
+      <div class="rule-text"><strong>R:R minimo 1:2.</strong> Se rischi 10$ devi puntare almeno 20$. Sotto questo rapporto non entrare.</div>
+    </div>
+    <div class="rule-row">
+      <span class="rule-icon">🔒</span>
+      <div class="rule-text"><strong>A +50% del target sposta lo stop in pareggio.</strong> Non lasciare mai un trade in profitto tornare in perdita.</div>
+    </div>
+    <div class="rule-row">
+      <span class="rule-icon">🚫</span>
+      <div class="rule-text"><strong>Non spostare lo stop verso il basso</strong> sperando nel rimbalzo. È l'errore che brucia i conti.</div>
+    </div>
+    <div class="rule-row">
+      <span class="rule-icon">⏰</span>
+      <div class="rule-text"><strong>Stai fermo 15 minuti prima/dopo dati macro USA</strong> (14:30 ora italiana). La volatilità è imprevedibile.</div>
+    </div>
+  </div>
+</div>
+
+<div class="g-bottom"></div>
+</div><!-- /guidaPanel -->
+
+<script>
+function toggleGuida() {
+  const panel = document.getElementById('guidaPanel');
+  const btn   = document.getElementById('guidaBtn');
+  const open  = panel.style.display === 'none' || panel.style.display === '';
+  panel.style.display = open ? 'block' : 'none';
+  btn.textContent = open ? '✕' : '📋';
+  btn.style.background = open
+    ? 'linear-gradient(135deg,#FF4560,#C0001A)'
+    : 'linear-gradient(135deg,#FFB830,#FF8C00)';
+}
+</script>
+
 </body>
 </html>
