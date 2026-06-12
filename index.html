@@ -119,12 +119,12 @@ canvas { width:100%!important; display:block; }
 .log-msg.warn { color:var(–yellow); }
 
 /* TOAST */
-.toast { position:fixed; top:20px; left:50%; transform:translateX(-50%) translateY(-130px); background:var(–card); border:1px solid var(–border); border-radius:16px; padding:14px 20px; min-width:260px; max-width:340px; box-shadow:0 8px 32px rgba(0,0,0,.6); transition:transform .35s cubic-bezier(.34,1.56,.64,1); z-index:999; text-align:center; }
+.toast { position:fixed; top:20px; left:50%; transform:translateX(-50%) translateY(-130px); border-radius:16px; padding:16px 24px; min-width:280px; max-width:360px; box-shadow:0 8px 32px rgba(0,0,0,.8); transition:transform .35s cubic-bezier(.34,1.56,.64,1); z-index:999; text-align:center; border:none; }
 .toast.show { transform:translateX(-50%) translateY(0); }
-.toast-title { font-size:15px; font-weight:700; margin-bottom:4px; }
-.toast-body  { font-size:12px; color:var(–dim); }
-.toast.buy  .toast-title { color:var(–green); }
-.toast.sell .toast-title { color:var(–red); }
+.toast-title { font-size:18px; font-weight:800; margin-bottom:6px; color:#fff; letter-spacing:0.5px; }
+.toast-body  { font-size:13px; color:rgba(255,255,255,0.85); font-weight:500; }
+.toast.buy  { background:linear-gradient(135deg, #00A878, #00D4A0); }
+.toast.sell { background:linear-gradient(135deg, #C0392B, #FF4560); }
 
 /* STATUS */
 .status-bar { display:flex; align-items:center; justify-content:space-between; padding:8px 16px; font-size:11px; color:var(–dim); border-top:1px solid var(–border); margin-top:14px; }
