@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="it">
 <head>
 <meta charset="UTF-8">
@@ -25,190 +26,206 @@
   * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
   body { background:var(--bg); color:var(--text); font-family:-apple-system,'SF Pro Display',sans-serif; min-height:100vh; padding-bottom:40px; }
 
-  /* HEADER */
-  .header { background:linear-gradient(135deg,#0E1419,#131A21); border-bottom:1px solid var(--border); padding:14px 16px 12px; position:sticky; top:0; z-index:100; }
-  .header-top { display:flex; align-items:center; justify-content:space-between; }
-  .logo { display:flex; align-items:center; gap:8px; }
-  .logo-dot { width:10px; height:10px; border-radius:50%; background:var(--gold); box-shadow:0 0 8px var(--gold); animation:pulse-gold 2s infinite; }
-  @keyframes pulse-gold { 0%,100%{box-shadow:0 0 6px var(--gold)} 50%{box-shadow:0 0 16px var(--gold),0 0 28px rgba(255,209,102,.3)} }
-  .logo-text { font-size:17px; font-weight:700; letter-spacing:1.5px; color:var(--gold); }
-  .logo-sub  { font-size:10px; color:var(--dim); letter-spacing:.5px; }
-  .live-badge { display:flex; align-items:center; gap:5px; background:rgba(0,212,160,.1); border:1px solid rgba(0,212,160,.25); border-radius:20px; padding:4px 10px; font-size:10px; font-weight:600; color:var(--green); letter-spacing:.5px; }
-  .live-dot { width:6px; height:6px; border-radius:50%; background:var(--green); animation:blink 1.2s infinite; }
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
-  .price-bar { display:flex; align-items:baseline; gap:10px; margin-top:10px; flex-wrap:wrap; }
-  .price-main { font-size:32px; font-weight:300; letter-spacing:-.5px; color:#fff; }
-  .price-change { font-size:13px; font-weight:600; }
-  .price-time { font-size:10px; color:var(--dim); margin-left:auto; }
+/* HEADER */
+.header { background:linear-gradient(135deg,#0E1419,#131A21); border-bottom:1px solid var(–border); padding:14px 16px 12px; position:sticky; top:0; z-index:100; }
+.header-top { display:flex; align-items:center; justify-content:space-between; }
+.logo { display:flex; align-items:center; gap:8px; }
+.logo-dot { width:10px; height:10px; border-radius:50%; background:var(–gold); box-shadow:0 0 8px var(–gold); animation:pulse-gold 2s infinite; }
+@keyframes pulse-gold { 0%,100%{box-shadow:0 0 6px var(–gold)} 50%{box-shadow:0 0 16px var(–gold),0 0 28px rgba(255,209,102,.3)} }
+.logo-text { font-size:17px; font-weight:700; letter-spacing:1.5px; color:var(–gold); }
+.logo-sub  { font-size:10px; color:var(–dim); letter-spacing:.5px; }
+.live-badge { display:flex; align-items:center; gap:5px; background:rgba(0,212,160,.1); border:1px solid rgba(0,212,160,.25); border-radius:20px; padding:4px 10px; font-size:10px; font-weight:600; color:var(–green); letter-spacing:.5px; }
+.live-dot { width:6px; height:6px; border-radius:50%; background:var(–green); animation:blink 1.2s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+.price-bar { display:flex; align-items:baseline; gap:10px; margin-top:10px; flex-wrap:wrap; }
+.price-main { font-size:32px; font-weight:300; letter-spacing:-.5px; color:#fff; }
+.price-change { font-size:13px; font-weight:600; }
+.price-time { font-size:10px; color:var(–dim); margin-left:auto; }
 
-  /* SIGNAL BOX */
-  .signal-box { margin:14px 14px 0; border-radius:14px; padding:16px; border:1.5px solid var(--border); background:var(--card); transition:all .4s; position:relative; overflow:hidden; }
-  .signal-box::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--border); transition:background .4s; }
-  .signal-box.buy  { border-color:rgba(0,212,160,.4);  background:rgba(0,212,160,.05); }
-  .signal-box.buy::before  { background:linear-gradient(90deg,var(--green),transparent); }
-  .signal-box.sell { border-color:rgba(255,69,96,.4);  background:rgba(255,69,96,.05); }
-  .signal-box.sell::before { background:linear-gradient(90deg,var(--red),transparent); }
-  .signal-box.wait { border-color:rgba(255,184,48,.3); background:rgba(255,184,48,.04); }
-  .signal-box.wait::before { background:linear-gradient(90deg,var(--yellow),transparent); }
-  .signal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
-  .signal-label { font-size:11px; font-weight:600; color:var(--dim); letter-spacing:1px; text-transform:uppercase; }
-  .signal-main  { font-size:26px; font-weight:700; letter-spacing:1px; }
-  .signal-main.buy  { color:var(--green); }
-  .signal-main.sell { color:var(--red); }
-  .signal-main.wait { color:var(--yellow); }
-  .signal-desc { font-size:12px; color:var(--text); line-height:1.6; }
-  .signal-score { display:flex; gap:6px; margin-top:10px; flex-wrap:wrap; }
-  .score-pill { padding:3px 10px; border-radius:20px; font-size:10px; font-weight:600; display:flex; align-items:center; gap:4px; }
-  .score-pill.ok   { background:rgba(0,212,160,.15);  color:var(--green);  border:1px solid rgba(0,212,160,.3); }
-  .score-pill.no   { background:rgba(255,69,96,.12);  color:var(--red);    border:1px solid rgba(255,69,96,.25); }
-  .score-pill.warn { background:rgba(255,184,48,.12); color:var(--yellow); border:1px solid rgba(255,184,48,.25); }
+/* SIGNAL BOX */
+.signal-box { margin:14px 14px 0; border-radius:14px; padding:16px; border:1.5px solid var(–border); background:var(–card); transition:all .4s; position:relative; overflow:hidden; }
+.signal-box::before { content:’’; position:absolute; top:0; left:0; right:0; height:3px; background:var(–border); transition:background .4s; }
+.signal-box.buy  { border-color:rgba(0,212,160,.4);  background:rgba(0,212,160,.05); }
+.signal-box.buy::before  { background:linear-gradient(90deg,var(–green),transparent); }
+.signal-box.sell { border-color:rgba(255,69,96,.4);  background:rgba(255,69,96,.05); }
+.signal-box.sell::before { background:linear-gradient(90deg,var(–red),transparent); }
+.signal-box.wait { border-color:rgba(255,184,48,.3); background:rgba(255,184,48,.04); }
+.signal-box.wait::before { background:linear-gradient(90deg,var(–yellow),transparent); }
+.signal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.signal-label { font-size:11px; font-weight:600; color:var(–dim); letter-spacing:1px; text-transform:uppercase; }
+.signal-main  { font-size:26px; font-weight:700; letter-spacing:1px; }
+.signal-main.buy  { color:var(–green); }
+.signal-main.sell { color:var(–red); }
+.signal-main.wait { color:var(–yellow); }
+.signal-desc { font-size:12px; color:var(–text); line-height:1.6; }
+.signal-score { display:flex; gap:6px; margin-top:10px; flex-wrap:wrap; }
+.score-pill { padding:3px 10px; border-radius:20px; font-size:10px; font-weight:600; display:flex; align-items:center; gap:4px; }
+.score-pill.ok   { background:rgba(0,212,160,.15);  color:var(–green);  border:1px solid rgba(0,212,160,.3); }
+.score-pill.no   { background:rgba(255,69,96,.12);  color:var(–red);    border:1px solid rgba(255,69,96,.25); }
+.score-pill.warn { background:rgba(255,184,48,.12); color:var(–yellow); border:1px solid rgba(255,184,48,.25); }
 
-  /* SECTION */
-  .section-title { font-size:10px; font-weight:600; color:var(--dim); letter-spacing:1.5px; text-transform:uppercase; padding:16px 16px 8px; }
+/* SECTION */
+.section-title { font-size:10px; font-weight:600; color:var(–dim); letter-spacing:1.5px; text-transform:uppercase; padding:16px 16px 8px; }
 
-  /* IND GRID */
-  .indicators-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; padding:0 14px; }
-  .ind-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:12px 14px; position:relative; overflow:hidden; }
-  .ind-card::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; }
-  .ind-card.bull::after { background:var(--green); }
-  .ind-card.bear::after { background:var(--red); }
-  .ind-card.neut::after { background:var(--yellow); }
-  .ind-name  { font-size:10px; color:var(--dim); font-weight:600; letter-spacing:.8px; margin-bottom:6px; }
-  .ind-value { font-size:18px; font-weight:300; color:#fff; letter-spacing:-.3px; }
-  .ind-sub   { font-size:10px; margin-top:2px; color:var(--dim); }
-  .ind-badge { display:inline-block; margin-top:6px; padding:2px 8px; border-radius:10px; font-size:9px; font-weight:700; letter-spacing:.5px; }
-  .ind-badge.bull { background:rgba(0,212,160,.15);  color:var(--green); }
-  .ind-badge.bear { background:rgba(255,69,96,.15);  color:var(--red); }
-  .ind-badge.neut { background:rgba(255,184,48,.15); color:var(--yellow); }
+/* IND GRID */
+.indicators-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; padding:0 14px; }
+.ind-card { background:var(–card); border:1px solid var(–border); border-radius:12px; padding:12px 14px; position:relative; overflow:hidden; }
+.ind-card::after { content:’’; position:absolute; bottom:0; left:0; right:0; height:2px; }
+.ind-card.bull::after { background:var(–green); }
+.ind-card.bear::after { background:var(–red); }
+.ind-card.neut::after { background:var(–yellow); }
+.ind-name  { font-size:10px; color:var(–dim); font-weight:600; letter-spacing:.8px; margin-bottom:6px; }
+.ind-value { font-size:18px; font-weight:300; color:#fff; letter-spacing:-.3px; }
+.ind-sub   { font-size:10px; margin-top:2px; color:var(–dim); }
+.ind-badge { display:inline-block; margin-top:6px; padding:2px 8px; border-radius:10px; font-size:9px; font-weight:700; letter-spacing:.5px; }
+.ind-badge.bull { background:rgba(0,212,160,.15);  color:var(–green); }
+.ind-badge.bear { background:rgba(255,69,96,.15);  color:var(–red); }
+.ind-badge.neut { background:rgba(255,184,48,.15); color:var(–yellow); }
 
-  /* EMA CARD */
-  .ema-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px; margin:0 14px; }
-  .ema-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; }
-  .ema-label { font-size:11px; font-weight:600; }
-  .ema-val   { font-size:13px; font-weight:300; font-variant-numeric:tabular-nums; }
-  .ema-bar   { height:3px; border-radius:2px; margin-bottom:8px; transition:width .5s; }
-  .ema-sep   { height:1px; background:var(--border); margin:4px 0 8px; }
+/* EMA CARD */
+.ema-card { background:var(–card); border:1px solid var(–border); border-radius:12px; padding:14px; margin:0 14px; }
+.ema-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; }
+.ema-label { font-size:11px; font-weight:600; }
+.ema-val   { font-size:13px; font-weight:300; font-variant-numeric:tabular-nums; }
+.ema-bar   { height:3px; border-radius:2px; margin-bottom:8px; transition:width .5s; }
+.ema-sep   { height:1px; background:var(–border); margin:4px 0 8px; }
 
-  /* CHART */
-  .chart-wrap { margin:0 14px; background:var(--card); border:1px solid var(--border); border-radius:12px; padding:12px 14px 8px; }
-  canvas { width:100%!important; display:block; }
+/* CHART */
+.chart-wrap { margin:0 14px; background:var(–card); border:1px solid var(–border); border-radius:12px; padding:12px 14px 8px; }
+canvas { width:100%!important; display:block; }
 
-  /* TF */
-  .tf-row { display:flex; gap:6px; padding:0 14px 14px; overflow-x:auto; scrollbar-width:none; }
-  .tf-row::-webkit-scrollbar { display:none; }
-  .tf-btn { padding:6px 14px; border-radius:20px; font-size:11px; font-weight:600; border:1px solid var(--border); background:var(--card); color:var(--dim); cursor:pointer; white-space:nowrap; transition:all .2s; }
-  .tf-btn.active { background:rgba(61,158,255,.15); color:var(--blue); border-color:rgba(61,158,255,.4); }
+/* TF */
+.tf-row { display:flex; gap:6px; padding:0 14px 14px; overflow-x:auto; scrollbar-width:none; }
+.tf-row::-webkit-scrollbar { display:none; }
+.tf-btn { padding:6px 14px; border-radius:20px; font-size:11px; font-weight:600; border:1px solid var(–border); background:var(–card); color:var(–dim); cursor:pointer; white-space:nowrap; transition:all .2s; }
+.tf-btn.active { background:rgba(61,158,255,.15); color:var(–blue); border-color:rgba(61,158,255,.4); }
 
-  /* CONTROLS */
-  .controls { padding:14px; display:flex; gap:8px; }
-  .btn { flex:1; padding:13px; border-radius:12px; border:none; font-size:13px; font-weight:600; cursor:pointer; transition:all .2s; display:flex; align-items:center; justify-content:center; gap:6px; }
-  .btn-primary { background:linear-gradient(135deg,#1A4A6E,#1E5C8A); color:#fff; border:1px solid rgba(61,158,255,.3); }
-  .btn-primary:active { transform:scale(.97); }
-  .btn-alert { background:rgba(255,184,48,.12); color:var(--yellow); border:1px solid rgba(255,184,48,.3); }
-  .btn-alert.active { background:rgba(255,184,48,.22); box-shadow:0 0 12px rgba(255,184,48,.2); }
+/* CONTROLS */
+.controls { padding:14px; display:flex; gap:8px; }
+.btn { flex:1; padding:13px; border-radius:12px; border:none; font-size:13px; font-weight:600; cursor:pointer; transition:all .2s; display:flex; align-items:center; justify-content:center; gap:6px; }
+.btn-primary { background:linear-gradient(135deg,#1A4A6E,#1E5C8A); color:#fff; border:1px solid rgba(61,158,255,.3); }
+.btn-primary:active { transform:scale(.97); }
+.btn-alert { background:rgba(255,184,48,.12); color:var(–yellow); border:1px solid rgba(255,184,48,.3); }
+.btn-alert.active { background:rgba(255,184,48,.22); box-shadow:0 0 12px rgba(255,184,48,.2); }
 
-  /* LOG */
-  .log-wrap { margin:0 14px; background:var(--card); border:1px solid var(--border); border-radius:12px; max-height:150px; overflow-y:auto; }
-  .log-entry { padding:9px 14px; font-size:11px; line-height:1.5; border-bottom:1px solid var(--border); display:flex; gap:10px; align-items:flex-start; }
-  .log-entry:last-child { border-bottom:none; }
-  .log-time { color:var(--dim); white-space:nowrap; font-variant-numeric:tabular-nums; }
-  .log-msg { color:var(--text); }
-  .log-msg.buy  { color:var(--green); }
-  .log-msg.sell { color:var(--red); }
-  .log-msg.warn { color:var(--yellow); }
+/* LOG */
+.log-wrap { margin:0 14px; background:var(–card); border:1px solid var(–border); border-radius:12px; max-height:150px; overflow-y:auto; }
+.log-entry { padding:9px 14px; font-size:11px; line-height:1.5; border-bottom:1px solid var(–border); display:flex; gap:10px; align-items:flex-start; }
+.log-entry:last-child { border-bottom:none; }
+.log-time { color:var(–dim); white-space:nowrap; font-variant-numeric:tabular-nums; }
+.log-msg { color:var(–text); }
+.log-msg.buy  { color:var(–green); }
+.log-msg.sell { color:var(–red); }
+.log-msg.warn { color:var(–yellow); }
 
-  /* TOAST */
-  .toast { position:fixed; top:20px; left:50%; transform:translateX(-50%) translateY(-130px); background:var(--card); border:1px solid var(--border); border-radius:16px; padding:14px 20px; min-width:260px; max-width:340px; box-shadow:0 8px 32px rgba(0,0,0,.6); transition:transform .35s cubic-bezier(.34,1.56,.64,1); z-index:999; text-align:center; }
-  .toast.show { transform:translateX(-50%) translateY(0); }
-  .toast-title { font-size:15px; font-weight:700; margin-bottom:4px; }
-  .toast-body  { font-size:12px; color:var(--dim); }
-  .toast.buy  .toast-title { color:var(--green); }
-  .toast.sell .toast-title { color:var(--red); }
+/* TOAST */
+.toast { position:fixed; top:20px; left:50%; transform:translateX(-50%) translateY(-130px); background:var(–card); border:1px solid var(–border); border-radius:16px; padding:14px 20px; min-width:260px; max-width:340px; box-shadow:0 8px 32px rgba(0,0,0,.6); transition:transform .35s cubic-bezier(.34,1.56,.64,1); z-index:999; text-align:center; }
+.toast.show { transform:translateX(-50%) translateY(0); }
+.toast-title { font-size:15px; font-weight:700; margin-bottom:4px; }
+.toast-body  { font-size:12px; color:var(–dim); }
+.toast.buy  .toast-title { color:var(–green); }
+.toast.sell .toast-title { color:var(–red); }
 
-  /* STATUS */
-  .status-bar { display:flex; align-items:center; justify-content:space-between; padding:8px 16px; font-size:10px; color:var(--dim); border-top:1px solid var(--border); margin-top:14px; }
-  .status-dot { width:6px; height:6px; border-radius:50%; display:inline-block; margin-right:5px; }
+/* STATUS */
+.status-bar { display:flex; align-items:center; justify-content:space-between; padding:8px 16px; font-size:10px; color:var(–dim); border-top:1px solid var(–border); margin-top:14px; }
+.status-dot { width:6px; height:6px; border-radius:50%; display:inline-block; margin-right:5px; }
 
-  /* LOADING */
-  .loading-overlay { display:none; position:fixed; inset:0; background:rgba(8,12,16,.8); z-index:200; align-items:center; justify-content:center; flex-direction:column; gap:12px; }
-  .loading-overlay.show { display:flex; }
-  .spinner { width:36px; height:36px; border:3px solid var(--border); border-top-color:var(--blue); border-radius:50%; animation:spin .8s linear infinite; }
-  @keyframes spin { to{transform:rotate(360deg)} }
-  .loading-text { font-size:12px; color:var(--dim); }
+/* LOADING */
+.loading-overlay { display:none; position:fixed; inset:0; background:rgba(8,12,16,.8); z-index:200; align-items:center; justify-content:center; flex-direction:column; gap:12px; }
+.loading-overlay.show { display:flex; }
+.spinner { width:36px; height:36px; border:3px solid var(–border); border-top-color:var(–blue); border-radius:50%; animation:spin .8s linear infinite; }
+@keyframes spin { to{transform:rotate(360deg)} }
+.loading-text { font-size:12px; color:var(–dim); }
 
-  .info-box { margin:0 14px; padding:10px 14px; background:rgba(61,158,255,.08); border:1px solid rgba(61,158,255,.2); border-radius:10px; font-size:11px; color:var(--blue); line-height:1.5; }
+.info-box { margin:0 14px; padding:10px 14px; background:rgba(61,158,255,.08); border:1px solid rgba(61,158,255,.2); border-radius:10px; font-size:11px; color:var(–blue); line-height:1.5; }
 
-  /* TABS */
-  .tab-nav { display:flex; background:var(--surface); border-bottom:1px solid var(--border); position:sticky; top:72px; z-index:99; }
-  .tab-btn { flex:1; padding:12px 6px; font-size:11px; font-weight:600; color:var(--dim); letter-spacing:.5px; text-align:center; cursor:pointer; border-bottom:2px solid transparent; transition:all .2s; }
-  .tab-btn.active { color:var(--gold); border-bottom-color:var(--gold); }
-  .tab-content { display:none; }
-  .tab-content.active { display:block; }
+/* TABS */
+.tab-nav { display:flex; background:var(–surface); border-bottom:1px solid var(–border); position:sticky; top:72px; z-index:99; }
+.tab-btn { flex:1; padding:12px 6px; font-size:11px; font-weight:600; color:var(–dim); letter-spacing:.5px; text-align:center; cursor:pointer; border-bottom:2px solid transparent; transition:all .2s; }
+.tab-btn.active { color:var(–gold); border-bottom-color:var(–gold); }
+.tab-content { display:none; }
+.tab-content.active { display:block; }
 
-  /* GUIDE PAGE */
-  .guide-wrap { padding:14px; }
-  .guide-hero { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px; margin-bottom:12px; }
-  .guide-hero-title { font-size:11px; font-weight:600; color:var(--dim); letter-spacing:1px; text-transform:uppercase; margin-bottom:4px; }
-  .guide-price-row { display:flex; align-items:baseline; gap:8px; margin-bottom:12px; }
-  .guide-price { font-size:28px; font-weight:300; color:#fff; }
-  .guide-price-label { font-size:11px; color:var(--dim); }
+/* GUIDE PAGE */
+.guide-wrap { padding:14px; }
+.guide-hero { background:var(–card); border:1px solid var(–border); border-radius:14px; padding:16px; margin-bottom:12px; }
+.guide-hero-title { font-size:11px; font-weight:600; color:var(–dim); letter-spacing:1px; text-transform:uppercase; margin-bottom:4px; }
+.guide-price-row { display:flex; align-items:baseline; gap:8px; margin-bottom:12px; }
+.guide-price { font-size:28px; font-weight:300; color:#fff; }
+.guide-price-label { font-size:11px; color:var(–dim); }
 
-  .tf-guide-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; margin-bottom:10px; overflow:hidden; }
-  .tf-guide-header { display:flex; align-items:center; justify-content:space-between; padding:12px 14px 10px; border-bottom:1px solid var(--border); }
-  .tf-guide-name { font-size:15px; font-weight:700; color:var(--gold); }
-  .tf-guide-desc { font-size:10px; color:var(--dim); margin-top:1px; }
-  .tf-guide-badge { font-size:10px; font-weight:600; padding:3px 10px; border-radius:20px; }
-  .tf-guide-badge.scalp  { background:rgba(61,158,255,.15);  color:var(--blue); border:1px solid rgba(61,158,255,.3); }
-  .tf-guide-badge.intra  { background:rgba(164,126,255,.15); color:var(--purple); border:1px solid rgba(164,126,255,.3); }
-  .tf-guide-badge.swing  { background:rgba(255,184,48,.15);  color:var(--yellow); border:1px solid rgba(255,184,48,.3); }
+.tf-guide-card { background:var(–surface); border:1px solid var(–border); border-radius:12px; margin-bottom:10px; overflow:hidden; }
+.tf-guide-header { display:flex; align-items:center; justify-content:space-between; padding:12px 14px 10px; border-bottom:1px solid var(–border); }
+.tf-guide-name { font-size:15px; font-weight:700; color:var(–gold); }
+.tf-guide-desc { font-size:10px; color:var(–dim); margin-top:1px; }
+.tf-guide-badge { font-size:10px; font-weight:600; padding:3px 10px; border-radius:20px; }
+.tf-guide-badge.scalp  { background:rgba(61,158,255,.15);  color:var(–blue); border:1px solid rgba(61,158,255,.3); }
+.tf-guide-badge.intra  { background:rgba(164,126,255,.15); color:var(–purple); border:1px solid rgba(164,126,255,.3); }
+.tf-guide-badge.swing  { background:rgba(255,184,48,.15);  color:var(–yellow); border:1px solid rgba(255,184,48,.3); }
 
-  .tf-guide-body { padding:12px 14px; }
-  .tf-row-values { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:10px; }
-  .tf-val-box { background:var(--card); border-radius:10px; padding:10px; text-align:center; }
-  .tf-val-label { font-size:9px; color:var(--dim); letter-spacing:.5px; text-transform:uppercase; margin-bottom:4px; }
-  .tf-val-num { font-size:14px; font-weight:600; }
-  .tf-val-num.sl { color:var(--red); }
-  .tf-val-num.tp { color:var(--green); }
-  .tf-val-num.atr { color:var(--yellow); }
-  .tf-val-pct { font-size:9px; color:var(--dim); margin-top:2px; }
+.tf-guide-body { padding:12px 14px; }
+.tf-row-values { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:10px; }
+.tf-val-box { background:var(–card); border-radius:10px; padding:10px; text-align:center; }
+.tf-val-label { font-size:9px; color:var(–dim); letter-spacing:.5px; text-transform:uppercase; margin-bottom:4px; }
+.tf-val-num { font-size:14px; font-weight:600; }
+.tf-val-num.sl { color:var(–red); }
+.tf-val-num.tp { color:var(–green); }
+.tf-val-num.atr { color:var(–yellow); }
+.tf-val-pct { font-size:9px; color:var(–dim); margin-top:2px; }
 
-  .sl-tp-visual { position:relative; height:80px; background:var(--card); border-radius:10px; overflow:hidden; margin-bottom:10px; }
-  .zone-tp { position:absolute; left:0; right:0; top:0; display:flex; align-items:center; justify-content:flex-end; padding-right:10px; }
-  .zone-sl { position:absolute; left:0; right:0; bottom:0; display:flex; align-items:center; justify-content:flex-end; padding-right:10px; }
-  .zone-entry { position:absolute; left:0; right:0; display:flex; align-items:center; gap:8px; padding-left:10px; }
-  .zone-line { position:absolute; left:0; right:0; height:1px; }
-  .zone-label { font-size:9px; font-weight:700; letter-spacing:.5px; }
+.sl-tp-visual { position:relative; height:80px; background:var(–card); border-radius:10px; overflow:hidden; margin-bottom:10px; }
+.zone-tp { position:absolute; left:0; right:0; top:0; display:flex; align-items:center; justify-content:flex-end; padding-right:10px; }
+.zone-sl { position:absolute; left:0; right:0; bottom:0; display:flex; align-items:center; justify-content:flex-end; padding-right:10px; }
+.zone-entry { position:absolute; left:0; right:0; display:flex; align-items:center; gap:8px; padding-left:10px; }
+.zone-line { position:absolute; left:0; right:0; height:1px; }
+.zone-label { font-size:9px; font-weight:700; letter-spacing:.5px; }
 
-  .tf-rule { font-size:11px; color:var(--text); line-height:1.6; padding:8px 10px; background:rgba(255,184,48,.05); border-radius:8px; border-left:2px solid var(--yellow); }
+.tf-rule { font-size:11px; color:var(–text); line-height:1.6; padding:8px 10px; background:rgba(255,184,48,.05); border-radius:8px; border-left:2px solid var(–yellow); }
 
-  .scale-rule { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px; margin-bottom:10px; }
-  .scale-rule-title { font-size:12px; font-weight:700; color:var(--blue); margin-bottom:10px; }
-  .scale-step { display:flex; align-items:flex-start; gap:10px; margin-bottom:8px; }
-  .scale-num { width:22px; height:22px; border-radius:50%; background:var(--blue); color:#fff; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-  .scale-text { font-size:11px; color:var(--text); line-height:1.5; }
-  .scale-text strong { color:var(--green); }
+.scale-rule { background:var(–card); border:1px solid var(–border); border-radius:12px; padding:14px; margin-bottom:10px; }
+.scale-rule-title { font-size:12px; font-weight:700; color:var(–blue); margin-bottom:10px; }
+.scale-step { display:flex; align-items:flex-start; gap:10px; margin-bottom:8px; }
+.scale-num { width:22px; height:22px; border-radius:50%; background:var(–blue); color:#fff; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.scale-text { font-size:11px; color:var(–text); line-height:1.5; }
+.scale-text strong { color:var(–green); }
 
-  .rr-box { background:linear-gradient(135deg,rgba(0,212,160,.08),rgba(61,158,255,.08)); border:1px solid rgba(0,212,160,.2); border-radius:12px; padding:14px; margin-bottom:10px; text-align:center; }
-  .rr-title { font-size:10px; color:var(--dim); letter-spacing:1px; text-transform:uppercase; margin-bottom:6px; }
-  .rr-value { font-size:22px; font-weight:700; color:var(--green); }
-  .rr-sub { font-size:10px; color:var(--dim); margin-top:4px; }
+.rr-box { background:linear-gradient(135deg,rgba(0,212,160,.08),rgba(61,158,255,.08)); border:1px solid rgba(0,212,160,.2); border-radius:12px; padding:14px; margin-bottom:10px; text-align:center; }
+.rr-title { font-size:10px; color:var(–dim); letter-spacing:1px; text-transform:uppercase; margin-bottom:6px; }
+.rr-value { font-size:22px; font-weight:700; color:var(–green); }
+.rr-sub { font-size:10px; color:var(–dim); margin-top:4px; }
+
+.risk-btn { padding:6px 10px; border-radius:8px; font-size:11px; font-weight:600; border:1px solid var(–border); background:var(–surface); color:var(–dim); cursor:pointer; transition:all .2s; }
+.risk-btn.active { background:rgba(61,158,255,.2); color:var(–blue); border-color:rgba(61,158,255,.4); }
+.calc-row { display:grid; grid-template-columns:60px 1fr 1fr 1fr; gap:6px; align-items:center; padding:10px 12px; background:var(–card); border:1px solid var(–border); border-radius:10px; margin-bottom:6px; }
+.calc-tf { font-size:13px; font-weight:700; color:var(–gold); }
+.calc-cell { text-align:center; }
+.calc-label { font-size:8px; color:var(–dim); text-transform:uppercase; letter-spacing:.5px; margin-bottom:2px; }
+.calc-val { font-size:13px; font-weight:600; }
+.calc-val.sl { color:var(–red); }
+.calc-val.tp { color:var(–green); }
+.calc-val.pips { color:var(–yellow); }
+.calc-sub { font-size:9px; color:var(–dim); margin-top:1px; }
 </style>
+
 </head>
 <body>
 
 <!-- LOADING -->
+
 <div class="loading-overlay" id="loadingOverlay">
   <div class="spinner"></div>
   <div class="loading-text" id="loadingText">Recupero dati XAU/USD...</div>
 </div>
 
 <!-- TOAST -->
+
 <div class="toast" id="toast">
   <div class="toast-title" id="toastTitle"></div>
   <div class="toast-body"  id="toastBody"></div>
 </div>
 
 <!-- HEADER -->
+
 <div class="header">
   <div class="header-top">
     <div class="logo">
@@ -227,8 +244,8 @@
   </div>
 </div>
 
-
 <!-- TAB NAV -->
+
 <div class="tab-nav">
   <div class="tab-btn active" onclick="switchTab('scanner')">📡 SCANNER</div>
   <div class="tab-btn" onclick="switchTab('guide')">📋 GUIDA SL/TP</div>
@@ -236,6 +253,7 @@
 </div>
 
 <!-- SCANNER TAB -->
+
 <div class="tab-content active" id="tab-scanner">
 <!-- TF -->
 <div class="section-title">TIMEFRAME ANALISI</div>
@@ -248,6 +266,7 @@
 </div>
 
 <!-- SIGNAL -->
+
 <div class="signal-box wait" id="signalBox">
   <div class="signal-header">
     <div>
@@ -261,6 +280,7 @@
 </div>
 
 <!-- INDICATORS -->
+
 <div class="section-title">INDICATORI</div>
 <div class="indicators-grid">
   <div class="ind-card neut" id="cardEMA">
@@ -290,6 +310,7 @@
 </div>
 
 <!-- EMA DETAIL -->
+
 <div class="section-title">MEDIE MOBILI</div>
 <div class="ema-card">
   <div class="ema-row"><span class="ema-label" style="color:var(--yellow)">EMA 5</span><span class="ema-val" id="ema5v">—</span></div>
@@ -303,23 +324,21 @@
 </div>
 
 <!-- CHART -->
+
 <div class="section-title">ANDAMENTO PREZZI (ultimi 30 valori)</div>
 <div class="chart-wrap"><canvas id="priceChart" height="100"></canvas></div>
 
 <!-- CONTROLS -->
+
 <div class="controls">
   <button class="btn btn-primary" id="refreshBtn" onclick="fetchData()">↻ Aggiorna</button>
   <button class="btn btn-alert"   id="alertBtn"   onclick="toggleAlerts()">🔔 Alert <span id="alertStatus">OFF</span></button>
 </div>
 
-
-
-
-
-
 </div><!-- end tab-scanner -->
 
 <!-- GUIDE TAB -->
+
 <div class="tab-content" id="tab-guide">
 <div class="guide-wrap">
 
@@ -333,6 +352,7 @@
   </div>
 
   <!-- M1 -->
+
   <div class="tf-guide-card">
     <div class="tf-guide-header">
       <div>
@@ -366,6 +386,7 @@
   </div>
 
   <!-- M5 -->
+
   <div class="tf-guide-card">
     <div class="tf-guide-header">
       <div>
@@ -399,6 +420,7 @@
   </div>
 
   <!-- M15 -->
+
   <div class="tf-guide-card">
     <div class="tf-guide-header">
       <div>
@@ -432,6 +454,7 @@
   </div>
 
   <!-- M30 -->
+
   <div class="tf-guide-card">
     <div class="tf-guide-header">
       <div>
@@ -465,6 +488,7 @@
   </div>
 
   <!-- H1 -->
+
   <div class="tf-guide-card">
     <div class="tf-guide-header">
       <div>
@@ -498,6 +522,7 @@
   </div>
 
   <!-- SCALA MOBILE -->
+
   <div class="scale-rule">
     <div class="scale-rule-title">📈 Tecnica Stop a Scala — Come non perdere mai dopo +10$</div>
     <div class="scale-step">
@@ -523,33 +548,103 @@
   </div>
 
   <!-- R:R -->
+
   <div class="rr-box">
     <div class="rr-title">RAPPORTO RISCHIO / RENDIMENTO MINIMO</div>
     <div class="rr-value">1 : 2</div>
     <div class="rr-sub">Per ogni 1$ rischiato devi puntare a guadagnare almeno 2$.<br>Sotto 1:1.5 il trade non vale l'apertura.</div>
   </div>
 
-  <!-- LOTTI -->
-  <div class="scale-rule">
-    <div class="scale-rule-title">💼 Riferimento Lotti su Conto Demo 100.000$</div>
-    <div class="scale-step">
-      <div class="scale-num" style="background:var(--green);font-size:9px">OK</div>
-      <div class="scale-text"><strong style="color:var(--green)">0.01 lotti</strong> = 1$ per pip · Rischio max 2% = 200$ = 200 pip</div>
+  <!-- CALCOLATORE PERSONALE -->
+
+  <div style="margin-bottom:10px">
+    <div style="font-size:13px;font-weight:700;color:var(--blue);margin-bottom:10px">🧮 Il Tuo Calcolatore Personale</div>
+
+```
+<!-- INPUT ROW -->
+<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px">
+  <div style="font-size:10px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px">PARAMETRI CONTO</div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+    <div>
+      <div style="font-size:10px;color:var(--dim);margin-bottom:5px">Saldo conto (€)</div>
+      <input id="calcBalance" type="number" value="170" min="1"
+        style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;color:#fff;font-size:16px;text-align:center"
+        oninput="calcAll()">
     </div>
-    <div class="scale-step">
-      <div class="scale-num" style="background:var(--yellow);font-size:9px">MED</div>
-      <div class="scale-text"><strong style="color:var(--yellow)">0.05 lotti</strong> = 5$ per pip · Rischio max 2% = 200$ = 40 pip</div>
+    <div>
+      <div style="font-size:10px;color:var(--dim);margin-bottom:5px">EUR/USD (tasso)</div>
+      <input id="calcEurUsd" type="number" value="1.08" step="0.01" min="0.5"
+        style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;color:#fff;font-size:16px;text-align:center"
+        oninput="calcAll()">
     </div>
-    <div class="scale-step">
-      <div class="scale-num" style="background:var(--red);font-size:9px">MAX</div>
-      <div class="scale-text"><strong style="color:var(--red)">0.10 lotti</strong> = 10$ per pip · Non superare mai su conto reale iniziale</div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+    <div>
+      <div style="font-size:10px;color:var(--dim);margin-bottom:5px">Rischio % per trade</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button onclick="setRisk(3)"  id="riskBtn3"  class="risk-btn">3%</button>
+        <button onclick="setRisk(5)"  id="riskBtn5"  class="risk-btn active">5%</button>
+        <button onclick="setRisk(8)"  id="riskBtn8"  class="risk-btn">8%</button>
+      </div>
     </div>
+    <div>
+      <div style="font-size:10px;color:var(--dim);margin-bottom:5px">Lotti</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button onclick="setLots(0.01)" id="lotBtn001" class="risk-btn active">0.01</button>
+        <button onclick="setLots(0.03)" id="lotBtn003" class="risk-btn">0.03</button>
+        <button onclick="setLots(0.05)" id="lotBtn005" class="risk-btn">0.05</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Segnale forza -->
+  <div>
+    <div style="font-size:10px;color:var(--dim);margin-bottom:5px">Forza segnale (influenza il TP)</div>
+    <div style="display:flex;gap:6px">
+      <button onclick="setSignal(1)" id="sig1" class="risk-btn">⚡ 2/3</button>
+      <button onclick="setSignal(2)" id="sig2" class="risk-btn active">🎯 3/3</button>
+      <button onclick="setSignal(3)" id="sig3" class="risk-btn">🔥 3/3+TF</button>
+    </div>
+    <div style="font-size:9px;color:var(--dim);margin-top:4px">2/3=RR 1:1.5 · 3/3=RR 1:2 · 3/3+TF allineati=RR 1:3</div>
+  </div>
+</div>
+
+<!-- RISULTATI PER TF -->
+<div style="font-size:10px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">VALORI CALCOLATI SUL TUO CONTO</div>
+
+<div id="calcResults"></div>
+
+<!-- AVVISO RISCHIO -->
+<div id="riskWarning" style="display:none;padding:10px 14px;background:rgba(255,69,96,.1);border:1px solid rgba(255,69,96,.3);border-radius:10px;font-size:11px;color:var(--red);line-height:1.5;margin-bottom:10px"></div>
+
+<!-- SOMMARIO -->
+<div id="calcSummary" style="background:linear-gradient(135deg,rgba(0,212,160,.08),rgba(61,158,255,.08));border:1px solid rgba(0,212,160,.2);border-radius:12px;padding:14px;text-align:center">
+  <div style="font-size:10px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">RISCHIO PER TRADE</div>
+  <div id="calcRiskEur" style="font-size:24px;font-weight:700;color:var(--red)">—</div>
+  <div id="calcRiskPct" style="font-size:11px;color:var(--dim);margin-top:2px">sul saldo totale</div>
+  <div style="height:1px;background:var(--border);margin:10px 0"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <div>
+      <div style="font-size:9px;color:var(--dim);margin-bottom:3px">Val. pip (lotto scelto)</div>
+      <div id="calcPipVal" style="font-size:14px;font-weight:600;color:var(--yellow)">—</div>
+    </div>
+    <div>
+      <div style="font-size:9px;color:var(--dim);margin-bottom:3px">Saldo in USD</div>
+      <div id="calcBalUsd" style="font-size:14px;font-weight:600;color:var(--blue)">—</div>
+    </div>
+  </div>
+</div>
+```
+
   </div>
 
 </div>
 </div><!-- end tab-guide -->
 
 <!-- LOG TAB -->
+
 <div class="tab-content" id="tab-log">
 <div style="padding:14px">
   <div class="info-box" style="margin:0 0 12px">ℹ️ Dati live XAU/USD via Twelve Data. Aggiornamento ogni 60 secondi.</div>
@@ -560,6 +655,7 @@
 </div><!-- end tab-log -->
 
 <!-- STATUS -->
+
 <div class="status-bar">
   <div><span class="status-dot" id="statusDot" style="background:var(--dim)"></span><span id="statusText">Non connesso</span></div>
   <div id="nextRefresh">—</div>
@@ -663,6 +759,7 @@ async function fetchData() {
 
     processMarketData(mkt);
     updateGuide(mkt.price || mkt.closes.at(-1));
+    calcAll();
     setStatus('ok');
     addLog('Dati live ricevuti — ' + last.toFixed(2), '');
 
@@ -909,6 +1006,136 @@ function updateGuide(price) {
   });
 }
 
+
+// ─── CALCULATOR ─────────────────────────────────────────────────────────────
+let calcRiskPct = 5;
+let calcLots    = 0.01;
+let calcSignal  = 2; // 1=2/3, 2=3/3, 3=3/3+TF
+
+function setRisk(pct) {
+  calcRiskPct = pct;
+  ['3','5','8'].forEach(v => {
+    const b = document.getElementById('riskBtn'+v);
+    if (b) b.className = 'risk-btn' + (v == pct ? ' active' : '');
+  });
+  calcAll();
+}
+
+function setLots(lots) {
+  calcLots = lots;
+  ['001','003','005'].forEach(v => {
+    const b = document.getElementById('lotBtn'+v);
+    if (b) b.className = 'risk-btn' + (parseFloat('0.'+v.replace('0','')) == lots || v == String(lots).replace('0.','').replace('.','') ? ' active' : '');
+  });
+  // fix active state
+  document.querySelectorAll('[id^=lotBtn]').forEach(b => b.classList.remove('active'));
+  const key = 'lotBtn' + String(lots).replace('0.','').replace('.','').padStart(3,'0');
+  const el = document.getElementById(key);
+  if (el) el.classList.add('active');
+  calcAll();
+}
+
+function setSignal(s) {
+  calcSignal = s;
+  [1,2,3].forEach(v => {
+    const b = document.getElementById('sig'+v);
+    if (b) b.className = 'risk-btn' + (v === s ? ' active' : '');
+  });
+  calcAll();
+}
+
+function getRRMultiplier() {
+  return calcSignal === 1 ? 1.5 : calcSignal === 2 ? 2.0 : 3.0;
+}
+
+function calcAll() {
+  const balance  = parseFloat(document.getElementById('calcBalance').value) || 170;
+  const eurUsd   = parseFloat(document.getElementById('calcEurUsd').value)  || 1.08;
+  const balUsd   = balance * eurUsd;
+  const riskEur  = balance * calcRiskPct / 100;
+  const riskUsd  = riskEur * eurUsd;
+  const pipVal   = calcLots * 100; // XAU/USD: 1 pip = $1 per standard lot, so 0.01 = $0.10... actually for XAU 1 lot = 100oz, pip=$1/0.01lot
+  // XAU/USD: 1 lot = 100 oz, pip size = 0.01, pip value = $1 per 0.01 lot? No:
+  // 1 standard lot XAU = 100 oz. 1 pip = $0.01 move. pip value = lots * 100 * 0.01 = lots * 1
+  // Actually: pip value in USD = lots * 1 (for XAU/USD, 1 pip = $0.01, lot=100oz, so 0.01lot * 100oz * $0.01 = $0.01)
+  // More precisely: for XAU/USD, 1 pip = 0.01, value per lot = $1. So 0.01 lots = $0.01/pip
+  // But on MT4 XAU usually quoted to 2 decimals, 1 pip = 0.01, value = lot*1
+  // Let's use: 1 lot XAU = $1/pip, so 0.01 lot = $0.10/pip (this is the standard PUPrime/MT4 convention)
+  const pipValUsd = calcLots * 1; // $/pip for XAU, 1 pip = $0.01 move in price (but we work in $)
+  // Actually let's work in $ moves not pips for clarity:
+  // 0.01 lot XAU: 1$ price move = $0.01 * 100oz * 0.01lot... 
+  // Standard: 0.01 lot = $1 per $1 move in XAU price (MT4 standard for gold)
+  // Let's just use: profit/loss = lots * 100 * price_change (for gold, 1 lot = 100 units)
+  // So 0.01 lot, price moves $1 = 0.01 * 100 * 1 = $1. Yes: $1 per $1 move per 0.01 lot
+  const dollarPerDollar = calcLots * 100; // USD profit per $1 price move
+
+  // SL in $ = riskUsd / dollarPerDollar
+  const slDollars = riskUsd / dollarPerDollar;
+  const rr = getRRMultiplier();
+  const tpDollars = slDollars * rr;
+
+  // Summary
+  document.getElementById('calcRiskEur').textContent = '−€' + riskEur.toFixed(2);
+  document.getElementById('calcRiskPct').textContent = calcRiskPct + '% del saldo · −$' + riskUsd.toFixed(2);
+  document.getElementById('calcPipVal').textContent  = '$' + dollarPerDollar.toFixed(2) + '/$1 mossa';
+  document.getElementById('calcBalUsd').textContent  = '$' + balUsd.toFixed(0);
+
+  // Warning
+  const warn = document.getElementById('riskWarning');
+  if (calcLots >= 0.03 && balance < 300) {
+    warn.style.display = 'block';
+    warn.textContent = '⚠️ Con ' + calcLots + ' lotti e ' + balance + '€ di saldo, ogni $1 di movimento vale $' + dollarPerDollar.toFixed(2) + '. Lo stop da $' + slDollars.toFixed(1) + ' è molto stretto — considera 0.01 lotti.';
+  } else {
+    warn.style.display = 'none';
+  }
+
+  // TF results
+  const tfs = [
+    { id:'M1',  name:'M1',  atrPct:0.020, label:'Scalping 1–5 min' },
+    { id:'M5',  name:'M5',  atrPct:0.050, label:'Scalping 5–20 min' },
+    { id:'M15', name:'M15', atrPct:0.100, label:'Intraday 20–60 min' },
+    { id:'M30', name:'M30', atrPct:0.180, label:'Intraday 1–3 ore' },
+    { id:'H1',  name:'H1',  atrPct:0.300, label:'Swing 2–8 ore' },
+  ];
+
+  const price = parseFloat(document.getElementById('priceMain').textContent) || 4100;
+  const res = document.getElementById('calcResults');
+  res.innerHTML = tfs.map(tf => {
+    const atr   = price * tf.atrPct / 100;
+    // Check if SL is wider than ATR (good) or tighter (risky)
+    const slOk  = slDollars >= atr * 1.5;
+    const slColor = slOk ? 'var(--green)' : 'var(--red)';
+    const slWarn  = slOk ? '' : '⚠️ ';
+    const tpThis  = slDollars * rr;
+    const slEur   = slDollars / eurUsd / dollarPerDollar * dollarPerDollar / eurUsd;
+    // EUR values
+    const slEurVal = riskEur;
+    const tpEurVal = riskEur * rr;
+
+    return `<div class="calc-row">
+      <div class="calc-tf">${tf.name}<div style="font-size:8px;color:var(--dim);font-weight:400">${tf.label}</div></div>
+      <div class="calc-cell">
+        <div class="calc-label">ATR normale</div>
+        <div class="calc-val pips">±$${atr.toFixed(1)}</div>
+        <div class="calc-sub">±€${(atr/eurUsd).toFixed(1)}</div>
+      </div>
+      <div class="calc-cell">
+        <div class="calc-label">Stop Loss</div>
+        <div class="calc-val sl">${slWarn}−$${slDollars.toFixed(1)}</div>
+        <div class="calc-sub">−€${slEurVal.toFixed(2)}</div>
+      </div>
+      <div class="calc-cell">
+        <div class="calc-label">Take Profit</div>
+        <div class="calc-val tp">+$${tpThis.toFixed(1)}</div>
+        <div class="calc-sub">+€${tpEurVal.toFixed(2)}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// Init calculator on load
+setTimeout(calcAll, 2000);
+
 // ─── TF SWITCH ─────────────────────────────────────────────────────────────
 document.getElementById('tfRow').addEventListener('click',e=>{
   const b=e.target.closest('.tf-btn'); if(!b) return;
@@ -926,6 +1153,7 @@ fetchData();
 <!-- ══════════════════════════════════════════════════════════════
      GUIDA SL/TP — scheda aggiuntiva
 ══════════════════════════════════════════════════════════════ -->
+
 <div id="guidaBtn" onclick="toggleGuida()" style="
   position:fixed; bottom:20px; right:16px; z-index:300;
   width:52px; height:52px; border-radius:50%;
@@ -961,106 +1189,107 @@ fetchData();
     letter-spacing:2px; text-transform:uppercase; margin-bottom:10px;
   }
 
-  /* TF CARDS */
-  .tf-cards { display:flex; flex-direction:column; gap:8px; }
-  .tf-card {
-    background:#131A21; border:1px solid #1E2A35; border-radius:14px;
-    overflow:hidden;
-  }
-  .tf-card-header {
-    display:flex; align-items:center; gap:10px;
-    padding:12px 14px 10px;
-    border-bottom:1px solid #1E2A35;
-  }
-  .tf-badge {
-    font-size:11px; font-weight:700; letter-spacing:.5px;
-    padding:3px 10px; border-radius:20px;
-    background:rgba(61,158,255,.15); color:#3D9EFF;
-    border:1px solid rgba(61,158,255,.3);
-  }
-  .tf-label { font-size:12px; color:#8B949E; }
-  .tf-atr {
-    margin-left:auto; font-size:11px; font-weight:600;
-    color:#FFB830; background:rgba(255,184,48,.1);
-    border:1px solid rgba(255,184,48,.2);
-    padding:2px 8px; border-radius:10px;
-  }
-  .tf-grid {
-    display:grid; grid-template-columns:1fr 1fr 1fr;
-    gap:0;
-  }
-  .tf-cell {
-    padding:10px 12px; border-right:1px solid #1E2A35;
-    text-align:center;
-  }
-  .tf-cell:last-child { border-right:none; }
-  .tf-cell-label { font-size:9px; color:#4A6278; letter-spacing:.8px; text-transform:uppercase; margin-bottom:4px; }
-  .tf-cell-val { font-size:14px; font-weight:600; }
-  .tf-cell-sub { font-size:9px; color:#4A6278; margin-top:2px; }
-  .val-green { color:#00D4A0; }
-  .val-red   { color:#FF4560; }
-  .val-yellow{ color:#FFB830; }
+/* TF CARDS */
+.tf-cards { display:flex; flex-direction:column; gap:8px; }
+.tf-card {
+background:#131A21; border:1px solid #1E2A35; border-radius:14px;
+overflow:hidden;
+}
+.tf-card-header {
+display:flex; align-items:center; gap:10px;
+padding:12px 14px 10px;
+border-bottom:1px solid #1E2A35;
+}
+.tf-badge {
+font-size:11px; font-weight:700; letter-spacing:.5px;
+padding:3px 10px; border-radius:20px;
+background:rgba(61,158,255,.15); color:#3D9EFF;
+border:1px solid rgba(61,158,255,.3);
+}
+.tf-label { font-size:12px; color:#8B949E; }
+.tf-atr {
+margin-left:auto; font-size:11px; font-weight:600;
+color:#FFB830; background:rgba(255,184,48,.1);
+border:1px solid rgba(255,184,48,.2);
+padding:2px 8px; border-radius:10px;
+}
+.tf-grid {
+display:grid; grid-template-columns:1fr 1fr 1fr;
+gap:0;
+}
+.tf-cell {
+padding:10px 12px; border-right:1px solid #1E2A35;
+text-align:center;
+}
+.tf-cell:last-child { border-right:none; }
+.tf-cell-label { font-size:9px; color:#4A6278; letter-spacing:.8px; text-transform:uppercase; margin-bottom:4px; }
+.tf-cell-val { font-size:14px; font-weight:600; }
+.tf-cell-sub { font-size:9px; color:#4A6278; margin-top:2px; }
+.val-green { color:#00D4A0; }
+.val-red   { color:#FF4560; }
+.val-yellow{ color:#FFB830; }
 
-  /* RR BAR */
-  .rr-bar-wrap { padding:10px 14px 12px; }
-  .rr-label { font-size:9px; color:#4A6278; letter-spacing:.8px; text-transform:uppercase; margin-bottom:6px; }
-  .rr-bar {
-    height:8px; border-radius:4px; display:flex; overflow:hidden;
-  }
-  .rr-sl { background:#FF4560; }
-  .rr-tp { background:#00D4A0; }
-  .rr-nums { display:flex; justify-content:space-between; margin-top:4px; font-size:10px; }
+/* RR BAR */
+.rr-bar-wrap { padding:10px 14px 12px; }
+.rr-label { font-size:9px; color:#4A6278; letter-spacing:.8px; text-transform:uppercase; margin-bottom:6px; }
+.rr-bar {
+height:8px; border-radius:4px; display:flex; overflow:hidden;
+}
+.rr-sl { background:#FF4560; }
+.rr-tp { background:#00D4A0; }
+.rr-nums { display:flex; justify-content:space-between; margin-top:4px; font-size:10px; }
 
-  /* RULES BOX */
-  .rules-box {
-    background:#131A21; border:1px solid #1E2A35; border-radius:14px;
-    padding:14px;
-  }
-  .rule-row {
-    display:flex; gap:10px; align-items:flex-start;
-    padding:8px 0; border-bottom:1px solid #1E2A35;
-  }
-  .rule-row:last-child { border-bottom:none; }
-  .rule-icon { font-size:16px; flex-shrink:0; margin-top:1px; }
-  .rule-text { font-size:12px; color:#D4E0EC; line-height:1.6; }
-  .rule-text strong { color:#fff; }
+/* RULES BOX */
+.rules-box {
+background:#131A21; border:1px solid #1E2A35; border-radius:14px;
+padding:14px;
+}
+.rule-row {
+display:flex; gap:10px; align-items:flex-start;
+padding:8px 0; border-bottom:1px solid #1E2A35;
+}
+.rule-row:last-child { border-bottom:none; }
+.rule-icon { font-size:16px; flex-shrink:0; margin-top:1px; }
+.rule-text { font-size:12px; color:#D4E0EC; line-height:1.6; }
+.rule-text strong { color:#fff; }
 
-  /* SCALE TECHNIQUE */
-  .scale-box {
-    background:#131A21; border:1px solid #1E2A35; border-radius:14px;
-    overflow:hidden;
-  }
-  .scale-step {
-    display:flex; gap:12px; align-items:flex-start;
-    padding:11px 14px; border-bottom:1px solid #1E2A35;
-    position:relative;
-  }
-  .scale-step:last-child { border-bottom:none; }
-  .scale-num {
-    width:24px; height:24px; border-radius:50%;
-    display:flex; align-items:center; justify-content:center;
-    font-size:11px; font-weight:700; flex-shrink:0;
-  }
-  .scale-body { flex:1; }
-  .scale-title { font-size:12px; font-weight:600; color:#fff; margin-bottom:2px; }
-  .scale-desc  { font-size:11px; color:#8B949E; line-height:1.5; }
+/* SCALE TECHNIQUE */
+.scale-box {
+background:#131A21; border:1px solid #1E2A35; border-radius:14px;
+overflow:hidden;
+}
+.scale-step {
+display:flex; gap:12px; align-items:flex-start;
+padding:11px 14px; border-bottom:1px solid #1E2A35;
+position:relative;
+}
+.scale-step:last-child { border-bottom:none; }
+.scale-num {
+width:24px; height:24px; border-radius:50%;
+display:flex; align-items:center; justify-content:center;
+font-size:11px; font-weight:700; flex-shrink:0;
+}
+.scale-body { flex:1; }
+.scale-title { font-size:12px; font-weight:600; color:#fff; margin-bottom:2px; }
+.scale-desc  { font-size:11px; color:#8B949E; line-height:1.5; }
 
-  /* PCT PILL */
-  .pct-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-  .pct-card {
-    background:#131A21; border:1px solid #1E2A35; border-radius:12px;
-    padding:12px; text-align:center;
-  }
-  .pct-tf   { font-size:10px; color:#4A6278; font-weight:600; letter-spacing:.8px; margin-bottom:6px; }
-  .pct-sl   { font-size:13px; font-weight:700; color:#FF4560; margin-bottom:2px; }
-  .pct-tp   { font-size:13px; font-weight:700; color:#00D4A0; }
-  .pct-rr   { font-size:9px; color:#FFB830; margin-top:4px; font-weight:600; }
+/* PCT PILL */
+.pct-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.pct-card {
+background:#131A21; border:1px solid #1E2A35; border-radius:12px;
+padding:12px; text-align:center;
+}
+.pct-tf   { font-size:10px; color:#4A6278; font-weight:600; letter-spacing:.8px; margin-bottom:6px; }
+.pct-sl   { font-size:13px; font-weight:700; color:#FF4560; margin-bottom:2px; }
+.pct-tp   { font-size:13px; font-weight:700; color:#00D4A0; }
+.pct-rr   { font-size:9px; color:#FFB830; margin-top:4px; font-weight:600; }
 
-  .g-spacer { height:16px; }
-  .g-bottom { height:40px; }
+.g-spacer { height:16px; }
+.g-bottom { height:40px; }
 </style>
 
 <!-- HEADER -->
+
 <div class="g-header">
   <div>
     <div class="g-title">📋 Guida SL / TP</div>
@@ -1070,194 +1299,197 @@ fetchData();
 </div>
 
 <!-- TF REFERENCE CARDS -->
+
 <div class="g-sec">
   <div class="g-sec-title">Movimenti attesi per timeframe</div>
   <div class="tf-cards">
 
-    <!-- M1 -->
-    <div class="tf-card">
-      <div class="tf-card-header">
-        <span class="tf-badge">M1</span>
-        <span class="tf-label">Scalping veloce</span>
-        <span class="tf-atr">ATR ≈ 0.8–1.5$</span>
-      </div>
-      <div class="tf-grid">
-        <div class="tf-cell">
-          <div class="tf-cell-label">Stop Loss</div>
-          <div class="tf-cell-val val-red">2–3$</div>
-          <div class="tf-cell-sub">≈ 0.05–0.07%</div>
-        </div>
-        <div class="tf-cell">
-          <div class="tf-cell-label">Take Profit</div>
-          <div class="tf-cell-val val-green">4–6$</div>
-          <div class="tf-cell-sub">≈ 0.10–0.15%</div>
-        </div>
-        <div class="tf-cell">
-          <div class="tf-cell-label">R:R minimo</div>
-          <div class="tf-cell-val val-yellow">1 : 2</div>
-          <div class="tf-cell-sub">rischio/profitto</div>
-        </div>
-      </div>
-      <div class="rr-bar-wrap">
-        <div class="rr-label">Rapporto visivo SL / TP</div>
-        <div class="rr-bar">
-          <div class="rr-sl" style="width:33%"></div>
-          <div class="rr-tp" style="width:67%"></div>
-        </div>
-        <div class="rr-nums">
-          <span style="color:#FF4560">◀ SL 2$</span>
-          <span style="color:#00D4A0">TP 4$ ▶</span>
-        </div>
-      </div>
+```
+<!-- M1 -->
+<div class="tf-card">
+  <div class="tf-card-header">
+    <span class="tf-badge">M1</span>
+    <span class="tf-label">Scalping veloce</span>
+    <span class="tf-atr">ATR ≈ 0.8–1.5$</span>
+  </div>
+  <div class="tf-grid">
+    <div class="tf-cell">
+      <div class="tf-cell-label">Stop Loss</div>
+      <div class="tf-cell-val val-red">2–3$</div>
+      <div class="tf-cell-sub">≈ 0.05–0.07%</div>
     </div>
+    <div class="tf-cell">
+      <div class="tf-cell-label">Take Profit</div>
+      <div class="tf-cell-val val-green">4–6$</div>
+      <div class="tf-cell-sub">≈ 0.10–0.15%</div>
+    </div>
+    <div class="tf-cell">
+      <div class="tf-cell-label">R:R minimo</div>
+      <div class="tf-cell-val val-yellow">1 : 2</div>
+      <div class="tf-cell-sub">rischio/profitto</div>
+    </div>
+  </div>
+  <div class="rr-bar-wrap">
+    <div class="rr-label">Rapporto visivo SL / TP</div>
+    <div class="rr-bar">
+      <div class="rr-sl" style="width:33%"></div>
+      <div class="rr-tp" style="width:67%"></div>
+    </div>
+    <div class="rr-nums">
+      <span style="color:#FF4560">◀ SL 2$</span>
+      <span style="color:#00D4A0">TP 4$ ▶</span>
+    </div>
+  </div>
+</div>
 
-    <!-- M5 -->
-    <div class="tf-card">
-      <div class="tf-card-header">
-        <span class="tf-badge">M5</span>
-        <span class="tf-label">Scalping standard</span>
-        <span class="tf-atr">ATR ≈ 1.5–3$</span>
-      </div>
-      <div class="tf-grid">
-        <div class="tf-cell">
-          <div class="tf-cell-label">Stop Loss</div>
-          <div class="tf-cell-val val-red">4–6$</div>
-          <div class="tf-cell-sub">≈ 0.10–0.15%</div>
-        </div>
-        <div class="tf-cell">
-          <div class="tf-cell-label">Take Profit</div>
-          <div class="tf-cell-val val-green">8–12$</div>
-          <div class="tf-cell-sub">≈ 0.20–0.30%</div>
-        </div>
-        <div class="tf-cell">
-          <div class="tf-cell-label">R:R minimo</div>
-          <div class="tf-cell-val val-yellow">1 : 2</div>
-          <div class="tf-cell-sub">rischio/profitto</div>
-        </div>
-      </div>
-      <div class="rr-bar-wrap">
-        <div class="rr-label">Rapporto visivo SL / TP</div>
-        <div class="rr-bar">
-          <div class="rr-sl" style="width:33%"></div>
-          <div class="rr-tp" style="width:67%"></div>
-        </div>
-        <div class="rr-nums">
-          <span style="color:#FF4560">◀ SL 5$</span>
-          <span style="color:#00D4A0">TP 10$ ▶</span>
-        </div>
-      </div>
+<!-- M5 -->
+<div class="tf-card">
+  <div class="tf-card-header">
+    <span class="tf-badge">M5</span>
+    <span class="tf-label">Scalping standard</span>
+    <span class="tf-atr">ATR ≈ 1.5–3$</span>
+  </div>
+  <div class="tf-grid">
+    <div class="tf-cell">
+      <div class="tf-cell-label">Stop Loss</div>
+      <div class="tf-cell-val val-red">4–6$</div>
+      <div class="tf-cell-sub">≈ 0.10–0.15%</div>
     </div>
+    <div class="tf-cell">
+      <div class="tf-cell-label">Take Profit</div>
+      <div class="tf-cell-val val-green">8–12$</div>
+      <div class="tf-cell-sub">≈ 0.20–0.30%</div>
+    </div>
+    <div class="tf-cell">
+      <div class="tf-cell-label">R:R minimo</div>
+      <div class="tf-cell-val val-yellow">1 : 2</div>
+      <div class="tf-cell-sub">rischio/profitto</div>
+    </div>
+  </div>
+  <div class="rr-bar-wrap">
+    <div class="rr-label">Rapporto visivo SL / TP</div>
+    <div class="rr-bar">
+      <div class="rr-sl" style="width:33%"></div>
+      <div class="rr-tp" style="width:67%"></div>
+    </div>
+    <div class="rr-nums">
+      <span style="color:#FF4560">◀ SL 5$</span>
+      <span style="color:#00D4A0">TP 10$ ▶</span>
+    </div>
+  </div>
+</div>
 
-    <!-- M15 -->
-    <div class="tf-card">
-      <div class="tf-card-header">
-        <span class="tf-badge">M15</span>
-        <span class="tf-label">Intraday breve</span>
-        <span class="tf-atr">ATR ≈ 3–6$</span>
-      </div>
-      <div class="tf-grid">
-        <div class="tf-cell">
-          <div class="tf-cell-label">Stop Loss</div>
-          <div class="tf-cell-val val-red">8–12$</div>
-          <div class="tf-cell-sub">≈ 0.20–0.30%</div>
-        </div>
-        <div class="tf-cell">
-          <div class="tf-cell-label">Take Profit</div>
-          <div class="tf-cell-val val-green">16–24$</div>
-          <div class="tf-cell-sub">≈ 0.40–0.60%</div>
-        </div>
-        <div class="tf-cell">
-          <div class="tf-cell-label">R:R minimo</div>
-          <div class="tf-cell-val val-yellow">1 : 2</div>
-          <div class="tf-cell-sub">rischio/profitto</div>
-        </div>
-      </div>
-      <div class="rr-bar-wrap">
-        <div class="rr-label">Rapporto visivo SL / TP</div>
-        <div class="rr-bar">
-          <div class="rr-sl" style="width:33%"></div>
-          <div class="rr-tp" style="width:67%"></div>
-        </div>
-        <div class="rr-nums">
-          <span style="color:#FF4560">◀ SL 10$</span>
-          <span style="color:#00D4A0">TP 20$ ▶</span>
-        </div>
-      </div>
+<!-- M15 -->
+<div class="tf-card">
+  <div class="tf-card-header">
+    <span class="tf-badge">M15</span>
+    <span class="tf-label">Intraday breve</span>
+    <span class="tf-atr">ATR ≈ 3–6$</span>
+  </div>
+  <div class="tf-grid">
+    <div class="tf-cell">
+      <div class="tf-cell-label">Stop Loss</div>
+      <div class="tf-cell-val val-red">8–12$</div>
+      <div class="tf-cell-sub">≈ 0.20–0.30%</div>
     </div>
+    <div class="tf-cell">
+      <div class="tf-cell-label">Take Profit</div>
+      <div class="tf-cell-val val-green">16–24$</div>
+      <div class="tf-cell-sub">≈ 0.40–0.60%</div>
+    </div>
+    <div class="tf-cell">
+      <div class="tf-cell-label">R:R minimo</div>
+      <div class="tf-cell-val val-yellow">1 : 2</div>
+      <div class="tf-cell-sub">rischio/profitto</div>
+    </div>
+  </div>
+  <div class="rr-bar-wrap">
+    <div class="rr-label">Rapporto visivo SL / TP</div>
+    <div class="rr-bar">
+      <div class="rr-sl" style="width:33%"></div>
+      <div class="rr-tp" style="width:67%"></div>
+    </div>
+    <div class="rr-nums">
+      <span style="color:#FF4560">◀ SL 10$</span>
+      <span style="color:#00D4A0">TP 20$ ▶</span>
+    </div>
+  </div>
+</div>
 
-    <!-- M30 -->
-    <div class="tf-card">
-      <div class="tf-card-header">
-        <span class="tf-badge">M30</span>
-        <span class="tf-label">Intraday medio</span>
-        <span class="tf-atr">ATR ≈ 5–10$</span>
-      </div>
-      <div class="tf-grid">
-        <div class="tf-cell">
-          <div class="tf-cell-label">Stop Loss</div>
-          <div class="tf-cell-val val-red">12–18$</div>
-          <div class="tf-cell-sub">≈ 0.30–0.45%</div>
-        </div>
-        <div class="tf-cell">
-          <div class="tf-cell-label">Take Profit</div>
-          <div class="tf-cell-val val-green">25–40$</div>
-          <div class="tf-cell-sub">≈ 0.60–1.00%</div>
-        </div>
-        <div class="tf-cell">
-          <div class="tf-cell-label">R:R minimo</div>
-          <div class="tf-cell-val val-yellow">1 : 2</div>
-          <div class="tf-cell-sub">rischio/profitto</div>
-        </div>
-      </div>
-      <div class="rr-bar-wrap">
-        <div class="rr-label">Rapporto visivo SL / TP</div>
-        <div class="rr-bar">
-          <div class="rr-sl" style="width:33%"></div>
-          <div class="rr-tp" style="width:67%"></div>
-        </div>
-        <div class="rr-nums">
-          <span style="color:#FF4560">◀ SL 15$</span>
-          <span style="color:#00D4A0">TP 30$ ▶</span>
-        </div>
-      </div>
+<!-- M30 -->
+<div class="tf-card">
+  <div class="tf-card-header">
+    <span class="tf-badge">M30</span>
+    <span class="tf-label">Intraday medio</span>
+    <span class="tf-atr">ATR ≈ 5–10$</span>
+  </div>
+  <div class="tf-grid">
+    <div class="tf-cell">
+      <div class="tf-cell-label">Stop Loss</div>
+      <div class="tf-cell-val val-red">12–18$</div>
+      <div class="tf-cell-sub">≈ 0.30–0.45%</div>
     </div>
+    <div class="tf-cell">
+      <div class="tf-cell-label">Take Profit</div>
+      <div class="tf-cell-val val-green">25–40$</div>
+      <div class="tf-cell-sub">≈ 0.60–1.00%</div>
+    </div>
+    <div class="tf-cell">
+      <div class="tf-cell-label">R:R minimo</div>
+      <div class="tf-cell-val val-yellow">1 : 2</div>
+      <div class="tf-cell-sub">rischio/profitto</div>
+    </div>
+  </div>
+  <div class="rr-bar-wrap">
+    <div class="rr-label">Rapporto visivo SL / TP</div>
+    <div class="rr-bar">
+      <div class="rr-sl" style="width:33%"></div>
+      <div class="rr-tp" style="width:67%"></div>
+    </div>
+    <div class="rr-nums">
+      <span style="color:#FF4560">◀ SL 15$</span>
+      <span style="color:#00D4A0">TP 30$ ▶</span>
+    </div>
+  </div>
+</div>
 
-    <!-- H1 -->
-    <div class="tf-card">
-      <div class="tf-card-header">
-        <span class="tf-badge" style="background:rgba(164,126,255,.15);color:#A47EFF;border-color:rgba(164,126,255,.3)">H1</span>
-        <span class="tf-label">Swing intraday</span>
-        <span class="tf-atr">ATR ≈ 8–15$</span>
-      </div>
-      <div class="tf-grid">
-        <div class="tf-cell">
-          <div class="tf-cell-label">Stop Loss</div>
-          <div class="tf-cell-val val-red">20–25$</div>
-          <div class="tf-cell-sub">≈ 0.50–0.60%</div>
-        </div>
-        <div class="tf-cell">
-          <div class="tf-cell-label">Take Profit</div>
-          <div class="tf-cell-val val-green">40–60$</div>
-          <div class="tf-cell-sub">≈ 1.00–1.50%</div>
-        </div>
-        <div class="tf-cell">
-          <div class="tf-cell-label">R:R minimo</div>
-          <div class="tf-cell-val val-yellow">1 : 2.5</div>
-          <div class="tf-cell-sub">rischio/profitto</div>
-        </div>
-      </div>
-      <div class="rr-bar-wrap">
-        <div class="rr-label">Rapporto visivo SL / TP</div>
-        <div class="rr-bar">
-          <div class="rr-sl" style="width:28%"></div>
-          <div class="rr-tp" style="width:72%"></div>
-        </div>
-        <div class="rr-nums">
-          <span style="color:#FF4560">◀ SL 22$</span>
-          <span style="color:#00D4A0">TP 55$ ▶</span>
-        </div>
-      </div>
+<!-- H1 -->
+<div class="tf-card">
+  <div class="tf-card-header">
+    <span class="tf-badge" style="background:rgba(164,126,255,.15);color:#A47EFF;border-color:rgba(164,126,255,.3)">H1</span>
+    <span class="tf-label">Swing intraday</span>
+    <span class="tf-atr">ATR ≈ 8–15$</span>
+  </div>
+  <div class="tf-grid">
+    <div class="tf-cell">
+      <div class="tf-cell-label">Stop Loss</div>
+      <div class="tf-cell-val val-red">20–25$</div>
+      <div class="tf-cell-sub">≈ 0.50–0.60%</div>
     </div>
+    <div class="tf-cell">
+      <div class="tf-cell-label">Take Profit</div>
+      <div class="tf-cell-val val-green">40–60$</div>
+      <div class="tf-cell-sub">≈ 1.00–1.50%</div>
+    </div>
+    <div class="tf-cell">
+      <div class="tf-cell-label">R:R minimo</div>
+      <div class="tf-cell-val val-yellow">1 : 2.5</div>
+      <div class="tf-cell-sub">rischio/profitto</div>
+    </div>
+  </div>
+  <div class="rr-bar-wrap">
+    <div class="rr-label">Rapporto visivo SL / TP</div>
+    <div class="rr-bar">
+      <div class="rr-sl" style="width:28%"></div>
+      <div class="rr-tp" style="width:72%"></div>
+    </div>
+    <div class="rr-nums">
+      <span style="color:#FF4560">◀ SL 22$</span>
+      <span style="color:#00D4A0">TP 55$ ▶</span>
+    </div>
+  </div>
+</div>
+```
 
   </div><!-- /tf-cards -->
 </div><!-- /g-sec -->
@@ -1265,6 +1497,7 @@ fetchData();
 <div class="g-spacer"></div>
 
 <!-- PERCENTUALI -->
+
 <div class="g-sec">
   <div class="g-sec-title">Riferimenti in % sul prezzo</div>
   <div class="pct-grid">
@@ -1304,6 +1537,7 @@ fetchData();
 <div class="g-spacer"></div>
 
 <!-- TECNICA A SCALA -->
+
 <div class="g-sec">
   <div class="g-sec-title">Tecnica stop a scala</div>
   <div class="scale-box">
@@ -1341,6 +1575,7 @@ fetchData();
 <div class="g-spacer"></div>
 
 <!-- REGOLE D'ORO -->
+
 <div class="g-sec">
   <div class="g-sec-title">Regole d'oro</div>
   <div class="rules-box">
