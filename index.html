@@ -659,6 +659,7 @@ canvas { width:100%!important; display:block; }
 <div class="status-bar">
   <div><span class="status-dot" id="statusDot" style="background:var(--dim)"></span><span id="statusText">Non connesso</span></div>
   <div id="nextRefresh">—</div>
+  <div id="callCounter" style="font-size:9px;color:var(--dim)">0/800</div>
 </div>
 
 <script>
@@ -674,6 +675,11 @@ let countdown   = null;
 let secsLeft    = 60;
 let lastSignal  = '';
 let audioCtx    = null;
+let isFetching  = false;   // prevent concurrent requests
+let fetchQueue  = null;    // debounce TF changes
+let callCount   = 0;       // daily call counter
+let lastCallMin = -1;      // minute of last call (rate limit)
+let callsThisMin = 0;      // calls this minute
 
 // ─── AUDIO ─────────────────────────────────────────────────────────────────
 function initAudio() {
@@ -730,6 +736,30 @@ function sar(closes, highs, lows) {
 
 // ─── FETCH via Anthropic API (no CORS issue) ────────────────────────────────
 async function fetchData() {
+  // ── Rate limit guard ──────────────────────────────────────────────────────
+  if (isFetching) {
+    addLog('Richiesta ignorata — già in corso', 'warn');
+    return;
+  }
+  const nowMin = Math.floor(Date.now() / 60000);
+  if (nowMin === lastCallMin) {
+    callsThisMin++;
+    if (callsThisMin > 5) { // max 5 calls/min (limit is 8, leave buffer)
+      addLog('Rate limit: attendo il prossimo minuto', 'warn');
+      setTimeout(fetchData, 15000); // retry in 15s
+      return;
+    }
+  } else {
+    lastCallMin  = nowMin;
+    callsThisMin = 1;
+  }
+  callCount++;
+  if (callCount > 750) { // approaching 800/day limit
+    addLog('⚠️ Limite giornaliero vicino (' + callCount + '/800)', 'warn');
+  }
+  isFetching = true;
+  // ─────────────────────────────────────────────────────────────────────────
+
   showLoading('Recupero dati live XAU/USD...');
   setStatus('loading');
 
@@ -768,6 +798,7 @@ async function fetchData() {
     addLog('Errore: ' + err.message, 'warn');
   }
 
+  isFetching = false;
   hideLoading();
   resetCountdown();
 }
@@ -959,7 +990,14 @@ function showLoading(t) { document.getElementById('loadingText').textContent=t; 
 function hideLoading()   { document.getElementById('loadingOverlay').classList.remove('show'); }
 function resetCountdown() {
   secsLeft=REFRESH_MS/1000; clearInterval(countdown);
-  countdown=setInterval(()=>{ secsLeft--; document.getElementById('nextRefresh').textContent=secsLeft>0?`Aggiornamento tra ${secsLeft}s`:'Aggiornamento...'; },1000);
+  countdown=setInterval(()=>{
+    secsLeft--;
+    document.getElementById('nextRefresh').textContent=secsLeft>0?`Aggiornamento tra ${secsLeft}s`:'Aggiornamento...';
+    const cc = document.getElementById('callCounter');
+    if (cc) cc.textContent = callCount + '/800';
+    if (callCount > 700) { if(cc) cc.style.color='var(--red)'; }
+    else if (callCount > 500) { if(cc) cc.style.color='var(--yellow)'; }
+  },1000);
 }
 function toggleAlerts() {
   initAudio(); alertsOn=!alertsOn;
@@ -1140,7 +1178,10 @@ setTimeout(calcAll, 2000);
 document.getElementById('tfRow').addEventListener('click',e=>{
   const b=e.target.closest('.tf-btn'); if(!b) return;
   document.querySelectorAll('.tf-btn').forEach(x=>x.classList.remove('active'));
-  b.classList.add('active'); currentTF=b.dataset.tf; lastSignal=''; fetchData();
+  b.classList.add('active'); currentTF=b.dataset.tf; lastSignal='';
+  // Debounce: wait 800ms before fetching to avoid multiple calls on fast taps
+  if (fetchQueue) clearTimeout(fetchQueue);
+  fetchQueue = setTimeout(fetchData, 800);
 });
 
 // ─── AUTO REFRESH ──────────────────────────────────────────────────────────
