@@ -1398,27 +1398,30 @@ function signalInfo(buyS, sellS) {
   return           { key:'wait',      label:'ATTESA',     color:'#FFB830', score: 0 };
 }
 
-async function fetchTF(tf) {
-  // Enforce strict rate limit: max 1 call per 8 seconds globally
-  const now = Date.now();
-  const sinceLastCall = now - (window._lastApiCall || 0);
-  if (sinceLastCall < 8000) {
-    await new Promise(r => setTimeout(r, 8000 - sinceLastCall));
-  }
-  window._lastApiCall = Date.now();
-
-  const url = `https://api.twelvedata.com/time_series?symbol=XAU/USD&interval=${tf}&outputsize=60&apikey=${API_KEY}&format=JSON`;
-  const res  = await fetch(url);
+async function fetchAllTF() {
+  // Single batch request for all 5 timeframes — 1 API call instead of 5
+  const tfs = '1min,5min,15min,30min,1h';
+  const url  = `https://api.twelvedata.com/complex_data?apikey=${API_KEY}`;
+  const body = JSON.stringify({
+    symbols:   ['XAU/USD'],
+    intervals: ['1min','5min','15min','30min','1h'],
+    outputsize: 60,
+    methods:   ['time_series']
+  });
+  const res  = await fetch(url, { method:'POST', headers:{'Content-Type':'application/json'}, body });
   if (!res.ok) throw new Error('HTTP ' + res.status);
   const json = await res.json();
-  if (json.status === 'error') throw new Error(json.message);
-  const values = [...json.values].reverse();
+  return json;
+}
+
+function parseTFData(values) {
+  const v = [...values].reverse();
   return {
-    closes: values.map(v => parseFloat(v.close)),
-    highs:  values.map(v => parseFloat(v.high)),
-    lows:   values.map(v => parseFloat(v.low)),
-    price:  parseFloat(values.at(-1).close),
-    open:   parseFloat(values[0].open),
+    closes: v.map(x => parseFloat(x.close)),
+    highs:  v.map(x => parseFloat(x.high)),
+    lows:   v.map(x => parseFloat(x.low)),
+    price:  parseFloat(v.at(-1).close),
+    open:   parseFloat(v[0].open),
   };
 }
 
@@ -1459,18 +1462,52 @@ async function refreshDashboard() {
 
   const results = [];
 
-  for (let i = 0; i < TF_LIST.length; i++) {
-    const tfObj = TF_LIST[i];
-    document.getElementById('dashLoading').innerHTML =
-      `<div style="font-size:28px;margin-bottom:10px">⏳</div>
-       Analisi ${tfObj.label} (${i+1}/5)...<br>
-       <div style="font-size:11px;color:var(--dim);margin-top:6px">Intervallo API rispettato</div>`;
-    try {
-      const data   = await fetchTF(tfObj.tf);
-      const signal = analyzeTF(data);
-      results.push({ ...tfObj, data, signal, price: data.price, error: null });
-    } catch(e) {
-      results.push({ ...tfObj, data: null, signal: null, price: null, error: e.message });
+  document.getElementById('dashLoading').innerHTML =
+    `<div style="font-size:28px;margin-bottom:10px">⏳</div>
+     Analisi di tutti i timeframe...<br>
+     <div style="font-size:11px;color:var(--dim);margin-top:6px">Una sola chiamata API</div>`;
+
+  try {
+    const batch = await fetchAllTF();
+    // batch structure: { 'XAU/USD': { '1min': {values:[]}, '5min': ... } }
+    const tfMap = { '1min':'1min','5min':'5min','15min':'15min','30min':'30min','1h':'1h' };
+    const xau   = batch['XAU/USD'] || {};
+
+    for (const tfObj of TF_LIST) {
+      const tfData = xau[tfObj.tf];
+      if (!tfData || !tfData.values) {
+        // Fallback: try direct key formats
+        const alt = xau[tfObj.tf.replace('min','min')] || xau[tfObj.tf];
+        if (!alt || !alt.values) {
+          results.push({ ...tfObj, data:null, signal:null, price:null, error:'Nessun dato' });
+          continue;
+        }
+      }
+      try {
+        const raw    = tfData || xau[tfObj.tf];
+        const data   = parseTFData(raw.values);
+        const signal = analyzeTF(data);
+        results.push({ ...tfObj, data, signal, price: data.price, error: null });
+      } catch(e) {
+        results.push({ ...tfObj, data:null, signal:null, price:null, error: e.message });
+      }
+    }
+  } catch(batchErr) {
+    // Fallback to individual calls if batch fails
+    addLog('Batch fallback: ' + batchErr.message, 'warn');
+    for (const tfObj of TF_LIST) {
+      try {
+        await new Promise(r => setTimeout(r, 2000));
+        const url    = `https://api.twelvedata.com/time_series?symbol=XAU/USD&interval=${tfObj.tf}&outputsize=60&apikey=${API_KEY}&format=JSON`;
+        const res    = await fetch(url);
+        const json   = await res.json();
+        if (json.status === 'error') throw new Error(json.message);
+        const data   = parseTFData(json.values);
+        const signal = analyzeTF(data);
+        results.push({ ...tfObj, data, signal, price: data.price, error: null });
+      } catch(e) {
+        results.push({ ...tfObj, data:null, signal:null, price:null, error: e.message });
+      }
     }
   }
 
