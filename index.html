@@ -1399,6 +1399,14 @@ function signalInfo(buyS, sellS) {
 }
 
 async function fetchTF(tf) {
+  // Enforce strict rate limit: max 1 call per 8 seconds globally
+  const now = Date.now();
+  const sinceLastCall = now - (window._lastApiCall || 0);
+  if (sinceLastCall < 8000) {
+    await new Promise(r => setTimeout(r, 8000 - sinceLastCall));
+  }
+  window._lastApiCall = Date.now();
+
   const url = `https://api.twelvedata.com/time_series?symbol=XAU/USD&interval=${tf}&outputsize=60&apikey=${API_KEY}&format=JSON`;
   const res  = await fetch(url);
   if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -1451,9 +1459,13 @@ async function refreshDashboard() {
 
   const results = [];
 
-  for (const tfObj of TF_LIST) {
+  for (let i = 0; i < TF_LIST.length; i++) {
+    const tfObj = TF_LIST[i];
+    document.getElementById('dashLoading').innerHTML =
+      `<div style="font-size:28px;margin-bottom:10px">⏳</div>
+       Analisi ${tfObj.label} (${i+1}/5)...<br>
+       <div style="font-size:11px;color:var(--dim);margin-top:6px">Intervallo API rispettato</div>`;
     try {
-      await new Promise(r => setTimeout(r, 1000)); // 1s delay between calls
       const data   = await fetchTF(tfObj.tf);
       const signal = analyzeTF(data);
       results.push({ ...tfObj, data, signal, price: data.price, error: null });
