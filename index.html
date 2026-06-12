@@ -27,7 +27,7 @@
   body { background:var(--bg); color:var(--text); font-family:-apple-system,'SF Pro Display',sans-serif; min-height:100vh; padding-bottom:40px; }
 
 /* HEADER */
-.header { background:linear-gradient(135deg,#0E1419,#131A21); border-bottom:1px solid var(–border); padding:14px 16px 12px; position:sticky; top:0; z-index:101; }
+.header { background:linear-gradient(135deg,#0E1419,#131A21); border-bottom:1px solid var(–border); padding:14px 16px 12px; }
 .header-top { display:flex; align-items:center; justify-content:space-between; }
 .logo { display:flex; align-items:center; gap:8px; }
 .logo-dot { width:10px; height:10px; border-radius:50%; background:var(–gold); box-shadow:0 0 8px var(–gold); animation:pulse-gold 2s infinite; }
@@ -140,7 +140,7 @@ canvas { width:100%!important; display:block; }
 .info-box { margin:0 14px; padding:10px 14px; background:rgba(61,158,255,.08); border:1px solid rgba(61,158,255,.2); border-radius:10px; font-size:11px; color:var(–blue); line-height:1.5; }
 
 /* TABS */
-.tab-nav { display:flex; background:var(–surface); border-bottom:1px solid var(–border); position:sticky; top:88px; z-index:100; }
+.tab-nav { display:flex; background:var(–surface); border-bottom:1px solid var(–border); position:sticky; top:0; z-index:100; }
 .tab-btn { flex:1; padding:14px 6px; font-size:12px; font-weight:600; color:var(–dim); letter-spacing:.5px; text-align:center; cursor:pointer; border-bottom:2px solid transparent; transition:all .2s; }
 .tab-btn.active { color:var(–gold); border-bottom-color:var(–gold); }
 .tab-content { display:none; }
@@ -205,6 +205,14 @@ canvas { width:100%!important; display:block; }
 .calc-val.tp { color:var(–green); }
 .calc-val.pips { color:var(–yellow); }
 .calc-sub { font-size:9px; color:var(–dim); margin-top:1px; }
+
+/* STICKY WRAPPER — header + tabs always on top */
+.sticky-top {
+position: sticky;
+top: 0;
+z-index: 200;
+background: var(–bg);
+}
 </style>
 
 </head>
@@ -224,8 +232,10 @@ canvas { width:100%!important; display:block; }
   <div class="toast-body"  id="toastBody"></div>
 </div>
 
-<!-- HEADER -->
+<!-- STICKY TOP -->
 
+<div class="sticky-top">
+<!-- HEADER -->
 <div class="header">
   <div class="header-top">
     <div class="logo">
@@ -251,6 +261,7 @@ canvas { width:100%!important; display:block; }
   <div class="tab-btn" onclick="switchTab('guide')">📋 GUIDA SL/TP</div>
   <div class="tab-btn" onclick="switchTab('log')">📜 LOG</div>
 </div>
+</div><!-- end sticky-top -->
 
 <!-- SCANNER TAB -->
 
