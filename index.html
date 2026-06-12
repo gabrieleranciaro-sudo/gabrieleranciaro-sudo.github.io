@@ -262,8 +262,8 @@ color: #fff;
 /* Signal color themes */
 .dash-buy      { background: rgba(0,212,160,0.15);  border-color: rgba(0,212,160,0.4); }
 .dash-buy::before      { background: #00D4A0; }
-.dash-quasibuy { background: rgba(126,212,92,0.12); border-color: rgba(126,212,92,0.3); }
-.dash-quasibuy::before { background: #7ED45C; }
+.dash-quasibuy { background: rgba(184,224,74,0.12); border-color: rgba(184,224,74,0.3); }
+.dash-quasibuy::before { background: #B8E04A; }
 .dash-wait     { background: rgba(255,184,48,0.10); border-color: rgba(255,184,48,0.3); }
 .dash-wait::before     { background: #FFB830; }
 .dash-quasisell{ background: rgba(255,140,0,0.12);  border-color: rgba(255,140,0,0.35); }
@@ -379,8 +379,8 @@ letter-spacing: 0.5px;
         <span style="font-size:11px;color:var(--dim)">3/3 conferme rialziste</span>
       </div>
       <div style="display:flex;align-items:center;gap:10px">
-        <div style="width:12px;height:12px;border-radius:50%;background:#7ED45C;flex-shrink:0"></div>
-        <span style="font-size:12px;color:#7ED45C;font-weight:600">QUASI BUY</span>
+        <div style="width:12px;height:12px;border-radius:50%;background:#B8E04A;flex-shrink:0"></div>
+        <span style="font-size:12px;color:#B8E04A;font-weight:600">QUASI BUY</span>
         <span style="font-size:11px;color:var(--dim)">2/3 conferme rialziste</span>
       </div>
       <div style="display:flex;align-items:center;gap:10px">
@@ -1392,7 +1392,7 @@ const SIGNAL_ORDER = ['buy','quasibuy','wait','quasisell','sell'];
 
 function signalInfo(buyS, sellS) {
   if (buyS === 3)  return { key:'buy',      label:'BUY',        color:'#00D4A0', score: buyS };
-  if (buyS === 2)  return { key:'quasibuy', label:'QUASI BUY',  color:'#7ED45C', score: buyS };
+  if (buyS === 2)  return { key:'quasibuy', label:'QUASI BUY',  color:'#B8E04A', score: buyS };
   if (sellS === 2) return { key:'quasisell',label:'QUASI SELL', color:'#FF8C00', score: sellS };
   if (sellS === 3) return { key:'sell',     label:'SELL',       color:'#FF4560', score: sellS };
   return           { key:'wait',      label:'ATTESA',     color:'#FFB830', score: 0 };
