@@ -1081,7 +1081,7 @@ function computeSignal(e5,e10,e20,m,s,price) {
 function fireAlert(type,price) {
   playTone(type);
   const title = type==='buy' ? `🟢 BUY XAU — ${price.toFixed(2)}` : `🔴 SELL XAU — ${price.toFixed(2)}`;
-  const body  = '3/3 conferme allineate — apri PUPrime e controlla';
+  const body  = type==='buy' ? '🟢 TUTTI I TIMEFRAME BUY — apri PUPrime' : '🔴 TUTTI I TIMEFRAME SELL — apri PUPrime';
   // In-app toast
   const t=document.getElementById('toast');
   t.className=`toast ${type}`;
@@ -1538,12 +1538,14 @@ async function refreshDashboard() {
   document.getElementById('dashLoading').style.display = 'none';
   document.getElementById('dashResults').style.display = 'block';
 
-  // Fire alert if majority signal
-  const buyCount  = results.filter(r => r.signal && r.signal.buyS  === 3).length;
-  const sellCount = results.filter(r => r.signal && r.signal.sellS === 3).length;
-  if (alertsOn) {
-    if (buyCount  >= 3) fireAlert('buy',  priceData?.data?.price || 0);
-    if (sellCount >= 3) fireAlert('sell', priceData?.data?.price || 0);
+  // Fire alert ONLY when ALL 5 timeframes agree on same direction
+  const validResults = results.filter(r => r.signal);
+  const buyCount  = validResults.filter(r => r.signal.buyS  === 3).length;
+  const sellCount = validResults.filter(r => r.signal.sellS === 3).length;
+  const price     = priceData?.data?.price || 0;
+  if (alertsOn && validResults.length === 5) {
+    if (buyCount  === 5) fireAlert('buy',  price);
+    if (sellCount === 5) fireAlert('sell', price);
   }
 
   dashFetching = false;
