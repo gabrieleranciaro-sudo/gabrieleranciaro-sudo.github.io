@@ -1453,7 +1453,7 @@ async function refreshDashboard() {
 
   for (const tfObj of TF_LIST) {
     try {
-      await new Promise(r => setTimeout(r, 2500)); // 2.5s delay — respect Twelve Data rate limit
+      await new Promise(r => setTimeout(r, 1000)); // 1s delay between calls
       const data   = await fetchTF(tfObj.tf);
       const signal = analyzeTF(data);
       results.push({ ...tfObj, data, signal, price: data.price, error: null });
