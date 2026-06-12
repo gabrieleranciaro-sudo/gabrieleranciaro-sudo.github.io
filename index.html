@@ -896,7 +896,7 @@ async function fetchData() {
   const nowMin = Math.floor(Date.now() / 60000);
   if (nowMin === lastCallMin) {
     callsThisMin++;
-    if (callsThisMin > 5) { // max 5 calls/min (limit is 8, leave buffer)
+    if (callsThisMin > 3) { // max 3 calls/min (conservative to avoid 429)
       addLog('Rate limit: attendo il prossimo minuto', 'warn');
       setTimeout(fetchData, 15000); // retry in 15s
       return;
@@ -1453,7 +1453,7 @@ async function refreshDashboard() {
 
   for (const tfObj of TF_LIST) {
     try {
-      await new Promise(r => setTimeout(r, 300)); // 300ms delay between calls
+      await new Promise(r => setTimeout(r, 2500)); // 2.5s delay — respect Twelve Data rate limit
       const data   = await fetchTF(tfObj.tf);
       const signal = analyzeTF(data);
       results.push({ ...tfObj, data, signal, price: data.price, error: null });
