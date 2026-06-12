@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <title>XAU Scanner</title>
 <style>
   :root {
@@ -24,7 +24,7 @@
     --gold:    #FFD166;
   }
   * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
-  body { background:var(--bg); color:var(--text); font-family:-apple-system,'SF Pro Display',sans-serif; min-height:100vh; padding-bottom:40px; }
+  body { background:var(--bg); color:var(--text); font-family:-apple-system,'SF Pro Display',sans-serif; min-height:100vh; padding-bottom:40px; background-color:#000; }
 
 /* HEADER */
 .header { background:linear-gradient(135deg,#0E1419,#131A21); border-bottom:1px solid var(–border); padding:14px 16px 12px; }
@@ -119,7 +119,7 @@ canvas { width:100%!important; display:block; }
 .log-msg.warn { color:var(–yellow); }
 
 /* TOAST */
-.toast { position:fixed; top:20px; left:50%; transform:translateX(-50%) translateY(-130px); border-radius:16px; padding:16px 24px; min-width:280px; max-width:360px; box-shadow:0 8px 32px rgba(0,0,0,.8); transition:transform .35s cubic-bezier(.34,1.56,.64,1); z-index:999; text-align:center; border:none; }
+.toast { position:fixed; top:calc(env(safe-area-inset-top, 20px) + 60px); left:50%; transform:translateX(-50%) translateY(-130px); border-radius:16px; padding:16px 24px; min-width:280px; max-width:360px; box-shadow:0 8px 32px rgba(0,0,0,.8); transition:transform .35s cubic-bezier(.34,1.56,.64,1); z-index:999; text-align:center; border:none; }
 .toast.show { transform:translateX(-50%) translateY(0); }
 .toast-title { font-size:18px; font-weight:800; margin-bottom:6px; color:#fff; letter-spacing:0.5px; }
 .toast-body  { font-size:13px; color:rgba(255,255,255,0.85); font-weight:500; }
@@ -213,6 +213,74 @@ top: 0;
 z-index: 200;
 background: #000;
 box-shadow: 0 2px 12px rgba(0,0,0,0.9);
+padding-top: env(safe-area-inset-top, 0px);
+}
+
+/* DASHBOARD */
+.dash-row {
+display: flex; align-items: center;
+border-radius: 14px; padding: 14px 16px;
+margin-bottom: 8px;
+border: 1px solid transparent;
+position: relative; overflow: hidden;
+}
+.dash-row::before {
+content: ‘’; position: absolute;
+left: 0; top: 0; bottom: 0; width: 4px;
+}
+.dash-tf {
+font-size: 18px; font-weight: 800;
+width: 44px; flex-shrink: 0;
+color: #fff;
+}
+.dash-tf-sub {
+font-size: 9px; font-weight: 400;
+color: rgba(255,255,255,0.5);
+display: block; margin-top: 1px;
+}
+.dash-signal {
+flex: 1; padding: 0 12px;
+}
+.dash-signal-name {
+font-size: 16px; font-weight: 700; letter-spacing: 0.5px;
+}
+.dash-signal-detail {
+font-size: 11px; color: rgba(255,255,255,0.6);
+margin-top: 2px;
+}
+.dash-pills {
+display: flex; gap: 4px;
+}
+.dash-pill {
+font-size: 9px; font-weight: 700;
+padding: 3px 7px; border-radius: 8px;
+color: #fff;
+}
+.dash-pill.ok   { background: rgba(255,255,255,0.25); }
+.dash-pill.no   { background: rgba(0,0,0,0.25); color: rgba(255,255,255,0.4); }
+
+/* Signal color themes */
+.dash-buy      { background: rgba(0,212,160,0.15);  border-color: rgba(0,212,160,0.4); }
+.dash-buy::before      { background: #00D4A0; }
+.dash-quasibuy { background: rgba(126,212,92,0.12); border-color: rgba(126,212,92,0.3); }
+.dash-quasibuy::before { background: #7ED45C; }
+.dash-wait     { background: rgba(255,184,48,0.10); border-color: rgba(255,184,48,0.3); }
+.dash-wait::before     { background: #FFB830; }
+.dash-quasisell{ background: rgba(255,140,0,0.12);  border-color: rgba(255,140,0,0.35); }
+.dash-quasisell::before{ background: #FF8C00; }
+.dash-sell     { background: rgba(255,69,96,0.15);  border-color: rgba(255,69,96,0.4); }
+.dash-sell::before     { background: #FF4560; }
+
+.dash-score-badge {
+font-size: 13px; font-weight: 800;
+width: 36px; text-align: center; flex-shrink: 0;
+}
+
+/* Sort order indicator */
+.dash-sort-label {
+font-size: 10px; color: var(–dim);
+text-align: center; padding: 4px 0 8px;
+letter-spacing: 0.5px;
 }
 </style>
 
@@ -258,11 +326,83 @@ box-shadow: 0 2px 12px rgba(0,0,0,0.9);
 <!-- TAB NAV -->
 
 <div class="tab-nav">
+  <div class="tab-btn" onclick="switchTab('dashboard')">📊 OVERVIEW</div>
   <div class="tab-btn active" onclick="switchTab('scanner')">📡 SCANNER</div>
   <div class="tab-btn" onclick="switchTab('guide')">📋 GUIDA SL/TP</div>
   <div class="tab-btn" onclick="switchTab('log')">📜 LOG</div>
 </div>
 </div><!-- end sticky-top -->
+
+<!-- DASHBOARD TAB -->
+
+<div class="tab-content" id="tab-dashboard">
+<div style="padding:14px">
+
+  <!-- Header row -->
+
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+    <div>
+      <div style="font-size:11px;color:var(--dim);letter-spacing:1px;text-transform:uppercase">PANORAMICA MERCATO</div>
+      <div style="font-size:11px;color:var(--dim);margin-top:2px" id="dashTime">—</div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:28px;font-weight:300;color:#fff" id="dashPrice">—</div>
+      <div style="font-size:12px" id="dashChange">—</div>
+    </div>
+  </div>
+
+  <!-- Loading state -->
+
+  <div id="dashLoading" style="text-align:center;padding:40px 0;color:var(--dim);font-size:13px">
+    <div style="font-size:28px;margin-bottom:10px">⏳</div>
+    Analisi di tutti i timeframe in corso...
+  </div>
+
+  <!-- Results -->
+
+  <div id="dashResults" style="display:none"></div>
+
+  <!-- Refresh button -->
+
+  <button onclick="refreshDashboard()" style="width:100%;padding:14px;background:rgba(61,158,255,.15);border:1px solid rgba(61,158,255,.3);border-radius:12px;color:var(--blue);font-size:13px;font-weight:600;cursor:pointer;margin-top:10px">
+    ↻ Aggiorna tutto
+  </button>
+
+  <!-- Legend -->
+
+  <div style="margin-top:14px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px">
+    <div style="font-size:10px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">LEGENDA SEGNALI</div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:12px;height:12px;border-radius:50%;background:#00D4A0;flex-shrink:0"></div>
+        <span style="font-size:12px;color:#00D4A0;font-weight:600">BUY</span>
+        <span style="font-size:11px;color:var(--dim)">3/3 conferme rialziste</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:12px;height:12px;border-radius:50%;background:#7ED45C;flex-shrink:0"></div>
+        <span style="font-size:12px;color:#7ED45C;font-weight:600">QUASI BUY</span>
+        <span style="font-size:11px;color:var(--dim)">2/3 conferme rialziste</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:12px;height:12px;border-radius:50%;background:#FFB830;flex-shrink:0"></div>
+        <span style="font-size:12px;color:#FFB830;font-weight:600">ATTESA</span>
+        <span style="font-size:11px;color:var(--dim)">Segnali non allineati</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:12px;height:12px;border-radius:50%;background:#FF8C00;flex-shrink:0"></div>
+        <span style="font-size:12px;color:#FF8C00;font-weight:600">QUASI SELL</span>
+        <span style="font-size:11px;color:var(--dim)">2/3 conferme ribassiste</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:12px;height:12px;border-radius:50%;background:#FF4560;flex-shrink:0"></div>
+        <span style="font-size:12px;color:#FF4560;font-weight:600">SELL</span>
+        <span style="font-size:11px;color:var(--dim)">3/3 conferme ribassiste</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div><!-- end tab-dashboard -->
 
 <!-- SCANNER TAB -->
 
@@ -1073,8 +1213,9 @@ function switchTab(name) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
-  const idx = ['scanner','guide','log'].indexOf(name);
-  document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+  const idx = ['dashboard','scanner','guide','log'].indexOf(name);
+  if (idx >= 0) document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+  if (name === 'dashboard') refreshDashboard();
 }
 
 // ─── UPDATE GUIDE TAB WITH LIVE PRICE ───────────────────────────────────────
@@ -1233,6 +1374,176 @@ function calcAll() {
 
 // Init calculator on load
 setTimeout(calcAll, 2000);
+
+
+// ─── DASHBOARD — multi-TF overview ──────────────────────────────────────────
+let dashData    = {};   // cache: tf -> {closes, highs, lows}
+let dashFetching = false;
+
+const TF_LIST = [
+  { tf:'1min',  label:'M1',  sub:'1 min'  },
+  { tf:'5min',  label:'M5',  sub:'5 min'  },
+  { tf:'15min', label:'M15', sub:'15 min' },
+  { tf:'30min', label:'M30', sub:'30 min' },
+  { tf:'1h',    label:'H1',  sub:'1 ora'  },
+];
+
+const SIGNAL_ORDER = ['buy','quasibuy','wait','quasisell','sell'];
+
+function signalInfo(buyS, sellS) {
+  if (buyS === 3)  return { key:'buy',      label:'BUY',        color:'#00D4A0', score: buyS };
+  if (buyS === 2)  return { key:'quasibuy', label:'QUASI BUY',  color:'#7ED45C', score: buyS };
+  if (sellS === 2) return { key:'quasisell',label:'QUASI SELL', color:'#FF8C00', score: sellS };
+  if (sellS === 3) return { key:'sell',     label:'SELL',       color:'#FF4560', score: sellS };
+  return           { key:'wait',      label:'ATTESA',     color:'#FFB830', score: 0 };
+}
+
+async function fetchTF(tf) {
+  const url = `https://api.twelvedata.com/time_series?symbol=XAU/USD&interval=${tf}&outputsize=60&apikey=${API_KEY}&format=JSON`;
+  const res  = await fetch(url);
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  const json = await res.json();
+  if (json.status === 'error') throw new Error(json.message);
+  const values = [...json.values].reverse();
+  return {
+    closes: values.map(v => parseFloat(v.close)),
+    highs:  values.map(v => parseFloat(v.high)),
+    lows:   values.map(v => parseFloat(v.low)),
+    price:  parseFloat(values.at(-1).close),
+    open:   parseFloat(values[0].open),
+  };
+}
+
+function analyzeTF(data) {
+  const { closes, highs, lows } = data;
+  const e5  = ema(closes, 5);
+  const e10 = ema(closes, 10);
+  const e20 = ema(closes, 20);
+  const m   = macd(closes);
+  const s   = sar(closes, highs, lows);
+  if (!e5 || !e10 || !e20 || !m || !s) return null;
+
+  const emaBull = e5 > e10 && e10 > e20;
+  const emaBear = e5 < e10 && e10 < e20;
+  const mBull   = m.dif > m.dea && m.hist > 0;
+  const mBear   = m.dif < m.dea && m.hist < 0;
+  const sBull   = !s.above;
+  const sBear   = s.above;
+
+  const buyS  = [emaBull, mBull, sBull].filter(Boolean).length;
+  const sellS = [emaBear, mBear, sBear].filter(Boolean).length;
+
+  return {
+    buyS, sellS,
+    ema:  emaBull ? 'bull' : emaBear ? 'bear' : 'neut',
+    macd: mBull   ? 'bull' : mBear   ? 'bear' : 'neut',
+    sar:  sBull   ? 'bull' : sBear   ? 'bear' : 'neut',
+  };
+}
+
+async function refreshDashboard() {
+  if (dashFetching) return;
+  dashFetching = true;
+
+  document.getElementById('dashLoading').style.display = 'block';
+  document.getElementById('dashResults').style.display = 'none';
+  document.getElementById('dashTime').textContent = 'Aggiornamento...';
+
+  const results = [];
+
+  for (const tfObj of TF_LIST) {
+    try {
+      await new Promise(r => setTimeout(r, 300)); // 300ms delay between calls
+      const data   = await fetchTF(tfObj.tf);
+      const signal = analyzeTF(data);
+      results.push({ ...tfObj, data, signal, price: data.price, error: null });
+    } catch(e) {
+      results.push({ ...tfObj, data: null, signal: null, price: null, error: e.message });
+    }
+  }
+
+  // Get price from M5 or first available
+  const priceData = results.find(r => r.data) || null;
+  if (priceData) {
+    const chg  = priceData.data.price - priceData.data.open;
+    const pct  = (chg / priceData.data.open * 100).toFixed(2);
+    const sign = chg >= 0 ? '+' : '';
+    const col  = chg >= 0 ? 'var(--green)' : 'var(--red)';
+    document.getElementById('dashPrice').textContent  = priceData.data.price.toFixed(2);
+    document.getElementById('dashChange').innerHTML   = `<span style="color:${col}">${sign}${chg.toFixed(2)} (${sign}${pct}%)</span>`;
+    document.getElementById('dashTime').textContent   = 'Aggiornato ' + new Date().toLocaleTimeString('it-IT');
+  }
+
+  // Sort by signal strength: BUY first, SELL last
+  const sortedResults = [...results].sort((a, b) => {
+    const order = { buy:0, quasibuy:1, wait:2, quasisell:3, sell:4 };
+    const keyA  = a.signal ? signalInfo(a.signal.buyS, a.signal.sellS).key : 'wait';
+    const keyB  = b.signal ? signalInfo(b.signal.buyS, b.signal.sellS).key : 'wait';
+    return order[keyA] - order[keyB];
+  });
+
+  // Render
+  const container = document.getElementById('dashResults');
+  container.innerHTML = '<div class="dash-sort-label">ORDINATI PER FORZA SEGNALE</div>' +
+    sortedResults.map(r => {
+      if (r.error) return `
+        <div class="dash-row dash-wait">
+          <div class="dash-tf">${r.label}<span class="dash-tf-sub">${r.sub}</span></div>
+          <div class="dash-signal">
+            <div class="dash-signal-name" style="color:#FFB830">ERRORE</div>
+            <div class="dash-signal-detail">${r.error}</div>
+          </div>
+        </div>`;
+
+      const sig  = signalInfo(r.signal.buyS, r.signal.sellS);
+      const pills = [
+        { label:'EMA',  state: r.signal.ema  },
+        { label:'MACD', state: r.signal.macd },
+        { label:'SAR',  state: r.signal.sar  },
+      ];
+      const pillsHtml = pills.map(p => {
+        const dir   = p.state === 'bull' ? '↑' : p.state === 'bear' ? '↓' : '→';
+        const okCls = (sig.key.includes('buy')  && p.state === 'bull') ||
+                      (sig.key.includes('sell') && p.state === 'bear') ? 'ok' : 'no';
+        return `<span class="dash-pill ${okCls}">${p.label} ${dir}</span>`;
+      }).join('');
+
+      const priceStr = r.price ? r.price.toFixed(2) : '—';
+
+      return `
+        <div class="dash-row dash-${sig.key}">
+          <div class="dash-tf">${r.label}<span class="dash-tf-sub">${r.sub}</span></div>
+          <div class="dash-signal">
+            <div class="dash-signal-name" style="color:${sig.color}">${sig.label}</div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
+              <div class="dash-pills">${pillsHtml}</div>
+            </div>
+          </div>
+          <div class="dash-score-badge" style="color:${sig.color}">${priceStr}</div>
+        </div>`;
+    }).join('');
+
+  document.getElementById('dashLoading').style.display = 'none';
+  document.getElementById('dashResults').style.display = 'block';
+
+  // Fire alert if majority signal
+  const buyCount  = results.filter(r => r.signal && r.signal.buyS  === 3).length;
+  const sellCount = results.filter(r => r.signal && r.signal.sellS === 3).length;
+  if (alertsOn) {
+    if (buyCount  >= 3) fireAlert('buy',  priceData?.data?.price || 0);
+    if (sellCount >= 3) fireAlert('sell', priceData?.data?.price || 0);
+  }
+
+  dashFetching = false;
+}
+
+// Auto-run dashboard on app open
+document.addEventListener('DOMContentLoaded', () => {
+  // Switch to dashboard on first load
+  setTimeout(() => {
+    switchTab('dashboard');
+  }, 100);
+});
 
 // ─── TF SWITCH ─────────────────────────────────────────────────────────────
 document.getElementById('tfRow').addEventListener('click',e=>{
