@@ -20,27 +20,27 @@
     --blue:    #3D9EFF;
     --purple:  #A47EFF;
     --text:    #D4E0EC;
-    --dim:     #4A6278;
+    --dim:     #7A92A8;
     --gold:    #FFD166;
   }
   * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
   body { background:var(--bg); color:var(--text); font-family:-apple-system,'SF Pro Display',sans-serif; min-height:100vh; padding-bottom:40px; }
 
 /* HEADER */
-.header { background:linear-gradient(135deg,#0E1419,#131A21); border-bottom:1px solid var(–border); padding:14px 16px 12px; position:sticky; top:0; z-index:100; }
+.header { background:linear-gradient(135deg,#0E1419,#131A21); border-bottom:1px solid var(–border); padding:14px 16px 12px; position:sticky; top:0; z-index:101; }
 .header-top { display:flex; align-items:center; justify-content:space-between; }
 .logo { display:flex; align-items:center; gap:8px; }
 .logo-dot { width:10px; height:10px; border-radius:50%; background:var(–gold); box-shadow:0 0 8px var(–gold); animation:pulse-gold 2s infinite; }
 @keyframes pulse-gold { 0%,100%{box-shadow:0 0 6px var(–gold)} 50%{box-shadow:0 0 16px var(–gold),0 0 28px rgba(255,209,102,.3)} }
 .logo-text { font-size:17px; font-weight:700; letter-spacing:1.5px; color:var(–gold); }
-.logo-sub  { font-size:10px; color:var(–dim); letter-spacing:.5px; }
-.live-badge { display:flex; align-items:center; gap:5px; background:rgba(0,212,160,.1); border:1px solid rgba(0,212,160,.25); border-radius:20px; padding:4px 10px; font-size:10px; font-weight:600; color:var(–green); letter-spacing:.5px; }
+.logo-sub  { font-size:11px; color:var(–dim); letter-spacing:.5px; }
+.live-badge { display:flex; align-items:center; gap:5px; background:rgba(0,212,160,.1); border:1px solid rgba(0,212,160,.25); border-radius:20px; padding:5px 12px; font-size:12px; font-weight:600; color:var(–green); letter-spacing:.5px; }
 .live-dot { width:6px; height:6px; border-radius:50%; background:var(–green); animation:blink 1.2s infinite; }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
 .price-bar { display:flex; align-items:baseline; gap:10px; margin-top:10px; flex-wrap:wrap; }
 .price-main { font-size:32px; font-weight:300; letter-spacing:-.5px; color:#fff; }
 .price-change { font-size:13px; font-weight:600; }
-.price-time { font-size:10px; color:var(–dim); margin-left:auto; }
+.price-time { font-size:11px; color:var(–dim); margin-left:auto; }
 
 /* SIGNAL BOX */
 .signal-box { margin:14px 14px 0; border-radius:14px; padding:16px; border:1.5px solid var(–border); background:var(–card); transition:all .4s; position:relative; overflow:hidden; }
@@ -52,20 +52,20 @@
 .signal-box.wait { border-color:rgba(255,184,48,.3); background:rgba(255,184,48,.04); }
 .signal-box.wait::before { background:linear-gradient(90deg,var(–yellow),transparent); }
 .signal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
-.signal-label { font-size:11px; font-weight:600; color:var(–dim); letter-spacing:1px; text-transform:uppercase; }
-.signal-main  { font-size:26px; font-weight:700; letter-spacing:1px; }
+.signal-label { font-size:12px; font-weight:600; color:var(–dim); letter-spacing:1px; text-transform:uppercase; }
+.signal-main  { font-size:28px; font-weight:700; letter-spacing:1px; }
 .signal-main.buy  { color:var(–green); }
 .signal-main.sell { color:var(–red); }
 .signal-main.wait { color:var(–yellow); }
-.signal-desc { font-size:12px; color:var(–text); line-height:1.6; }
+.signal-desc { font-size:13px; color:var(–text); line-height:1.6; }
 .signal-score { display:flex; gap:6px; margin-top:10px; flex-wrap:wrap; }
-.score-pill { padding:3px 10px; border-radius:20px; font-size:10px; font-weight:600; display:flex; align-items:center; gap:4px; }
+.score-pill { padding:5px 12px; border-radius:20px; font-size:11px; font-weight:600; display:flex; align-items:center; gap:4px; }
 .score-pill.ok   { background:rgba(0,212,160,.15);  color:var(–green);  border:1px solid rgba(0,212,160,.3); }
 .score-pill.no   { background:rgba(255,69,96,.12);  color:var(–red);    border:1px solid rgba(255,69,96,.25); }
 .score-pill.warn { background:rgba(255,184,48,.12); color:var(–yellow); border:1px solid rgba(255,184,48,.25); }
 
 /* SECTION */
-.section-title { font-size:10px; font-weight:600; color:var(–dim); letter-spacing:1.5px; text-transform:uppercase; padding:16px 16px 8px; }
+.section-title { font-size:12px; font-weight:600; color:var(–dim); letter-spacing:1.5px; text-transform:uppercase; padding:16px 16px 8px; }
 
 /* IND GRID */
 .indicators-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; padding:0 14px; }
@@ -74,10 +74,10 @@
 .ind-card.bull::after { background:var(–green); }
 .ind-card.bear::after { background:var(–red); }
 .ind-card.neut::after { background:var(–yellow); }
-.ind-name  { font-size:10px; color:var(–dim); font-weight:600; letter-spacing:.8px; margin-bottom:6px; }
-.ind-value { font-size:18px; font-weight:300; color:#fff; letter-spacing:-.3px; }
-.ind-sub   { font-size:10px; margin-top:2px; color:var(–dim); }
-.ind-badge { display:inline-block; margin-top:6px; padding:2px 8px; border-radius:10px; font-size:9px; font-weight:700; letter-spacing:.5px; }
+.ind-name  { font-size:11px; color:var(–dim); font-weight:600; letter-spacing:.8px; margin-bottom:6px; }
+.ind-value { font-size:20px; font-weight:300; color:#fff; letter-spacing:-.3px; }
+.ind-sub   { font-size:11px; margin-top:2px; color:var(–dim); }
+.ind-badge { display:inline-block; margin-top:6px; padding:3px 10px; border-radius:10px; font-size:11px; font-weight:700; letter-spacing:.5px; }
 .ind-badge.bull { background:rgba(0,212,160,.15);  color:var(–green); }
 .ind-badge.bear { background:rgba(255,69,96,.15);  color:var(–red); }
 .ind-badge.neut { background:rgba(255,184,48,.15); color:var(–yellow); }
@@ -85,8 +85,8 @@
 /* EMA CARD */
 .ema-card { background:var(–card); border:1px solid var(–border); border-radius:12px; padding:14px; margin:0 14px; }
 .ema-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; }
-.ema-label { font-size:11px; font-weight:600; }
-.ema-val   { font-size:13px; font-weight:300; font-variant-numeric:tabular-nums; }
+.ema-label { font-size:13px; font-weight:600; }
+.ema-val   { font-size:14px; font-weight:300; font-variant-numeric:tabular-nums; }
 .ema-bar   { height:3px; border-radius:2px; margin-bottom:8px; transition:width .5s; }
 .ema-sep   { height:1px; background:var(–border); margin:4px 0 8px; }
 
@@ -97,8 +97,8 @@ canvas { width:100%!important; display:block; }
 /* TF */
 .tf-row { display:flex; gap:6px; padding:0 14px 14px; overflow-x:auto; scrollbar-width:none; }
 .tf-row::-webkit-scrollbar { display:none; }
-.tf-btn { padding:6px 14px; border-radius:20px; font-size:11px; font-weight:600; border:1px solid var(–border); background:var(–card); color:var(–dim); cursor:pointer; white-space:nowrap; transition:all .2s; }
-.tf-btn.active { background:rgba(61,158,255,.15); color:var(–blue); border-color:rgba(61,158,255,.4); }
+.tf-btn { padding:8px 18px; border-radius:20px; font-size:13px; font-weight:600; border:1px solid var(–border); background:var(–card); color:var(–dim); cursor:pointer; white-space:nowrap; transition:all .2s; }
+.tf-btn.active { background:rgba(61,158,255,.30); color:#fff; border-color:var(–blue); box-shadow:0 0 10px rgba(61,158,255,.3); font-weight:700; }
 
 /* CONTROLS */
 .controls { padding:14px; display:flex; gap:8px; }
@@ -110,7 +110,7 @@ canvas { width:100%!important; display:block; }
 
 /* LOG */
 .log-wrap { margin:0 14px; background:var(–card); border:1px solid var(–border); border-radius:12px; max-height:150px; overflow-y:auto; }
-.log-entry { padding:9px 14px; font-size:11px; line-height:1.5; border-bottom:1px solid var(–border); display:flex; gap:10px; align-items:flex-start; }
+.log-entry { padding:11px 14px; font-size:12px; line-height:1.5; border-bottom:1px solid var(–border); display:flex; gap:10px; align-items:flex-start; }
 .log-entry:last-child { border-bottom:none; }
 .log-time { color:var(–dim); white-space:nowrap; font-variant-numeric:tabular-nums; }
 .log-msg { color:var(–text); }
@@ -127,7 +127,7 @@ canvas { width:100%!important; display:block; }
 .toast.sell .toast-title { color:var(–red); }
 
 /* STATUS */
-.status-bar { display:flex; align-items:center; justify-content:space-between; padding:8px 16px; font-size:10px; color:var(–dim); border-top:1px solid var(–border); margin-top:14px; }
+.status-bar { display:flex; align-items:center; justify-content:space-between; padding:8px 16px; font-size:11px; color:var(–dim); border-top:1px solid var(–border); margin-top:14px; }
 .status-dot { width:6px; height:6px; border-radius:50%; display:inline-block; margin-right:5px; }
 
 /* LOADING */
@@ -140,8 +140,8 @@ canvas { width:100%!important; display:block; }
 .info-box { margin:0 14px; padding:10px 14px; background:rgba(61,158,255,.08); border:1px solid rgba(61,158,255,.2); border-radius:10px; font-size:11px; color:var(–blue); line-height:1.5; }
 
 /* TABS */
-.tab-nav { display:flex; background:var(–surface); border-bottom:1px solid var(–border); position:sticky; top:72px; z-index:99; }
-.tab-btn { flex:1; padding:12px 6px; font-size:11px; font-weight:600; color:var(–dim); letter-spacing:.5px; text-align:center; cursor:pointer; border-bottom:2px solid transparent; transition:all .2s; }
+.tab-nav { display:flex; background:var(–surface); border-bottom:1px solid var(–border); position:sticky; top:88px; z-index:100; }
+.tab-btn { flex:1; padding:14px 6px; font-size:12px; font-weight:600; color:var(–dim); letter-spacing:.5px; text-align:center; cursor:pointer; border-bottom:2px solid transparent; transition:all .2s; }
 .tab-btn.active { color:var(–gold); border-bottom-color:var(–gold); }
 .tab-content { display:none; }
 .tab-content.active { display:block; }
@@ -149,29 +149,29 @@ canvas { width:100%!important; display:block; }
 /* GUIDE PAGE */
 .guide-wrap { padding:14px; }
 .guide-hero { background:var(–card); border:1px solid var(–border); border-radius:14px; padding:16px; margin-bottom:12px; }
-.guide-hero-title { font-size:11px; font-weight:600; color:var(–dim); letter-spacing:1px; text-transform:uppercase; margin-bottom:4px; }
+.guide-hero-title { font-size:12px; font-weight:600; color:var(–dim); letter-spacing:1px; text-transform:uppercase; margin-bottom:4px; }
 .guide-price-row { display:flex; align-items:baseline; gap:8px; margin-bottom:12px; }
 .guide-price { font-size:28px; font-weight:300; color:#fff; }
 .guide-price-label { font-size:11px; color:var(–dim); }
 
 .tf-guide-card { background:var(–surface); border:1px solid var(–border); border-radius:12px; margin-bottom:10px; overflow:hidden; }
 .tf-guide-header { display:flex; align-items:center; justify-content:space-between; padding:12px 14px 10px; border-bottom:1px solid var(–border); }
-.tf-guide-name { font-size:15px; font-weight:700; color:var(–gold); }
-.tf-guide-desc { font-size:10px; color:var(–dim); margin-top:1px; }
+.tf-guide-name { font-size:17px; font-weight:700; color:var(–gold); }
+.tf-guide-desc { font-size:12px; color:var(–dim); margin-top:1px; }
 .tf-guide-badge { font-size:10px; font-weight:600; padding:3px 10px; border-radius:20px; }
-.tf-guide-badge.scalp  { background:rgba(61,158,255,.15);  color:var(–blue); border:1px solid rgba(61,158,255,.3); }
-.tf-guide-badge.intra  { background:rgba(164,126,255,.15); color:var(–purple); border:1px solid rgba(164,126,255,.3); }
-.tf-guide-badge.swing  { background:rgba(255,184,48,.15);  color:var(–yellow); border:1px solid rgba(255,184,48,.3); }
+.tf-guide-badge.scalp  { background:rgba(61,158,255,.20);  color:#fff; border:1px solid rgba(61,158,255,.4); font-weight:700; }
+.tf-guide-badge.intra  { background:rgba(164,126,255,.20); color:#fff; border:1px solid rgba(164,126,255,.4); font-weight:700; }
+.tf-guide-badge.swing  { background:rgba(255,184,48,.20);  color:#fff; border:1px solid rgba(255,184,48,.4); font-weight:700; }
 
 .tf-guide-body { padding:12px 14px; }
 .tf-row-values { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:10px; }
 .tf-val-box { background:var(–card); border-radius:10px; padding:10px; text-align:center; }
-.tf-val-label { font-size:9px; color:var(–dim); letter-spacing:.5px; text-transform:uppercase; margin-bottom:4px; }
-.tf-val-num { font-size:14px; font-weight:600; }
+.tf-val-label { font-size:11px; color:var(–dim); letter-spacing:.5px; text-transform:uppercase; margin-bottom:4px; }
+.tf-val-num { font-size:16px; font-weight:600; }
 .tf-val-num.sl { color:var(–red); }
 .tf-val-num.tp { color:var(–green); }
 .tf-val-num.atr { color:var(–yellow); }
-.tf-val-pct { font-size:9px; color:var(–dim); margin-top:2px; }
+.tf-val-pct { font-size:10px; color:var(–dim); margin-top:2px; }
 
 .sl-tp-visual { position:relative; height:80px; background:var(–card); border-radius:10px; overflow:hidden; margin-bottom:10px; }
 .zone-tp { position:absolute; left:0; right:0; top:0; display:flex; align-items:center; justify-content:flex-end; padding-right:10px; }
@@ -180,27 +180,27 @@ canvas { width:100%!important; display:block; }
 .zone-line { position:absolute; left:0; right:0; height:1px; }
 .zone-label { font-size:9px; font-weight:700; letter-spacing:.5px; }
 
-.tf-rule { font-size:11px; color:var(–text); line-height:1.6; padding:8px 10px; background:rgba(255,184,48,.05); border-radius:8px; border-left:2px solid var(–yellow); }
+.tf-rule { font-size:12px; color:var(–text); line-height:1.6; padding:8px 10px; background:rgba(255,184,48,.05); border-radius:8px; border-left:2px solid var(–yellow); }
 
 .scale-rule { background:var(–card); border:1px solid var(–border); border-radius:12px; padding:14px; margin-bottom:10px; }
-.scale-rule-title { font-size:12px; font-weight:700; color:var(–blue); margin-bottom:10px; }
+.scale-rule-title { font-size:13px; font-weight:700; color:var(–blue); margin-bottom:10px; }
 .scale-step { display:flex; align-items:flex-start; gap:10px; margin-bottom:8px; }
 .scale-num { width:22px; height:22px; border-radius:50%; background:var(–blue); color:#fff; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.scale-text { font-size:11px; color:var(–text); line-height:1.5; }
+.scale-text { font-size:12px; color:var(–text); line-height:1.5; }
 .scale-text strong { color:var(–green); }
 
 .rr-box { background:linear-gradient(135deg,rgba(0,212,160,.08),rgba(61,158,255,.08)); border:1px solid rgba(0,212,160,.2); border-radius:12px; padding:14px; margin-bottom:10px; text-align:center; }
 .rr-title { font-size:10px; color:var(–dim); letter-spacing:1px; text-transform:uppercase; margin-bottom:6px; }
-.rr-value { font-size:22px; font-weight:700; color:var(–green); }
-.rr-sub { font-size:10px; color:var(–dim); margin-top:4px; }
+.rr-value { font-size:24px; font-weight:700; color:var(–green); }
+.rr-sub { font-size:11px; color:var(–dim); margin-top:4px; }
 
 .risk-btn { padding:6px 10px; border-radius:8px; font-size:11px; font-weight:600; border:1px solid var(–border); background:var(–surface); color:var(–dim); cursor:pointer; transition:all .2s; }
 .risk-btn.active { background:rgba(61,158,255,.2); color:var(–blue); border-color:rgba(61,158,255,.4); }
 .calc-row { display:grid; grid-template-columns:60px 1fr 1fr 1fr; gap:6px; align-items:center; padding:10px 12px; background:var(–card); border:1px solid var(–border); border-radius:10px; margin-bottom:6px; }
-.calc-tf { font-size:13px; font-weight:700; color:var(–gold); }
+.calc-tf { font-size:15px; font-weight:700; color:var(–gold); }
 .calc-cell { text-align:center; }
-.calc-label { font-size:8px; color:var(–dim); text-transform:uppercase; letter-spacing:.5px; margin-bottom:2px; }
-.calc-val { font-size:13px; font-weight:600; }
+.calc-label { font-size:10px; color:var(–dim); text-transform:uppercase; letter-spacing:.5px; margin-bottom:2px; }
+.calc-val { font-size:14px; font-weight:600; }
 .calc-val.sl { color:var(–red); }
 .calc-val.tp { color:var(–green); }
 .calc-val.pips { color:var(–yellow); }
@@ -359,7 +359,7 @@ canvas { width:100%!important; display:block; }
         <div class="tf-guide-name">M1 — 1 Minuto</div>
         <div class="tf-guide-desc">Scalping ultrarapido · Durata trade: 1–5 min</div>
       </div>
-      <div class="tf-guide-badge scalp">SCALPING</div>
+      <div class="tf-guide-badge scalp">SCALPING VELOCE</div>
     </div>
     <div class="tf-guide-body">
       <div class="tf-row-values">
@@ -393,7 +393,7 @@ canvas { width:100%!important; display:block; }
         <div class="tf-guide-name">M5 — 5 Minuti</div>
         <div class="tf-guide-desc">Scalping standard · Durata trade: 5–20 min</div>
       </div>
-      <div class="tf-guide-badge scalp">SCALPING</div>
+      <div class="tf-guide-badge scalp">SCALPING STANDARD</div>
     </div>
     <div class="tf-guide-body">
       <div class="tf-row-values">
@@ -563,7 +563,7 @@ canvas { width:100%!important; display:block; }
 ```
 <!-- INPUT ROW -->
 <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px">
-  <div style="font-size:10px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px">PARAMETRI CONTO</div>
+  <div style="font-size:11px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px">PARAMETRI CONTO</div>
 
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
     <div>
@@ -612,7 +612,7 @@ canvas { width:100%!important; display:block; }
 </div>
 
 <!-- RISULTATI PER TF -->
-<div style="font-size:10px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">VALORI CALCOLATI SUL TUO CONTO</div>
+<div style="font-size:11px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">VALORI CALCOLATI SUL TUO CONTO</div>
 
 <div id="calcResults"></div>
 
@@ -621,7 +621,7 @@ canvas { width:100%!important; display:block; }
 
 <!-- SOMMARIO -->
 <div id="calcSummary" style="background:linear-gradient(135deg,rgba(0,212,160,.08),rgba(61,158,255,.08));border:1px solid rgba(0,212,160,.2);border-radius:12px;padding:14px;text-align:center">
-  <div style="font-size:10px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">RISCHIO PER TRADE</div>
+  <div style="font-size:11px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">RISCHIO PER TRADE</div>
   <div id="calcRiskEur" style="font-size:24px;font-weight:700;color:var(--red)">—</div>
   <div id="calcRiskPct" style="font-size:11px;color:var(--dim);margin-top:2px">sul saldo totale</div>
   <div style="height:1px;background:var(--border);margin:10px 0"></div>
@@ -928,12 +928,17 @@ function computeSignal(e5,e10,e20,m,s,price) {
 // ─── ALERT ─────────────────────────────────────────────────────────────────
 function fireAlert(type,price) {
   playTone(type);
+  const title = type==='buy' ? `🟢 BUY XAU — ${price.toFixed(2)}` : `🔴 SELL XAU — ${price.toFixed(2)}`;
+  const body  = '3/3 conferme allineate — apri PUPrime e controlla';
+  // In-app toast
   const t=document.getElementById('toast');
   t.className=`toast ${type}`;
-  document.getElementById('toastTitle').textContent=type==='buy'?`🟢 BUY — ${price.toFixed(2)}`:`🔴 SELL — ${price.toFixed(2)}`;
-  document.getElementById('toastBody').textContent='3/3 conferme allineate — controlla il grafico';
+  document.getElementById('toastTitle').textContent=title;
+  document.getElementById('toastBody').textContent=body;
   t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),4500);
+  setTimeout(()=>t.classList.remove('show'),5000);
+  // System notification
+  sendNotification(title, body);
   if ('vibrate' in navigator) navigator.vibrate([200,100,200]);
 }
 
@@ -1003,9 +1008,52 @@ function toggleAlerts() {
   initAudio(); alertsOn=!alertsOn;
   document.getElementById('alertStatus').textContent=alertsOn?'ON':'OFF';
   document.getElementById('alertBtn').classList.toggle('active',alertsOn);
-  if(alertsOn) playTone('buy');
-  addLog(alertsOn?'Alert sonori attivati':'Alert disattivati','warn');
+  if(alertsOn) {
+    playTone('buy');
+    requestNotifPermission();
+  }
+  // Persist across page reloads
+  try { localStorage.setItem('xau_alerts', alertsOn ? '1' : '0'); } catch(e){}
+  addLog(alertsOn?'Alert attivati (suono + notifica)':'Alert disattivati','warn');
 }
+
+function requestNotifPermission() {
+  if (!('Notification' in window)) return;
+  if (Notification.permission === 'default') {
+    Notification.requestPermission().then(p => {
+      addLog(p === 'granted' ? 'Notifiche telefono: ABILITATE ✓' : 'Notifiche telefono: negate — usa solo suono', p === 'granted' ? '' : 'warn');
+    });
+  }
+}
+
+function sendNotification(title, body) {
+  if (!('Notification' in window)) return;
+  if (Notification.permission !== 'granted') return;
+  try {
+    const n = new Notification(title, {
+      body: body,
+      icon: 'https://gabrieleranciaro-sudo.github.io/favicon.ico',
+      badge: 'https://gabrieleranciaro-sudo.github.io/favicon.ico',
+      vibrate: [200, 100, 200],
+      requireInteraction: true,
+      tag: 'xau-signal'
+    });
+    n.onclick = () => { window.focus(); n.close(); };
+  } catch(e) { console.log('Notification error:', e); }
+}
+
+// Restore alert state on load
+try {
+  if (localStorage.getItem('xau_alerts') === '1') {
+    alertsOn = true;
+    document.addEventListener('DOMContentLoaded', () => {
+      const btn = document.getElementById('alertBtn');
+      const st  = document.getElementById('alertStatus');
+      if (btn) btn.classList.add('active');
+      if (st)  st.textContent = 'ON';
+    });
+  }
+} catch(e) {}
 
 
 // ─── TAB SWITCHING ──────────────────────────────────────────────────────────
