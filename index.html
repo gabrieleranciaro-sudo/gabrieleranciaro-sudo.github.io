@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="it">
 <head>
 <meta charset="UTF-8">
@@ -26,283 +25,279 @@
   * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
   body { background:var(--bg); color:var(--text); font-family:-apple-system,'SF Pro Display',sans-serif; min-height:100vh; padding-bottom:40px; background-color:#000; }
 
-/* HEADER */
-.header { background:linear-gradient(135deg,#0E1419,#131A21); border-bottom:1px solid var(–border); padding:14px 16px 12px; }
-.header-top { display:flex; align-items:center; justify-content:space-between; }
-.logo { display:flex; align-items:center; gap:8px; }
-.logo-dot { width:10px; height:10px; border-radius:50%; background:var(–gold); box-shadow:0 0 8px var(–gold); animation:pulse-gold 2s infinite; }
-@keyframes pulse-gold { 0%,100%{box-shadow:0 0 6px var(–gold)} 50%{box-shadow:0 0 16px var(–gold),0 0 28px rgba(255,209,102,.3)} }
-.logo-text { font-size:17px; font-weight:700; letter-spacing:1.5px; color:var(–gold); }
-.logo-sub  { font-size:11px; color:var(–dim); letter-spacing:.5px; }
-.live-badge { display:flex; align-items:center; gap:5px; background:rgba(0,212,160,.1); border:1px solid rgba(0,212,160,.25); border-radius:20px; padding:5px 12px; font-size:12px; font-weight:600; color:var(–green); letter-spacing:.5px; }
-.live-dot { width:6px; height:6px; border-radius:50%; background:var(–green); animation:blink 1.2s infinite; }
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
-.price-bar { display:flex; align-items:baseline; gap:10px; margin-top:10px; flex-wrap:wrap; }
-.price-main { font-size:32px; font-weight:300; letter-spacing:-.5px; color:#fff; }
-.price-change { font-size:13px; font-weight:600; }
-.price-time { font-size:11px; color:var(–dim); margin-left:auto; }
+  /* HEADER */
+  .header { background:linear-gradient(135deg,#0E1419,#131A21); border-bottom:1px solid var(--border); padding:14px 16px 12px; }
+  .header-top { display:flex; align-items:center; justify-content:space-between; }
+  .logo { display:flex; align-items:center; gap:8px; }
+  .logo-dot { width:10px; height:10px; border-radius:50%; background:var(--gold); box-shadow:0 0 8px var(--gold); animation:pulse-gold 2s infinite; }
+  @keyframes pulse-gold { 0%,100%{box-shadow:0 0 6px var(--gold)} 50%{box-shadow:0 0 16px var(--gold),0 0 28px rgba(255,209,102,.3)} }
+  .logo-text { font-size:17px; font-weight:700; letter-spacing:1.5px; color:var(--gold); }
+  .logo-sub  { font-size:11px; color:var(--dim); letter-spacing:.5px; }
+  .live-badge { display:flex; align-items:center; gap:5px; background:rgba(0,212,160,.1); border:1px solid rgba(0,212,160,.25); border-radius:20px; padding:5px 12px; font-size:12px; font-weight:600; color:var(--green); letter-spacing:.5px; }
+  .live-dot { width:6px; height:6px; border-radius:50%; background:var(--green); animation:blink 1.2s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+  .price-bar { display:flex; align-items:baseline; gap:10px; margin-top:10px; flex-wrap:wrap; }
+  .price-main { font-size:32px; font-weight:300; letter-spacing:-.5px; color:#fff; }
+  .price-change { font-size:13px; font-weight:600; }
+  .price-time { font-size:11px; color:var(--dim); margin-left:auto; }
 
-/* SIGNAL BOX */
-.signal-box { margin:14px 14px 0; border-radius:14px; padding:16px; border:1.5px solid var(–border); background:var(–card); transition:all .4s; position:relative; overflow:hidden; }
-.signal-box::before { content:’’; position:absolute; top:0; left:0; right:0; height:3px; background:var(–border); transition:background .4s; }
-.signal-box.buy  { border-color:rgba(0,212,160,.4);  background:rgba(0,212,160,.05); }
-.signal-box.buy::before  { background:linear-gradient(90deg,var(–green),transparent); }
-.signal-box.sell { border-color:rgba(255,69,96,.4);  background:rgba(255,69,96,.05); }
-.signal-box.sell::before { background:linear-gradient(90deg,var(–red),transparent); }
-.signal-box.wait { border-color:rgba(255,184,48,.3); background:rgba(255,184,48,.04); }
-.signal-box.wait::before { background:linear-gradient(90deg,var(–yellow),transparent); }
-.signal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
-.signal-label { font-size:12px; font-weight:600; color:var(–dim); letter-spacing:1px; text-transform:uppercase; }
-.signal-main  { font-size:28px; font-weight:700; letter-spacing:1px; }
-.signal-main.buy  { color:var(–green); }
-.signal-main.sell { color:var(–red); }
-.signal-main.wait { color:var(–yellow); }
-.signal-desc { font-size:13px; color:var(–text); line-height:1.6; }
-.signal-score { display:flex; gap:6px; margin-top:10px; flex-wrap:wrap; }
-.score-pill { padding:5px 12px; border-radius:20px; font-size:11px; font-weight:600; display:flex; align-items:center; gap:4px; }
-.score-pill.ok   { background:rgba(0,212,160,.15);  color:var(–green);  border:1px solid rgba(0,212,160,.3); }
-.score-pill.no   { background:rgba(255,69,96,.12);  color:var(–red);    border:1px solid rgba(255,69,96,.25); }
-.score-pill.warn { background:rgba(255,184,48,.12); color:var(–yellow); border:1px solid rgba(255,184,48,.25); }
+  /* SIGNAL BOX */
+  .signal-box { margin:14px 14px 0; border-radius:14px; padding:16px; border:1.5px solid var(--border); background:var(--card); transition:all .4s; position:relative; overflow:hidden; }
+  .signal-box::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--border); transition:background .4s; }
+  .signal-box.buy  { border-color:rgba(0,212,160,.4);  background:rgba(0,212,160,.05); }
+  .signal-box.buy::before  { background:linear-gradient(90deg,var(--green),transparent); }
+  .signal-box.sell { border-color:rgba(255,69,96,.4);  background:rgba(255,69,96,.05); }
+  .signal-box.sell::before { background:linear-gradient(90deg,var(--red),transparent); }
+  .signal-box.wait { border-color:rgba(255,184,48,.3); background:rgba(255,184,48,.04); }
+  .signal-box.wait::before { background:linear-gradient(90deg,var(--yellow),transparent); }
+  .signal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+  .signal-label { font-size:12px; font-weight:600; color:var(--dim); letter-spacing:1px; text-transform:uppercase; }
+  .signal-main  { font-size:28px; font-weight:700; letter-spacing:1px; }
+  .signal-main.buy  { color:var(--green); }
+  .signal-main.sell { color:var(--red); }
+  .signal-main.wait { color:var(--yellow); }
+  .signal-desc { font-size:13px; color:var(--text); line-height:1.6; }
+  .signal-score { display:flex; gap:6px; margin-top:10px; flex-wrap:wrap; }
+  .score-pill { padding:5px 12px; border-radius:20px; font-size:11px; font-weight:600; display:flex; align-items:center; gap:4px; }
+  .score-pill.ok   { background:rgba(0,212,160,.15);  color:var(--green);  border:1px solid rgba(0,212,160,.3); }
+  .score-pill.no   { background:rgba(255,69,96,.12);  color:var(--red);    border:1px solid rgba(255,69,96,.25); }
+  .score-pill.warn { background:rgba(255,184,48,.12); color:var(--yellow); border:1px solid rgba(255,184,48,.25); }
 
-/* SECTION */
-.section-title { font-size:12px; font-weight:600; color:var(–dim); letter-spacing:1.5px; text-transform:uppercase; padding:16px 16px 8px; }
+  /* SECTION */
+  .section-title { font-size:12px; font-weight:600; color:var(--dim); letter-spacing:1.5px; text-transform:uppercase; padding:16px 16px 8px; }
 
-/* IND GRID */
-.indicators-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; padding:0 14px; }
-.ind-card { background:var(–card); border:1px solid var(–border); border-radius:12px; padding:12px 14px; position:relative; overflow:hidden; }
-.ind-card::after { content:’’; position:absolute; bottom:0; left:0; right:0; height:2px; }
-.ind-card.bull::after { background:var(–green); }
-.ind-card.bear::after { background:var(–red); }
-.ind-card.neut::after { background:var(–yellow); }
-.ind-name  { font-size:11px; color:var(–dim); font-weight:600; letter-spacing:.8px; margin-bottom:6px; }
-.ind-value { font-size:20px; font-weight:300; color:#fff; letter-spacing:-.3px; }
-.ind-sub   { font-size:11px; margin-top:2px; color:var(–dim); }
-.ind-badge { display:inline-block; margin-top:6px; padding:3px 10px; border-radius:10px; font-size:11px; font-weight:700; letter-spacing:.5px; }
-.ind-badge.bull { background:rgba(0,212,160,.15);  color:var(–green); }
-.ind-badge.bear { background:rgba(255,69,96,.15);  color:var(–red); }
-.ind-badge.neut { background:rgba(255,184,48,.15); color:var(–yellow); }
+  /* IND GRID */
+  .indicators-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; padding:0 14px; }
+  .ind-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:12px 14px; position:relative; overflow:hidden; }
+  .ind-card::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; }
+  .ind-card.bull::after { background:var(--green); }
+  .ind-card.bear::after { background:var(--red); }
+  .ind-card.neut::after { background:var(--yellow); }
+  .ind-name  { font-size:11px; color:var(--dim); font-weight:600; letter-spacing:.8px; margin-bottom:6px; }
+  .ind-value { font-size:20px; font-weight:300; color:#fff; letter-spacing:-.3px; }
+  .ind-sub   { font-size:11px; margin-top:2px; color:var(--dim); }
+  .ind-badge { display:inline-block; margin-top:6px; padding:3px 10px; border-radius:10px; font-size:11px; font-weight:700; letter-spacing:.5px; }
+  .ind-badge.bull { background:rgba(0,212,160,.15);  color:var(--green); }
+  .ind-badge.bear { background:rgba(255,69,96,.15);  color:var(--red); }
+  .ind-badge.neut { background:rgba(255,184,48,.15); color:var(--yellow); }
 
-/* EMA CARD */
-.ema-card { background:var(–card); border:1px solid var(–border); border-radius:12px; padding:14px; margin:0 14px; }
-.ema-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; }
-.ema-label { font-size:13px; font-weight:600; }
-.ema-val   { font-size:14px; font-weight:300; font-variant-numeric:tabular-nums; }
-.ema-bar   { height:3px; border-radius:2px; margin-bottom:8px; transition:width .5s; }
-.ema-sep   { height:1px; background:var(–border); margin:4px 0 8px; }
+  /* EMA CARD */
+  .ema-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px; margin:0 14px; }
+  .ema-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; }
+  .ema-label { font-size:13px; font-weight:600; }
+  .ema-val   { font-size:14px; font-weight:300; font-variant-numeric:tabular-nums; }
+  .ema-bar   { height:3px; border-radius:2px; margin-bottom:8px; transition:width .5s; }
+  .ema-sep   { height:1px; background:var(--border); margin:4px 0 8px; }
 
-/* CHART */
-.chart-wrap { margin:0 14px; background:var(–card); border:1px solid var(–border); border-radius:12px; padding:12px 14px 8px; }
-canvas { width:100%!important; display:block; }
+  /* CHART */
+  .chart-wrap { margin:0 14px; background:var(--card); border:1px solid var(--border); border-radius:12px; padding:12px 14px 8px; }
+  canvas { width:100%!important; display:block; }
 
-/* TF */
-.tf-row { display:flex; gap:6px; padding:0 14px 14px; overflow-x:auto; scrollbar-width:none; }
-.tf-row::-webkit-scrollbar { display:none; }
-.tf-btn { padding:8px 18px; border-radius:20px; font-size:13px; font-weight:600; border:1px solid var(–border); background:var(–card); color:var(–dim); cursor:pointer; white-space:nowrap; transition:all .2s; }
-.tf-btn.active { background:rgba(61,158,255,.30); color:#fff; border-color:var(–blue); box-shadow:0 0 10px rgba(61,158,255,.3); font-weight:700; }
+  /* TF */
+  .tf-row { display:flex; gap:6px; padding:0 14px 14px; overflow-x:auto; scrollbar-width:none; }
+  .tf-row::-webkit-scrollbar { display:none; }
+  .tf-btn { padding:8px 18px; border-radius:20px; font-size:13px; font-weight:600; border:1px solid var(--border); background:var(--card); color:var(--dim); cursor:pointer; white-space:nowrap; transition:all .2s; }
+  .tf-btn.active { background:rgba(61,158,255,.30); color:#fff; border-color:var(--blue); box-shadow:0 0 10px rgba(61,158,255,.3); font-weight:700; }
 
-/* CONTROLS */
-.controls { padding:14px; display:flex; gap:8px; }
-.btn { flex:1; padding:13px; border-radius:12px; border:none; font-size:13px; font-weight:600; cursor:pointer; transition:all .2s; display:flex; align-items:center; justify-content:center; gap:6px; }
-.btn-primary { background:linear-gradient(135deg,#1A4A6E,#1E5C8A); color:#fff; border:1px solid rgba(61,158,255,.3); }
-.btn-primary:active { transform:scale(.97); }
-.btn-alert { background:rgba(255,184,48,.12); color:var(–yellow); border:1px solid rgba(255,184,48,.3); }
-.btn-alert.active { background:rgba(255,184,48,.22); box-shadow:0 0 12px rgba(255,184,48,.2); }
+  /* CONTROLS */
+  .controls { padding:14px; display:flex; gap:8px; }
+  .btn { flex:1; padding:13px; border-radius:12px; border:none; font-size:13px; font-weight:600; cursor:pointer; transition:all .2s; display:flex; align-items:center; justify-content:center; gap:6px; }
+  .btn-primary { background:linear-gradient(135deg,#1A4A6E,#1E5C8A); color:#fff; border:1px solid rgba(61,158,255,.3); }
+  .btn-primary:active { transform:scale(.97); }
+  .btn-alert { background:rgba(255,184,48,.12); color:var(--yellow); border:1px solid rgba(255,184,48,.3); }
+  .btn-alert.active { background:rgba(255,184,48,.22); box-shadow:0 0 12px rgba(255,184,48,.2); }
 
-/* LOG */
-.log-wrap { margin:0 14px; background:var(–card); border:1px solid var(–border); border-radius:12px; max-height:150px; overflow-y:auto; }
-.log-entry { padding:11px 14px; font-size:12px; line-height:1.5; border-bottom:1px solid var(–border); display:flex; gap:10px; align-items:flex-start; }
-.log-entry:last-child { border-bottom:none; }
-.log-time { color:var(–dim); white-space:nowrap; font-variant-numeric:tabular-nums; }
-.log-msg { color:var(–text); }
-.log-msg.buy  { color:var(–green); }
-.log-msg.sell { color:var(–red); }
-.log-msg.warn { color:var(–yellow); }
+  /* LOG */
+  .log-wrap { margin:0 14px; background:var(--card); border:1px solid var(--border); border-radius:12px; max-height:150px; overflow-y:auto; }
+  .log-entry { padding:11px 14px; font-size:12px; line-height:1.5; border-bottom:1px solid var(--border); display:flex; gap:10px; align-items:flex-start; }
+  .log-entry:last-child { border-bottom:none; }
+  .log-time { color:var(--dim); white-space:nowrap; font-variant-numeric:tabular-nums; }
+  .log-msg { color:var(--text); }
+  .log-msg.buy  { color:var(--green); }
+  .log-msg.sell { color:var(--red); }
+  .log-msg.warn { color:var(--yellow); }
 
-/* TOAST */
-.toast { position:fixed; top:calc(env(safe-area-inset-top, 20px) + 60px); left:50%; transform:translateX(-50%) translateY(-130px); border-radius:16px; padding:16px 24px; min-width:280px; max-width:360px; box-shadow:0 8px 32px rgba(0,0,0,.8); transition:transform .35s cubic-bezier(.34,1.56,.64,1); z-index:999; text-align:center; border:none; }
-.toast.show { transform:translateX(-50%) translateY(0); }
-.toast-title { font-size:18px; font-weight:800; margin-bottom:6px; color:#fff; letter-spacing:0.5px; }
-.toast-body  { font-size:13px; color:rgba(255,255,255,0.85); font-weight:500; }
-.toast.buy  { background:linear-gradient(135deg, #00A878, #00D4A0); }
-.toast.sell { background:linear-gradient(135deg, #C0392B, #FF4560); }
+  /* TOAST */
+  .toast { position:fixed; top:calc(env(safe-area-inset-top, 20px) + 60px); left:50%; transform:translateX(-50%) translateY(-130px); border-radius:16px; padding:16px 24px; min-width:280px; max-width:360px; box-shadow:0 8px 32px rgba(0,0,0,.8); transition:transform .35s cubic-bezier(.34,1.56,.64,1); z-index:999; text-align:center; border:none; }
+  .toast.show { transform:translateX(-50%) translateY(0); }
+  .toast-title { font-size:18px; font-weight:800; margin-bottom:6px; color:#fff; letter-spacing:0.5px; }
+  .toast-body  { font-size:13px; color:rgba(255,255,255,0.85); font-weight:500; }
+  .toast.buy  { background:linear-gradient(135deg, #00A878, #00D4A0); }
+  .toast.sell { background:linear-gradient(135deg, #C0392B, #FF4560); }
 
-/* STATUS */
-.status-bar { display:flex; align-items:center; justify-content:space-between; padding:8px 16px; font-size:11px; color:var(–dim); border-top:1px solid var(–border); margin-top:14px; }
-.status-dot { width:6px; height:6px; border-radius:50%; display:inline-block; margin-right:5px; }
+  /* STATUS */
+  .status-bar { display:flex; align-items:center; justify-content:space-between; padding:8px 16px; font-size:11px; color:var(--dim); border-top:1px solid var(--border); margin-top:14px; }
+  .status-dot { width:6px; height:6px; border-radius:50%; display:inline-block; margin-right:5px; }
 
-/* LOADING */
-.loading-overlay { display:none; position:fixed; inset:0; background:rgba(8,12,16,.8); z-index:200; align-items:center; justify-content:center; flex-direction:column; gap:12px; }
-.loading-overlay.show { display:flex; }
-.spinner { width:36px; height:36px; border:3px solid var(–border); border-top-color:var(–blue); border-radius:50%; animation:spin .8s linear infinite; }
-@keyframes spin { to{transform:rotate(360deg)} }
-.loading-text { font-size:12px; color:var(–dim); }
+  /* LOADING */
+  .loading-overlay { display:none; position:fixed; inset:0; background:rgba(8,12,16,.8); z-index:200; align-items:center; justify-content:center; flex-direction:column; gap:12px; }
+  .loading-overlay.show { display:flex; }
+  .spinner { width:36px; height:36px; border:3px solid var(--border); border-top-color:var(--blue); border-radius:50%; animation:spin .8s linear infinite; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+  .loading-text { font-size:12px; color:var(--dim); }
 
-.info-box { margin:0 14px; padding:10px 14px; background:rgba(61,158,255,.08); border:1px solid rgba(61,158,255,.2); border-radius:10px; font-size:11px; color:var(–blue); line-height:1.5; }
+  .info-box { margin:0 14px; padding:10px 14px; background:rgba(61,158,255,.08); border:1px solid rgba(61,158,255,.2); border-radius:10px; font-size:11px; color:var(--blue); line-height:1.5; }
 
-/* TABS */
-.tab-nav { display:flex; background:var(–surface); border-bottom:1px solid var(–border); position:sticky; top:0; z-index:100; }
-.tab-btn { flex:1; padding:14px 6px; font-size:12px; font-weight:600; color:var(–dim); letter-spacing:.5px; text-align:center; cursor:pointer; border-bottom:2px solid transparent; transition:all .2s; }
-.tab-btn.active { color:var(–gold); border-bottom-color:var(–gold); }
-.tab-content { display:none; }
-.tab-content.active { display:block; }
+  /* TABS */
+  .tab-nav { display:flex; background:var(--surface); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:100; }
+  .tab-btn { flex:1; padding:14px 6px; font-size:12px; font-weight:600; color:var(--dim); letter-spacing:.5px; text-align:center; cursor:pointer; border-bottom:2px solid transparent; transition:all .2s; }
+  .tab-btn.active { color:var(--gold); border-bottom-color:var(--gold); }
+  .tab-content { display:none; }
+  .tab-content.active { display:block; }
 
-/* GUIDE PAGE */
-.guide-wrap { padding:14px; }
-.guide-hero { background:var(–card); border:1px solid var(–border); border-radius:14px; padding:16px; margin-bottom:12px; }
-.guide-hero-title { font-size:12px; font-weight:600; color:var(–dim); letter-spacing:1px; text-transform:uppercase; margin-bottom:4px; }
-.guide-price-row { display:flex; align-items:baseline; gap:8px; margin-bottom:12px; }
-.guide-price { font-size:28px; font-weight:300; color:#fff; }
-.guide-price-label { font-size:11px; color:var(–dim); }
+  /* GUIDE PAGE */
+  .guide-wrap { padding:14px; }
+  .guide-hero { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px; margin-bottom:12px; }
+  .guide-hero-title { font-size:12px; font-weight:600; color:var(--dim); letter-spacing:1px; text-transform:uppercase; margin-bottom:4px; }
+  .guide-price-row { display:flex; align-items:baseline; gap:8px; margin-bottom:12px; }
+  .guide-price { font-size:28px; font-weight:300; color:#fff; }
+  .guide-price-label { font-size:11px; color:var(--dim); }
 
-.tf-guide-card { background:var(–surface); border:1px solid var(–border); border-radius:12px; margin-bottom:10px; overflow:hidden; }
-.tf-guide-header { display:flex; align-items:center; justify-content:space-between; padding:12px 14px 10px; border-bottom:1px solid var(–border); }
-.tf-guide-name { font-size:17px; font-weight:700; color:var(–gold); }
-.tf-guide-desc { font-size:12px; color:var(–dim); margin-top:1px; }
-.tf-guide-badge { font-size:10px; font-weight:600; padding:3px 10px; border-radius:20px; }
-.tf-guide-badge.scalp  { background:rgba(61,158,255,.20);  color:#fff; border:1px solid rgba(61,158,255,.4); font-weight:700; }
-.tf-guide-badge.intra  { background:rgba(164,126,255,.20); color:#fff; border:1px solid rgba(164,126,255,.4); font-weight:700; }
-.tf-guide-badge.swing  { background:rgba(255,184,48,.20);  color:#fff; border:1px solid rgba(255,184,48,.4); font-weight:700; }
+  .tf-guide-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; margin-bottom:10px; overflow:hidden; }
+  .tf-guide-header { display:flex; align-items:center; justify-content:space-between; padding:12px 14px 10px; border-bottom:1px solid var(--border); }
+  .tf-guide-name { font-size:17px; font-weight:700; color:var(--gold); }
+  .tf-guide-desc { font-size:12px; color:var(--dim); margin-top:1px; }
+  .tf-guide-badge { font-size:10px; font-weight:600; padding:3px 10px; border-radius:20px; }
+  .tf-guide-badge.scalp  { background:rgba(61,158,255,.20);  color:#fff; border:1px solid rgba(61,158,255,.4); font-weight:700; }
+  .tf-guide-badge.intra  { background:rgba(164,126,255,.20); color:#fff; border:1px solid rgba(164,126,255,.4); font-weight:700; }
+  .tf-guide-badge.swing  { background:rgba(255,184,48,.20);  color:#fff; border:1px solid rgba(255,184,48,.4); font-weight:700; }
 
-.tf-guide-body { padding:12px 14px; }
-.tf-row-values { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:10px; }
-.tf-val-box { background:var(–card); border-radius:10px; padding:10px; text-align:center; }
-.tf-val-label { font-size:11px; color:var(–dim); letter-spacing:.5px; text-transform:uppercase; margin-bottom:4px; }
-.tf-val-num { font-size:16px; font-weight:600; }
-.tf-val-num.sl { color:var(–red); }
-.tf-val-num.tp { color:var(–green); }
-.tf-val-num.atr { color:var(–yellow); }
-.tf-val-pct { font-size:10px; color:var(–dim); margin-top:2px; }
+  .tf-guide-body { padding:12px 14px; }
+  .tf-row-values { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:10px; }
+  .tf-val-box { background:var(--card); border-radius:10px; padding:10px; text-align:center; }
+  .tf-val-label { font-size:11px; color:var(--dim); letter-spacing:.5px; text-transform:uppercase; margin-bottom:4px; }
+  .tf-val-num { font-size:16px; font-weight:600; }
+  .tf-val-num.sl { color:var(--red); }
+  .tf-val-num.tp { color:var(--green); }
+  .tf-val-num.atr { color:var(--yellow); }
+  .tf-val-pct { font-size:10px; color:var(--dim); margin-top:2px; }
 
-.sl-tp-visual { position:relative; height:80px; background:var(–card); border-radius:10px; overflow:hidden; margin-bottom:10px; }
-.zone-tp { position:absolute; left:0; right:0; top:0; display:flex; align-items:center; justify-content:flex-end; padding-right:10px; }
-.zone-sl { position:absolute; left:0; right:0; bottom:0; display:flex; align-items:center; justify-content:flex-end; padding-right:10px; }
-.zone-entry { position:absolute; left:0; right:0; display:flex; align-items:center; gap:8px; padding-left:10px; }
-.zone-line { position:absolute; left:0; right:0; height:1px; }
-.zone-label { font-size:9px; font-weight:700; letter-spacing:.5px; }
+  .sl-tp-visual { position:relative; height:80px; background:var(--card); border-radius:10px; overflow:hidden; margin-bottom:10px; }
+  .zone-tp { position:absolute; left:0; right:0; top:0; display:flex; align-items:center; justify-content:flex-end; padding-right:10px; }
+  .zone-sl { position:absolute; left:0; right:0; bottom:0; display:flex; align-items:center; justify-content:flex-end; padding-right:10px; }
+  .zone-entry { position:absolute; left:0; right:0; display:flex; align-items:center; gap:8px; padding-left:10px; }
+  .zone-line { position:absolute; left:0; right:0; height:1px; }
+  .zone-label { font-size:9px; font-weight:700; letter-spacing:.5px; }
 
-.tf-rule { font-size:12px; color:var(–text); line-height:1.6; padding:8px 10px; background:rgba(255,184,48,.05); border-radius:8px; border-left:2px solid var(–yellow); }
+  .tf-rule { font-size:12px; color:var(--text); line-height:1.6; padding:8px 10px; background:rgba(255,184,48,.05); border-radius:8px; border-left:2px solid var(--yellow); }
 
-.scale-rule { background:var(–card); border:1px solid var(–border); border-radius:12px; padding:14px; margin-bottom:10px; }
-.scale-rule-title { font-size:13px; font-weight:700; color:var(–blue); margin-bottom:10px; }
-.scale-step { display:flex; align-items:flex-start; gap:10px; margin-bottom:8px; }
-.scale-num { width:22px; height:22px; border-radius:50%; background:var(–blue); color:#fff; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.scale-text { font-size:12px; color:var(–text); line-height:1.5; }
-.scale-text strong { color:var(–green); }
+  .scale-rule { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px; margin-bottom:10px; }
+  .scale-rule-title { font-size:13px; font-weight:700; color:var(--blue); margin-bottom:10px; }
+  .scale-step { display:flex; align-items:flex-start; gap:10px; margin-bottom:8px; }
+  .scale-num { width:22px; height:22px; border-radius:50%; background:var(--blue); color:#fff; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .scale-text { font-size:12px; color:var(--text); line-height:1.5; }
+  .scale-text strong { color:var(--green); }
 
-.rr-box { background:linear-gradient(135deg,rgba(0,212,160,.08),rgba(61,158,255,.08)); border:1px solid rgba(0,212,160,.2); border-radius:12px; padding:14px; margin-bottom:10px; text-align:center; }
-.rr-title { font-size:10px; color:var(–dim); letter-spacing:1px; text-transform:uppercase; margin-bottom:6px; }
-.rr-value { font-size:24px; font-weight:700; color:var(–green); }
-.rr-sub { font-size:11px; color:var(–dim); margin-top:4px; }
+  .rr-box { background:linear-gradient(135deg,rgba(0,212,160,.08),rgba(61,158,255,.08)); border:1px solid rgba(0,212,160,.2); border-radius:12px; padding:14px; margin-bottom:10px; text-align:center; }
+  .rr-title { font-size:10px; color:var(--dim); letter-spacing:1px; text-transform:uppercase; margin-bottom:6px; }
+  .rr-value { font-size:24px; font-weight:700; color:var(--green); }
+  .rr-sub { font-size:11px; color:var(--dim); margin-top:4px; }
 
-.risk-btn { padding:6px 10px; border-radius:8px; font-size:11px; font-weight:600; border:1px solid var(–border); background:var(–surface); color:var(–dim); cursor:pointer; transition:all .2s; }
-.risk-btn.active { background:rgba(61,158,255,.2); color:var(–blue); border-color:rgba(61,158,255,.4); }
-.calc-row { display:grid; grid-template-columns:60px 1fr 1fr 1fr; gap:6px; align-items:center; padding:10px 12px; background:var(–card); border:1px solid var(–border); border-radius:10px; margin-bottom:6px; }
-.calc-tf { font-size:15px; font-weight:700; color:var(–gold); }
-.calc-cell { text-align:center; }
-.calc-label { font-size:10px; color:var(–dim); text-transform:uppercase; letter-spacing:.5px; margin-bottom:2px; }
-.calc-val { font-size:14px; font-weight:600; }
-.calc-val.sl { color:var(–red); }
-.calc-val.tp { color:var(–green); }
-.calc-val.pips { color:var(–yellow); }
-.calc-sub { font-size:9px; color:var(–dim); margin-top:1px; }
+  .risk-btn { padding:6px 10px; border-radius:8px; font-size:11px; font-weight:600; border:1px solid var(--border); background:var(--surface); color:var(--dim); cursor:pointer; transition:all .2s; }
+  .risk-btn.active { background:rgba(61,158,255,.2); color:var(--blue); border-color:rgba(61,158,255,.4); }
+  .calc-row { display:grid; grid-template-columns:60px 1fr 1fr 1fr; gap:6px; align-items:center; padding:10px 12px; background:var(--card); border:1px solid var(--border); border-radius:10px; margin-bottom:6px; }
+  .calc-tf { font-size:15px; font-weight:700; color:var(--gold); }
+  .calc-cell { text-align:center; }
+  .calc-label { font-size:10px; color:var(--dim); text-transform:uppercase; letter-spacing:.5px; margin-bottom:2px; }
+  .calc-val { font-size:14px; font-weight:600; }
+  .calc-val.sl { color:var(--red); }
+  .calc-val.tp { color:var(--green); }
+  .calc-val.pips { color:var(--yellow); }
+  .calc-sub { font-size:9px; color:var(--dim); margin-top:1px; }
 
-/* STICKY WRAPPER — header + tabs always on top */
-.sticky-top {
-position: sticky;
-top: 0;
-z-index: 200;
-background: #000;
-box-shadow: 0 2px 12px rgba(0,0,0,0.9);
-padding-top: env(safe-area-inset-top, 0px);
-}
+  /* STICKY WRAPPER — header + tabs always on top */
+  .sticky-top {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    background: #000;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.9);
+    padding-top: env(safe-area-inset-top, 0px);
+  }
 
-/* DASHBOARD */
-.dash-row {
-display: flex; align-items: center;
-border-radius: 14px; padding: 14px 16px;
-margin-bottom: 8px;
-border: 1px solid transparent;
-position: relative; overflow: hidden;
-}
-.dash-row::before {
-content: ‘’; position: absolute;
-left: 0; top: 0; bottom: 0; width: 4px;
-}
-.dash-tf {
-font-size: 18px; font-weight: 800;
-width: 44px; flex-shrink: 0;
-color: #fff;
-}
-.dash-tf-sub {
-font-size: 9px; font-weight: 400;
-color: rgba(255,255,255,0.5);
-display: block; margin-top: 1px;
-}
-.dash-signal {
-flex: 1; padding: 0 12px;
-}
-.dash-signal-name {
-font-size: 16px; font-weight: 700; letter-spacing: 0.5px;
-}
-.dash-signal-detail {
-font-size: 11px; color: rgba(255,255,255,0.6);
-margin-top: 2px;
-}
-.dash-pills {
-display: flex; gap: 4px;
-}
-.dash-pill {
-font-size: 9px; font-weight: 700;
-padding: 3px 7px; border-radius: 8px;
-color: #fff;
-}
-.dash-pill.ok   { background: rgba(255,255,255,0.25); }
-.dash-pill.no   { background: rgba(0,0,0,0.25); color: rgba(255,255,255,0.4); }
+  /* DASHBOARD */
+  .dash-row {
+    display: flex; align-items: center;
+    border-radius: 14px; padding: 14px 16px;
+    margin-bottom: 8px;
+    border: 1px solid transparent;
+    position: relative; overflow: hidden;
+  }
+  .dash-row::before {
+    content: ''; position: absolute;
+    left: 0; top: 0; bottom: 0; width: 4px;
+  }
+  .dash-tf {
+    font-size: 18px; font-weight: 800;
+    width: 44px; flex-shrink: 0;
+    color: #fff;
+  }
+  .dash-tf-sub {
+    font-size: 9px; font-weight: 400;
+    color: rgba(255,255,255,0.5);
+    display: block; margin-top: 1px;
+  }
+  .dash-signal {
+    flex: 1; padding: 0 12px;
+  }
+  .dash-signal-name {
+    font-size: 16px; font-weight: 700; letter-spacing: 0.5px;
+  }
+  .dash-signal-detail {
+    font-size: 11px; color: rgba(255,255,255,0.6);
+    margin-top: 2px;
+  }
+  .dash-pills {
+    display: flex; gap: 4px;
+  }
+  .dash-pill {
+    font-size: 9px; font-weight: 700;
+    padding: 3px 7px; border-radius: 8px;
+    color: #fff;
+  }
+  .dash-pill.ok   { background: rgba(255,255,255,0.25); }
+  .dash-pill.no   { background: rgba(0,0,0,0.25); color: rgba(255,255,255,0.4); }
 
-/* Signal color themes */
-.dash-buy      { background: rgba(0,212,160,0.15);  border-color: rgba(0,212,160,0.4); }
-.dash-buy::before      { background: #00D4A0; }
-.dash-quasibuy { background: rgba(184,224,74,0.12); border-color: rgba(184,224,74,0.3); }
-.dash-quasibuy::before { background: #B8E04A; }
-.dash-wait     { background: rgba(255,184,48,0.10); border-color: rgba(255,184,48,0.3); }
-.dash-wait::before     { background: #FFB830; }
-.dash-quasisell{ background: rgba(255,140,0,0.12);  border-color: rgba(255,140,0,0.35); }
-.dash-quasisell::before{ background: #FF8C00; }
-.dash-sell     { background: rgba(255,69,96,0.15);  border-color: rgba(255,69,96,0.4); }
-.dash-sell::before     { background: #FF4560; }
+  /* Signal color themes */
+  .dash-buy      { background: rgba(0,212,160,0.15);  border-color: rgba(0,212,160,0.4); }
+  .dash-buy::before      { background: #00D4A0; }
+  .dash-quasibuy { background: rgba(184,224,74,0.12); border-color: rgba(184,224,74,0.3); }
+  .dash-quasibuy::before { background: #B8E04A; }
+  .dash-wait     { background: rgba(255,184,48,0.10); border-color: rgba(255,184,48,0.3); }
+  .dash-wait::before     { background: #FFB830; }
+  .dash-quasisell{ background: rgba(255,140,0,0.12);  border-color: rgba(255,140,0,0.35); }
+  .dash-quasisell::before{ background: #FF8C00; }
+  .dash-sell     { background: rgba(255,69,96,0.15);  border-color: rgba(255,69,96,0.4); }
+  .dash-sell::before     { background: #FF4560; }
 
-.dash-score-badge {
-font-size: 13px; font-weight: 800;
-width: 36px; text-align: center; flex-shrink: 0;
-}
+  .dash-score-badge {
+    font-size: 13px; font-weight: 800;
+    width: 36px; text-align: center; flex-shrink: 0;
+  }
 
-/* Sort order indicator */
-.dash-sort-label {
-font-size: 10px; color: var(–dim);
-text-align: center; padding: 4px 0 8px;
-letter-spacing: 0.5px;
-}
+  /* Sort order indicator */
+  .dash-sort-label {
+    font-size: 10px; color: var(--dim);
+    text-align: center; padding: 4px 0 8px;
+    letter-spacing: 0.5px;
+  }
 </style>
-
 </head>
 <body>
 
 <!-- LOADING -->
-
 <div class="loading-overlay" id="loadingOverlay">
   <div class="spinner"></div>
   <div class="loading-text" id="loadingText">Recupero dati XAU/USD...</div>
 </div>
 
 <!-- TOAST -->
-
 <div class="toast" id="toast">
   <div class="toast-title" id="toastTitle"></div>
   <div class="toast-body"  id="toastBody"></div>
 </div>
 
 <!-- STICKY TOP -->
-
 <div class="sticky-top">
 <!-- HEADER -->
 <div class="header">
@@ -323,8 +318,8 @@ letter-spacing: 0.5px;
   </div>
 </div>
 
-<!-- TAB NAV -->
 
+<!-- TAB NAV -->
 <div class="tab-nav">
   <div class="tab-btn" onclick="switchTab('dashboard')">📊 OVERVIEW</div>
   <div class="tab-btn active" onclick="switchTab('scanner')">📡 SCANNER</div>
@@ -334,12 +329,10 @@ letter-spacing: 0.5px;
 </div><!-- end sticky-top -->
 
 <!-- DASHBOARD TAB -->
-
 <div class="tab-content" id="tab-dashboard">
 <div style="padding:14px">
 
   <!-- Header row -->
-
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
     <div>
       <div style="font-size:11px;color:var(--dim);letter-spacing:1px;text-transform:uppercase">PANORAMICA MERCATO</div>
@@ -352,24 +345,20 @@ letter-spacing: 0.5px;
   </div>
 
   <!-- Loading state -->
-
   <div id="dashLoading" style="text-align:center;padding:40px 0;color:var(--dim);font-size:13px">
     <div style="font-size:28px;margin-bottom:10px">⏳</div>
     Analisi di tutti i timeframe in corso...
   </div>
 
   <!-- Results -->
-
   <div id="dashResults" style="display:none"></div>
 
   <!-- Refresh button -->
-
   <button onclick="refreshDashboard()" style="width:100%;padding:14px;background:rgba(61,158,255,.15);border:1px solid rgba(61,158,255,.3);border-radius:12px;color:var(--blue);font-size:13px;font-weight:600;cursor:pointer;margin-top:10px">
     ↻ Aggiorna tutto
   </button>
 
   <!-- Legend -->
-
   <div style="margin-top:14px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px">
     <div style="font-size:10px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">LEGENDA SEGNALI</div>
     <div style="display:flex;flex-direction:column;gap:6px">
@@ -405,7 +394,6 @@ letter-spacing: 0.5px;
 </div><!-- end tab-dashboard -->
 
 <!-- SCANNER TAB -->
-
 <div class="tab-content active" id="tab-scanner">
 <!-- TF -->
 <div class="section-title">TIMEFRAME ANALISI</div>
@@ -418,7 +406,6 @@ letter-spacing: 0.5px;
 </div>
 
 <!-- SIGNAL -->
-
 <div class="signal-box wait" id="signalBox">
   <div class="signal-header">
     <div>
@@ -432,7 +419,6 @@ letter-spacing: 0.5px;
 </div>
 
 <!-- INDICATORS -->
-
 <div class="section-title">INDICATORI</div>
 <div class="indicators-grid">
   <div class="ind-card neut" id="cardEMA">
@@ -462,7 +448,6 @@ letter-spacing: 0.5px;
 </div>
 
 <!-- EMA DETAIL -->
-
 <div class="section-title">MEDIE MOBILI</div>
 <div class="ema-card">
   <div class="ema-row"><span class="ema-label" style="color:var(--yellow)">EMA 5</span><span class="ema-val" id="ema5v">—</span></div>
@@ -476,21 +461,23 @@ letter-spacing: 0.5px;
 </div>
 
 <!-- CHART -->
-
 <div class="section-title">ANDAMENTO PREZZI (ultimi 30 valori)</div>
 <div class="chart-wrap"><canvas id="priceChart" height="100"></canvas></div>
 
 <!-- CONTROLS -->
-
 <div class="controls">
   <button class="btn btn-primary" id="refreshBtn" onclick="fetchData()">↻ Aggiorna</button>
   <button class="btn btn-alert"   id="alertBtn"   onclick="toggleAlerts()">🔔 Alert <span id="alertStatus">OFF</span></button>
 </div>
 
+
+
+
+
+
 </div><!-- end tab-scanner -->
 
 <!-- GUIDE TAB -->
-
 <div class="tab-content" id="tab-guide">
 <div class="guide-wrap">
 
@@ -504,7 +491,6 @@ letter-spacing: 0.5px;
   </div>
 
   <!-- M1 -->
-
   <div class="tf-guide-card">
     <div class="tf-guide-header">
       <div>
@@ -538,7 +524,6 @@ letter-spacing: 0.5px;
   </div>
 
   <!-- M5 -->
-
   <div class="tf-guide-card">
     <div class="tf-guide-header">
       <div>
@@ -572,7 +557,6 @@ letter-spacing: 0.5px;
   </div>
 
   <!-- M15 -->
-
   <div class="tf-guide-card">
     <div class="tf-guide-header">
       <div>
@@ -606,7 +590,6 @@ letter-spacing: 0.5px;
   </div>
 
   <!-- M30 -->
-
   <div class="tf-guide-card">
     <div class="tf-guide-header">
       <div>
@@ -640,7 +623,6 @@ letter-spacing: 0.5px;
   </div>
 
   <!-- H1 -->
-
   <div class="tf-guide-card">
     <div class="tf-guide-header">
       <div>
@@ -674,7 +656,6 @@ letter-spacing: 0.5px;
   </div>
 
   <!-- SCALA MOBILE -->
-
   <div class="scale-rule">
     <div class="scale-rule-title">📈 Tecnica Stop a Scala — Come non perdere mai dopo +10$</div>
     <div class="scale-step">
@@ -700,7 +681,6 @@ letter-spacing: 0.5px;
   </div>
 
   <!-- R:R -->
-
   <div class="rr-box">
     <div class="rr-title">RAPPORTO RISCHIO / RENDIMENTO MINIMO</div>
     <div class="rr-value">1 : 2</div>
@@ -708,95 +688,90 @@ letter-spacing: 0.5px;
   </div>
 
   <!-- CALCOLATORE PERSONALE -->
-
   <div style="margin-bottom:10px">
     <div style="font-size:13px;font-weight:700;color:var(--blue);margin-bottom:10px">🧮 Il Tuo Calcolatore Personale</div>
 
-```
-<!-- INPUT ROW -->
-<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px">
-  <div style="font-size:11px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px">PARAMETRI CONTO</div>
+    <!-- INPUT ROW -->
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px">
+      <div style="font-size:11px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px">PARAMETRI CONTO</div>
 
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
-    <div>
-      <div style="font-size:10px;color:var(--dim);margin-bottom:5px">Saldo conto (€)</div>
-      <input id="calcBalance" type="number" value="170" min="1"
-        style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;color:#fff;font-size:16px;text-align:center"
-        oninput="calcAll()">
-    </div>
-    <div>
-      <div style="font-size:10px;color:var(--dim);margin-bottom:5px">EUR/USD (tasso)</div>
-      <input id="calcEurUsd" type="number" value="1.08" step="0.01" min="0.5"
-        style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;color:#fff;font-size:16px;text-align:center"
-        oninput="calcAll()">
-    </div>
-  </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+        <div>
+          <div style="font-size:10px;color:var(--dim);margin-bottom:5px">Saldo conto (€)</div>
+          <input id="calcBalance" type="number" value="170" min="1"
+            style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;color:#fff;font-size:16px;text-align:center"
+            oninput="calcAll()">
+        </div>
+        <div>
+          <div style="font-size:10px;color:var(--dim);margin-bottom:5px">EUR/USD (tasso)</div>
+          <input id="calcEurUsd" type="number" value="1.08" step="0.01" min="0.5"
+            style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;color:#fff;font-size:16px;text-align:center"
+            oninput="calcAll()">
+        </div>
+      </div>
 
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
-    <div>
-      <div style="font-size:10px;color:var(--dim);margin-bottom:5px">Rischio % per trade</div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap">
-        <button onclick="setRisk(3)"  id="riskBtn3"  class="risk-btn">3%</button>
-        <button onclick="setRisk(5)"  id="riskBtn5"  class="risk-btn active">5%</button>
-        <button onclick="setRisk(8)"  id="riskBtn8"  class="risk-btn">8%</button>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+        <div>
+          <div style="font-size:10px;color:var(--dim);margin-bottom:5px">Rischio % per trade</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <button onclick="setRisk(3)"  id="riskBtn3"  class="risk-btn">3%</button>
+            <button onclick="setRisk(5)"  id="riskBtn5"  class="risk-btn active">5%</button>
+            <button onclick="setRisk(8)"  id="riskBtn8"  class="risk-btn">8%</button>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:10px;color:var(--dim);margin-bottom:5px">Lotti</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <button onclick="setLots(0.01)" id="lotBtn001" class="risk-btn active">0.01</button>
+            <button onclick="setLots(0.03)" id="lotBtn003" class="risk-btn">0.03</button>
+            <button onclick="setLots(0.05)" id="lotBtn005" class="risk-btn">0.05</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Segnale forza -->
+      <div>
+        <div style="font-size:10px;color:var(--dim);margin-bottom:5px">Forza segnale (influenza il TP)</div>
+        <div style="display:flex;gap:6px">
+          <button onclick="setSignal(1)" id="sig1" class="risk-btn">⚡ 2/3</button>
+          <button onclick="setSignal(2)" id="sig2" class="risk-btn active">🎯 3/3</button>
+          <button onclick="setSignal(3)" id="sig3" class="risk-btn">🔥 3/3+TF</button>
+        </div>
+        <div style="font-size:9px;color:var(--dim);margin-top:4px">2/3=RR 1:1.5 · 3/3=RR 1:2 · 3/3+TF allineati=RR 1:3</div>
       </div>
     </div>
-    <div>
-      <div style="font-size:10px;color:var(--dim);margin-bottom:5px">Lotti</div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap">
-        <button onclick="setLots(0.01)" id="lotBtn001" class="risk-btn active">0.01</button>
-        <button onclick="setLots(0.03)" id="lotBtn003" class="risk-btn">0.03</button>
-        <button onclick="setLots(0.05)" id="lotBtn005" class="risk-btn">0.05</button>
+
+    <!-- RISULTATI PER TF -->
+    <div style="font-size:11px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">VALORI CALCOLATI SUL TUO CONTO</div>
+
+    <div id="calcResults"></div>
+
+    <!-- AVVISO RISCHIO -->
+    <div id="riskWarning" style="display:none;padding:10px 14px;background:rgba(255,69,96,.1);border:1px solid rgba(255,69,96,.3);border-radius:10px;font-size:11px;color:var(--red);line-height:1.5;margin-bottom:10px"></div>
+
+    <!-- SOMMARIO -->
+    <div id="calcSummary" style="background:linear-gradient(135deg,rgba(0,212,160,.08),rgba(61,158,255,.08));border:1px solid rgba(0,212,160,.2);border-radius:12px;padding:14px;text-align:center">
+      <div style="font-size:11px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">RISCHIO PER TRADE</div>
+      <div id="calcRiskEur" style="font-size:24px;font-weight:700;color:var(--red)">—</div>
+      <div id="calcRiskPct" style="font-size:11px;color:var(--dim);margin-top:2px">sul saldo totale</div>
+      <div style="height:1px;background:var(--border);margin:10px 0"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div>
+          <div style="font-size:9px;color:var(--dim);margin-bottom:3px">Val. pip (lotto scelto)</div>
+          <div id="calcPipVal" style="font-size:14px;font-weight:600;color:var(--yellow)">—</div>
+        </div>
+        <div>
+          <div style="font-size:9px;color:var(--dim);margin-bottom:3px">Saldo in USD</div>
+          <div id="calcBalUsd" style="font-size:14px;font-weight:600;color:var(--blue)">—</div>
+        </div>
       </div>
     </div>
-  </div>
-
-  <!-- Segnale forza -->
-  <div>
-    <div style="font-size:10px;color:var(--dim);margin-bottom:5px">Forza segnale (influenza il TP)</div>
-    <div style="display:flex;gap:6px">
-      <button onclick="setSignal(1)" id="sig1" class="risk-btn">⚡ 2/3</button>
-      <button onclick="setSignal(2)" id="sig2" class="risk-btn active">🎯 3/3</button>
-      <button onclick="setSignal(3)" id="sig3" class="risk-btn">🔥 3/3+TF</button>
-    </div>
-    <div style="font-size:9px;color:var(--dim);margin-top:4px">2/3=RR 1:1.5 · 3/3=RR 1:2 · 3/3+TF allineati=RR 1:3</div>
-  </div>
-</div>
-
-<!-- RISULTATI PER TF -->
-<div style="font-size:11px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">VALORI CALCOLATI SUL TUO CONTO</div>
-
-<div id="calcResults"></div>
-
-<!-- AVVISO RISCHIO -->
-<div id="riskWarning" style="display:none;padding:10px 14px;background:rgba(255,69,96,.1);border:1px solid rgba(255,69,96,.3);border-radius:10px;font-size:11px;color:var(--red);line-height:1.5;margin-bottom:10px"></div>
-
-<!-- SOMMARIO -->
-<div id="calcSummary" style="background:linear-gradient(135deg,rgba(0,212,160,.08),rgba(61,158,255,.08));border:1px solid rgba(0,212,160,.2);border-radius:12px;padding:14px;text-align:center">
-  <div style="font-size:11px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">RISCHIO PER TRADE</div>
-  <div id="calcRiskEur" style="font-size:24px;font-weight:700;color:var(--red)">—</div>
-  <div id="calcRiskPct" style="font-size:11px;color:var(--dim);margin-top:2px">sul saldo totale</div>
-  <div style="height:1px;background:var(--border);margin:10px 0"></div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-    <div>
-      <div style="font-size:9px;color:var(--dim);margin-bottom:3px">Val. pip (lotto scelto)</div>
-      <div id="calcPipVal" style="font-size:14px;font-weight:600;color:var(--yellow)">—</div>
-    </div>
-    <div>
-      <div style="font-size:9px;color:var(--dim);margin-bottom:3px">Saldo in USD</div>
-      <div id="calcBalUsd" style="font-size:14px;font-weight:600;color:var(--blue)">—</div>
-    </div>
-  </div>
-</div>
-```
-
   </div>
 
 </div>
 </div><!-- end tab-guide -->
 
 <!-- LOG TAB -->
-
 <div class="tab-content" id="tab-log">
 <div style="padding:14px">
   <div class="info-box" style="margin:0 0 12px">ℹ️ Dati live XAU/USD via Twelve Data. Aggiornamento ogni 60 secondi.</div>
@@ -807,7 +782,6 @@ letter-spacing: 0.5px;
 </div><!-- end tab-log -->
 
 <!-- STATUS -->
-
 <div class="status-bar">
   <div><span class="status-dot" id="statusDot" style="background:var(--dim)"></span><span id="statusText">Non connesso</span></div>
   <div id="nextRefresh">—</div>
@@ -1377,7 +1351,6 @@ setTimeout(calcAll, 2000);
 
 
 // ─── DASHBOARD — multi-TF overview ──────────────────────────────────────────
-let dashData    = {};   // cache: tf -> {closes, highs, lows}
 let dashFetching = false;
 
 const TF_LIST = [
@@ -1388,68 +1361,69 @@ const TF_LIST = [
   { tf:'1h',    label:'H1',  sub:'1 ora'  },
 ];
 
-const SIGNAL_ORDER = ['buy','quasibuy','wait','quasisell','sell'];
-
 function signalInfo(buyS, sellS) {
-  if (buyS === 3)  return { key:'buy',      label:'BUY',        color:'#00D4A0', score: buyS };
-  if (buyS === 2)  return { key:'quasibuy', label:'QUASI BUY',  color:'#B8E04A', score: buyS };
-  if (sellS === 2) return { key:'quasisell',label:'QUASI SELL', color:'#FF8C00', score: sellS };
-  if (sellS === 3) return { key:'sell',     label:'SELL',       color:'#FF4560', score: sellS };
-  return           { key:'wait',      label:'ATTESA',     color:'#FFB830', score: 0 };
+  if (buyS === 3)  return { key:'buy',       label:'BUY',        color:'#00D4A0' };
+  if (buyS === 2)  return { key:'quasibuy',  label:'QUASI BUY',  color:'#B8E04A' };
+  if (sellS === 2) return { key:'quasisell', label:'QUASI SELL', color:'#FF8C00' };
+  if (sellS === 3) return { key:'sell',      label:'SELL',       color:'#FF4560' };
+  return                   { key:'wait',     label:'ATTESA',     color:'#FFB830' };
 }
 
-async function fetchAllTF() {
-  // Single batch request for all 5 timeframes — 1 API call instead of 5
-  const tfs = '1min,5min,15min,30min,1h';
-  const url  = `https://api.twelvedata.com/complex_data?apikey=${API_KEY}`;
-  const body = JSON.stringify({
-    symbols:   ['XAU/USD'],
-    intervals: ['1min','5min','15min','30min','1h'],
-    outputsize: 60,
-    methods:   ['time_series']
-  });
-  const res  = await fetch(url, { method:'POST', headers:{'Content-Type':'application/json'}, body });
-  if (!res.ok) throw new Error('HTTP ' + res.status);
-  const json = await res.json();
-  return json;
-}
-
-function parseTFData(values) {
-  const v = [...values].reverse();
-  return {
-    closes: v.map(x => parseFloat(x.close)),
-    highs:  v.map(x => parseFloat(x.high)),
-    lows:   v.map(x => parseFloat(x.low)),
-    price:  parseFloat(v.at(-1).close),
-    open:   parseFloat(v[0].open),
-  };
-}
-
-function analyzeTF(data) {
-  const { closes, highs, lows } = data;
+function analyzeTFData(closes, highs, lows) {
   const e5  = ema(closes, 5);
   const e10 = ema(closes, 10);
   const e20 = ema(closes, 20);
   const m   = macd(closes);
   const s   = sar(closes, highs, lows);
-  if (!e5 || !e10 || !e20 || !m || !s) return null;
-
-  const emaBull = e5 > e10 && e10 > e20;
-  const emaBear = e5 < e10 && e10 < e20;
-  const mBull   = m.dif > m.dea && m.hist > 0;
-  const mBear   = m.dif < m.dea && m.hist < 0;
+  if (!e5||!e10||!e20||!m||!s) return null;
+  const emaBull = e5>e10 && e10>e20;
+  const emaBear = e5<e10 && e10<e20;
+  const mBull   = m.dif>m.dea && m.hist>0;
+  const mBear   = m.dif<m.dea && m.hist<0;
   const sBull   = !s.above;
   const sBear   = s.above;
-
-  const buyS  = [emaBull, mBull, sBull].filter(Boolean).length;
-  const sellS = [emaBear, mBear, sBear].filter(Boolean).length;
-
   return {
-    buyS, sellS,
-    ema:  emaBull ? 'bull' : emaBear ? 'bear' : 'neut',
-    macd: mBull   ? 'bull' : mBear   ? 'bear' : 'neut',
-    sar:  sBull   ? 'bull' : sBear   ? 'bear' : 'neut',
+    buyS:  [emaBull,mBull,sBull].filter(Boolean).length,
+    sellS: [emaBear,mBear,sBear].filter(Boolean).length,
+    ema:   emaBull?'bull':emaBear?'bear':'neut',
+    macd:  mBull  ?'bull':mBear  ?'bear':'neut',
+    sar:   sBull  ?'bull':sBear  ?'bear':'neut',
   };
+}
+
+function renderDashRow(tfObj, signal, err) {
+  if (err) return `
+    <div class="dash-row dash-wait">
+      <div class="dash-tf">${tfObj.label}<span class="dash-tf-sub">${tfObj.sub}</span></div>
+      <div class="dash-signal">
+        <div class="dash-signal-name" style="color:#FFB830">ERRORE</div>
+        <div class="dash-signal-detail" style="font-size:10px;color:var(--dim)">${err}</div>
+      </div>
+    </div>`;
+
+  const sig   = signalInfo(signal.buyS, signal.sellS);
+  const pills = [
+    { label:'EMA',  state:signal.ema  },
+    { label:'MACD', state:signal.macd },
+    { label:'SAR',  state:signal.sar  },
+  ];
+  const pillsHtml = pills.map(p => {
+    const dir   = p.state==='bull'?'↑':p.state==='bear'?'↓':'→';
+    const isBullContext  = sig.key.includes('buy');
+    const isBearContext  = sig.key.includes('sell');
+    const match = (isBullContext && p.state==='bull') || (isBearContext && p.state==='bear');
+    return `<span class="dash-pill ${match?'ok':'no'}">${p.label}${dir}</span>`;
+  }).join('');
+
+  return `
+    <div class="dash-row dash-${sig.key}">
+      <div class="dash-tf">${tfObj.label}<span class="dash-tf-sub">${tfObj.sub}</span></div>
+      <div class="dash-signal">
+        <div class="dash-signal-name" style="color:${sig.color}">${sig.label}</div>
+        <div style="display:flex;gap:4px;margin-top:5px">${pillsHtml}</div>
+      </div>
+      <div style="font-size:11px;color:${sig.color};font-weight:700;flex-shrink:0">${signal.buyS+signal.sellS}/3</div>
+    </div>`;
 }
 
 async function refreshDashboard() {
@@ -1460,140 +1434,66 @@ async function refreshDashboard() {
   document.getElementById('dashResults').style.display = 'none';
   document.getElementById('dashTime').textContent = 'Aggiornamento...';
 
-  const results = [];
+  // Results array — fixed order M1 M5 M15 M30 H1
+  const results = TF_LIST.map(tf => ({ ...tf, signal:null, error:'In attesa...' }));
 
-  document.getElementById('dashLoading').innerHTML =
-    `<div style="font-size:28px;margin-bottom:10px">⏳</div>
-     Analisi di tutti i timeframe...<br>
-     <div style="font-size:11px;color:var(--dim);margin-top:6px">Una sola chiamata API</div>`;
+  // Render placeholder rows immediately
+  function renderAll() {
+    document.getElementById('dashLoading').style.display = 'none';
+    document.getElementById('dashResults').style.display = 'block';
+    document.getElementById('dashResults').innerHTML =
+      results.map(r => renderDashRow(r, r.signal, r.error)).join('');
+  }
 
-  try {
-    const batch = await fetchAllTF();
-    // batch structure: { 'XAU/USD': { '1min': {values:[]}, '5min': ... } }
-    const tfMap = { '1min':'1min','5min':'5min','15min':'15min','30min':'30min','1h':'1h' };
-    const xau   = batch['XAU/USD'] || {};
-
-    for (const tfObj of TF_LIST) {
-      const tfData = xau[tfObj.tf];
-      if (!tfData || !tfData.values) {
-        // Fallback: try direct key formats
-        const alt = xau[tfObj.tf.replace('min','min')] || xau[tfObj.tf];
-        if (!alt || !alt.values) {
-          results.push({ ...tfObj, data:null, signal:null, price:null, error:'Nessun dato' });
-          continue;
-        }
+  // Fetch all 5 TF in parallel — fastest possible
+  const fetchOne = async (tfObj, idx) => {
+    try {
+      const url  = `https://api.twelvedata.com/time_series?symbol=XAU/USD&interval=${tfObj.tf}&outputsize=60&apikey=${API_KEY}&format=JSON`;
+      const res  = await fetch(url);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const json = await res.json();
+      if (json.status === 'error') throw new Error(json.message);
+      const vals   = [...json.values].reverse();
+      const closes = vals.map(v => parseFloat(v.close));
+      const highs  = vals.map(v => parseFloat(v.high));
+      const lows   = vals.map(v => parseFloat(v.low));
+      const signal = analyzeTFData(closes, highs, lows);
+      const price  = parseFloat(vals.at(-1).close);
+      const open   = parseFloat(vals[0].open);
+      results[idx] = { ...tfObj, signal, error: null, price, open };
+      // Update price display from M5
+      if (tfObj.tf === '5min' && price) {
+        const chg  = price - open;
+        const pct  = (chg/open*100).toFixed(2);
+        const sign = chg>=0?'+':'';
+        const col  = chg>=0?'var(--green)':'var(--red)';
+        document.getElementById('dashPrice').textContent = price.toFixed(2);
+        document.getElementById('dashChange').innerHTML  =
+          `<span style="color:${col}">${sign}${chg.toFixed(2)} (${sign}${pct}%)</span>`;
+        document.getElementById('dashTime').textContent  =
+          'Aggiornato ' + new Date().toLocaleTimeString('it-IT');
       }
-      try {
-        const raw    = tfData || xau[tfObj.tf];
-        const data   = parseTFData(raw.values);
-        const signal = analyzeTF(data);
-        results.push({ ...tfObj, data, signal, price: data.price, error: null });
-      } catch(e) {
-        results.push({ ...tfObj, data:null, signal:null, price:null, error: e.message });
-      }
+    } catch(e) {
+      results[idx] = { ...tfObj, signal: null, error: e.message };
     }
-  } catch(batchErr) {
-    // Fallback to individual calls if batch fails
-    addLog('Batch fallback: ' + batchErr.message, 'warn');
-    for (const tfObj of TF_LIST) {
-      try {
-        await new Promise(r => setTimeout(r, 2000));
-        const url    = `https://api.twelvedata.com/time_series?symbol=XAU/USD&interval=${tfObj.tf}&outputsize=60&apikey=${API_KEY}&format=JSON`;
-        const res    = await fetch(url);
-        const json   = await res.json();
-        if (json.status === 'error') throw new Error(json.message);
-        const data   = parseTFData(json.values);
-        const signal = analyzeTF(data);
-        results.push({ ...tfObj, data, signal, price: data.price, error: null });
-      } catch(e) {
-        results.push({ ...tfObj, data:null, signal:null, price:null, error: e.message });
-      }
-    }
-  }
+    renderAll(); // re-render after each result arrives
+  };
 
-  // Get price from M5 or first available
-  const priceData = results.find(r => r.data) || null;
-  if (priceData) {
-    const chg  = priceData.data.price - priceData.data.open;
-    const pct  = (chg / priceData.data.open * 100).toFixed(2);
-    const sign = chg >= 0 ? '+' : '';
-    const col  = chg >= 0 ? 'var(--green)' : 'var(--red)';
-    document.getElementById('dashPrice').textContent  = priceData.data.price.toFixed(2);
-    document.getElementById('dashChange').innerHTML   = `<span style="color:${col}">${sign}${chg.toFixed(2)} (${sign}${pct}%)</span>`;
-    document.getElementById('dashTime').textContent   = 'Aggiornato ' + new Date().toLocaleTimeString('it-IT');
-  }
+  // Stagger calls by 700ms to avoid 429 (8 calls/min = 1 every 7.5s, but 5 in sequence is fine)
+  const promises = TF_LIST.map((tf, i) =>
+    new Promise(resolve => setTimeout(() => fetchOne(tf, i).then(resolve), i * 700))
+  );
 
-  // Sort by signal strength: BUY first, SELL last
-  const sortedResults = [...results].sort((a, b) => {
-    const order = { buy:0, quasibuy:1, wait:2, quasisell:3, sell:4 };
-    const keyA  = a.signal ? signalInfo(a.signal.buyS, a.signal.sellS).key : 'wait';
-    const keyB  = b.signal ? signalInfo(b.signal.buyS, b.signal.sellS).key : 'wait';
-    return order[keyA] - order[keyB];
-  });
+  await Promise.all(promises);
 
-  // Render
-  const container = document.getElementById('dashResults');
-  container.innerHTML = '<div class="dash-sort-label">ORDINATI PER FORZA SEGNALE</div>' +
-    sortedResults.map(r => {
-      if (r.error) return `
-        <div class="dash-row dash-wait">
-          <div class="dash-tf">${r.label}<span class="dash-tf-sub">${r.sub}</span></div>
-          <div class="dash-signal">
-            <div class="dash-signal-name" style="color:#FFB830">ERRORE</div>
-            <div class="dash-signal-detail">${r.error}</div>
-          </div>
-        </div>`;
-
-      const sig  = signalInfo(r.signal.buyS, r.signal.sellS);
-      const pills = [
-        { label:'EMA',  state: r.signal.ema  },
-        { label:'MACD', state: r.signal.macd },
-        { label:'SAR',  state: r.signal.sar  },
-      ];
-      const pillsHtml = pills.map(p => {
-        const dir   = p.state === 'bull' ? '↑' : p.state === 'bear' ? '↓' : '→';
-        const okCls = (sig.key.includes('buy')  && p.state === 'bull') ||
-                      (sig.key.includes('sell') && p.state === 'bear') ? 'ok' : 'no';
-        return `<span class="dash-pill ${okCls}">${p.label} ${dir}</span>`;
-      }).join('');
-
-      const priceStr = r.price ? r.price.toFixed(2) : '—';
-
-      return `
-        <div class="dash-row dash-${sig.key}">
-          <div class="dash-tf">${r.label}<span class="dash-tf-sub">${r.sub}</span></div>
-          <div class="dash-signal">
-            <div class="dash-signal-name" style="color:${sig.color}">${sig.label}</div>
-            <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
-              <div class="dash-pills">${pillsHtml}</div>
-            </div>
-          </div>
-          <div class="dash-score-badge" style="color:${sig.color}">${priceStr}</div>
-        </div>`;
-    }).join('');
-
-  document.getElementById('dashLoading').style.display = 'none';
-  document.getElementById('dashResults').style.display = 'block';
-
-  // Fire alert ONLY when ALL 5 timeframes agree on same direction
-  const validResults = results.filter(r => r.signal);
-  const buyCount  = validResults.filter(r => r.signal.buyS  === 3).length;
-  const sellCount = validResults.filter(r => r.signal.sellS === 3).length;
-  const price     = priceData?.data?.price || 0;
-  if (alertsOn && validResults.length === 5) {
-    if (buyCount  === 5) fireAlert('buy',  price);
-    if (sellCount === 5) fireAlert('sell', price);
-  }
-
+  // Final render in fixed order
+  renderAll();
   dashFetching = false;
 }
 
-// Auto-run dashboard on app open
+// Auto-run on first open
 document.addEventListener('DOMContentLoaded', () => {
-  // Switch to dashboard on first load
-  setTimeout(() => {
-    switchTab('dashboard');
-  }, 100);
+  setTimeout(() => switchTab('dashboard'), 100);
 });
 
 // ─── TF SWITCH ─────────────────────────────────────────────────────────────
@@ -1616,7 +1516,6 @@ fetchData();
 <!-- ══════════════════════════════════════════════════════════════
      GUIDA SL/TP — scheda aggiuntiva
 ══════════════════════════════════════════════════════════════ -->
-
 <div id="guidaBtn" onclick="toggleGuida()" style="
   position:fixed; bottom:20px; right:16px; z-index:300;
   width:52px; height:52px; border-radius:50%;
@@ -1652,107 +1551,106 @@ fetchData();
     letter-spacing:2px; text-transform:uppercase; margin-bottom:10px;
   }
 
-/* TF CARDS */
-.tf-cards { display:flex; flex-direction:column; gap:8px; }
-.tf-card {
-background:#131A21; border:1px solid #1E2A35; border-radius:14px;
-overflow:hidden;
-}
-.tf-card-header {
-display:flex; align-items:center; gap:10px;
-padding:12px 14px 10px;
-border-bottom:1px solid #1E2A35;
-}
-.tf-badge {
-font-size:11px; font-weight:700; letter-spacing:.5px;
-padding:3px 10px; border-radius:20px;
-background:rgba(61,158,255,.15); color:#3D9EFF;
-border:1px solid rgba(61,158,255,.3);
-}
-.tf-label { font-size:12px; color:#8B949E; }
-.tf-atr {
-margin-left:auto; font-size:11px; font-weight:600;
-color:#FFB830; background:rgba(255,184,48,.1);
-border:1px solid rgba(255,184,48,.2);
-padding:2px 8px; border-radius:10px;
-}
-.tf-grid {
-display:grid; grid-template-columns:1fr 1fr 1fr;
-gap:0;
-}
-.tf-cell {
-padding:10px 12px; border-right:1px solid #1E2A35;
-text-align:center;
-}
-.tf-cell:last-child { border-right:none; }
-.tf-cell-label { font-size:9px; color:#4A6278; letter-spacing:.8px; text-transform:uppercase; margin-bottom:4px; }
-.tf-cell-val { font-size:14px; font-weight:600; }
-.tf-cell-sub { font-size:9px; color:#4A6278; margin-top:2px; }
-.val-green { color:#00D4A0; }
-.val-red   { color:#FF4560; }
-.val-yellow{ color:#FFB830; }
+  /* TF CARDS */
+  .tf-cards { display:flex; flex-direction:column; gap:8px; }
+  .tf-card {
+    background:#131A21; border:1px solid #1E2A35; border-radius:14px;
+    overflow:hidden;
+  }
+  .tf-card-header {
+    display:flex; align-items:center; gap:10px;
+    padding:12px 14px 10px;
+    border-bottom:1px solid #1E2A35;
+  }
+  .tf-badge {
+    font-size:11px; font-weight:700; letter-spacing:.5px;
+    padding:3px 10px; border-radius:20px;
+    background:rgba(61,158,255,.15); color:#3D9EFF;
+    border:1px solid rgba(61,158,255,.3);
+  }
+  .tf-label { font-size:12px; color:#8B949E; }
+  .tf-atr {
+    margin-left:auto; font-size:11px; font-weight:600;
+    color:#FFB830; background:rgba(255,184,48,.1);
+    border:1px solid rgba(255,184,48,.2);
+    padding:2px 8px; border-radius:10px;
+  }
+  .tf-grid {
+    display:grid; grid-template-columns:1fr 1fr 1fr;
+    gap:0;
+  }
+  .tf-cell {
+    padding:10px 12px; border-right:1px solid #1E2A35;
+    text-align:center;
+  }
+  .tf-cell:last-child { border-right:none; }
+  .tf-cell-label { font-size:9px; color:#4A6278; letter-spacing:.8px; text-transform:uppercase; margin-bottom:4px; }
+  .tf-cell-val { font-size:14px; font-weight:600; }
+  .tf-cell-sub { font-size:9px; color:#4A6278; margin-top:2px; }
+  .val-green { color:#00D4A0; }
+  .val-red   { color:#FF4560; }
+  .val-yellow{ color:#FFB830; }
 
-/* RR BAR */
-.rr-bar-wrap { padding:10px 14px 12px; }
-.rr-label { font-size:9px; color:#4A6278; letter-spacing:.8px; text-transform:uppercase; margin-bottom:6px; }
-.rr-bar {
-height:8px; border-radius:4px; display:flex; overflow:hidden;
-}
-.rr-sl { background:#FF4560; }
-.rr-tp { background:#00D4A0; }
-.rr-nums { display:flex; justify-content:space-between; margin-top:4px; font-size:10px; }
+  /* RR BAR */
+  .rr-bar-wrap { padding:10px 14px 12px; }
+  .rr-label { font-size:9px; color:#4A6278; letter-spacing:.8px; text-transform:uppercase; margin-bottom:6px; }
+  .rr-bar {
+    height:8px; border-radius:4px; display:flex; overflow:hidden;
+  }
+  .rr-sl { background:#FF4560; }
+  .rr-tp { background:#00D4A0; }
+  .rr-nums { display:flex; justify-content:space-between; margin-top:4px; font-size:10px; }
 
-/* RULES BOX */
-.rules-box {
-background:#131A21; border:1px solid #1E2A35; border-radius:14px;
-padding:14px;
-}
-.rule-row {
-display:flex; gap:10px; align-items:flex-start;
-padding:8px 0; border-bottom:1px solid #1E2A35;
-}
-.rule-row:last-child { border-bottom:none; }
-.rule-icon { font-size:16px; flex-shrink:0; margin-top:1px; }
-.rule-text { font-size:12px; color:#D4E0EC; line-height:1.6; }
-.rule-text strong { color:#fff; }
+  /* RULES BOX */
+  .rules-box {
+    background:#131A21; border:1px solid #1E2A35; border-radius:14px;
+    padding:14px;
+  }
+  .rule-row {
+    display:flex; gap:10px; align-items:flex-start;
+    padding:8px 0; border-bottom:1px solid #1E2A35;
+  }
+  .rule-row:last-child { border-bottom:none; }
+  .rule-icon { font-size:16px; flex-shrink:0; margin-top:1px; }
+  .rule-text { font-size:12px; color:#D4E0EC; line-height:1.6; }
+  .rule-text strong { color:#fff; }
 
-/* SCALE TECHNIQUE */
-.scale-box {
-background:#131A21; border:1px solid #1E2A35; border-radius:14px;
-overflow:hidden;
-}
-.scale-step {
-display:flex; gap:12px; align-items:flex-start;
-padding:11px 14px; border-bottom:1px solid #1E2A35;
-position:relative;
-}
-.scale-step:last-child { border-bottom:none; }
-.scale-num {
-width:24px; height:24px; border-radius:50%;
-display:flex; align-items:center; justify-content:center;
-font-size:11px; font-weight:700; flex-shrink:0;
-}
-.scale-body { flex:1; }
-.scale-title { font-size:12px; font-weight:600; color:#fff; margin-bottom:2px; }
-.scale-desc  { font-size:11px; color:#8B949E; line-height:1.5; }
+  /* SCALE TECHNIQUE */
+  .scale-box {
+    background:#131A21; border:1px solid #1E2A35; border-radius:14px;
+    overflow:hidden;
+  }
+  .scale-step {
+    display:flex; gap:12px; align-items:flex-start;
+    padding:11px 14px; border-bottom:1px solid #1E2A35;
+    position:relative;
+  }
+  .scale-step:last-child { border-bottom:none; }
+  .scale-num {
+    width:24px; height:24px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:11px; font-weight:700; flex-shrink:0;
+  }
+  .scale-body { flex:1; }
+  .scale-title { font-size:12px; font-weight:600; color:#fff; margin-bottom:2px; }
+  .scale-desc  { font-size:11px; color:#8B949E; line-height:1.5; }
 
-/* PCT PILL */
-.pct-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-.pct-card {
-background:#131A21; border:1px solid #1E2A35; border-radius:12px;
-padding:12px; text-align:center;
-}
-.pct-tf   { font-size:10px; color:#4A6278; font-weight:600; letter-spacing:.8px; margin-bottom:6px; }
-.pct-sl   { font-size:13px; font-weight:700; color:#FF4560; margin-bottom:2px; }
-.pct-tp   { font-size:13px; font-weight:700; color:#00D4A0; }
-.pct-rr   { font-size:9px; color:#FFB830; margin-top:4px; font-weight:600; }
+  /* PCT PILL */
+  .pct-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .pct-card {
+    background:#131A21; border:1px solid #1E2A35; border-radius:12px;
+    padding:12px; text-align:center;
+  }
+  .pct-tf   { font-size:10px; color:#4A6278; font-weight:600; letter-spacing:.8px; margin-bottom:6px; }
+  .pct-sl   { font-size:13px; font-weight:700; color:#FF4560; margin-bottom:2px; }
+  .pct-tp   { font-size:13px; font-weight:700; color:#00D4A0; }
+  .pct-rr   { font-size:9px; color:#FFB830; margin-top:4px; font-weight:600; }
 
-.g-spacer { height:16px; }
-.g-bottom { height:40px; }
+  .g-spacer { height:16px; }
+  .g-bottom { height:40px; }
 </style>
 
 <!-- HEADER -->
-
 <div class="g-header">
   <div>
     <div class="g-title">📋 Guida SL / TP</div>
@@ -1762,197 +1660,194 @@ padding:12px; text-align:center;
 </div>
 
 <!-- TF REFERENCE CARDS -->
-
 <div class="g-sec">
   <div class="g-sec-title">Movimenti attesi per timeframe</div>
   <div class="tf-cards">
 
-```
-<!-- M1 -->
-<div class="tf-card">
-  <div class="tf-card-header">
-    <span class="tf-badge">M1</span>
-    <span class="tf-label">Scalping veloce</span>
-    <span class="tf-atr">ATR ≈ 0.8–1.5$</span>
-  </div>
-  <div class="tf-grid">
-    <div class="tf-cell">
-      <div class="tf-cell-label">Stop Loss</div>
-      <div class="tf-cell-val val-red">2–3$</div>
-      <div class="tf-cell-sub">≈ 0.05–0.07%</div>
+    <!-- M1 -->
+    <div class="tf-card">
+      <div class="tf-card-header">
+        <span class="tf-badge">M1</span>
+        <span class="tf-label">Scalping veloce</span>
+        <span class="tf-atr">ATR ≈ 0.8–1.5$</span>
+      </div>
+      <div class="tf-grid">
+        <div class="tf-cell">
+          <div class="tf-cell-label">Stop Loss</div>
+          <div class="tf-cell-val val-red">2–3$</div>
+          <div class="tf-cell-sub">≈ 0.05–0.07%</div>
+        </div>
+        <div class="tf-cell">
+          <div class="tf-cell-label">Take Profit</div>
+          <div class="tf-cell-val val-green">4–6$</div>
+          <div class="tf-cell-sub">≈ 0.10–0.15%</div>
+        </div>
+        <div class="tf-cell">
+          <div class="tf-cell-label">R:R minimo</div>
+          <div class="tf-cell-val val-yellow">1 : 2</div>
+          <div class="tf-cell-sub">rischio/profitto</div>
+        </div>
+      </div>
+      <div class="rr-bar-wrap">
+        <div class="rr-label">Rapporto visivo SL / TP</div>
+        <div class="rr-bar">
+          <div class="rr-sl" style="width:33%"></div>
+          <div class="rr-tp" style="width:67%"></div>
+        </div>
+        <div class="rr-nums">
+          <span style="color:#FF4560">◀ SL 2$</span>
+          <span style="color:#00D4A0">TP 4$ ▶</span>
+        </div>
+      </div>
     </div>
-    <div class="tf-cell">
-      <div class="tf-cell-label">Take Profit</div>
-      <div class="tf-cell-val val-green">4–6$</div>
-      <div class="tf-cell-sub">≈ 0.10–0.15%</div>
-    </div>
-    <div class="tf-cell">
-      <div class="tf-cell-label">R:R minimo</div>
-      <div class="tf-cell-val val-yellow">1 : 2</div>
-      <div class="tf-cell-sub">rischio/profitto</div>
-    </div>
-  </div>
-  <div class="rr-bar-wrap">
-    <div class="rr-label">Rapporto visivo SL / TP</div>
-    <div class="rr-bar">
-      <div class="rr-sl" style="width:33%"></div>
-      <div class="rr-tp" style="width:67%"></div>
-    </div>
-    <div class="rr-nums">
-      <span style="color:#FF4560">◀ SL 2$</span>
-      <span style="color:#00D4A0">TP 4$ ▶</span>
-    </div>
-  </div>
-</div>
 
-<!-- M5 -->
-<div class="tf-card">
-  <div class="tf-card-header">
-    <span class="tf-badge">M5</span>
-    <span class="tf-label">Scalping standard</span>
-    <span class="tf-atr">ATR ≈ 1.5–3$</span>
-  </div>
-  <div class="tf-grid">
-    <div class="tf-cell">
-      <div class="tf-cell-label">Stop Loss</div>
-      <div class="tf-cell-val val-red">4–6$</div>
-      <div class="tf-cell-sub">≈ 0.10–0.15%</div>
+    <!-- M5 -->
+    <div class="tf-card">
+      <div class="tf-card-header">
+        <span class="tf-badge">M5</span>
+        <span class="tf-label">Scalping standard</span>
+        <span class="tf-atr">ATR ≈ 1.5–3$</span>
+      </div>
+      <div class="tf-grid">
+        <div class="tf-cell">
+          <div class="tf-cell-label">Stop Loss</div>
+          <div class="tf-cell-val val-red">4–6$</div>
+          <div class="tf-cell-sub">≈ 0.10–0.15%</div>
+        </div>
+        <div class="tf-cell">
+          <div class="tf-cell-label">Take Profit</div>
+          <div class="tf-cell-val val-green">8–12$</div>
+          <div class="tf-cell-sub">≈ 0.20–0.30%</div>
+        </div>
+        <div class="tf-cell">
+          <div class="tf-cell-label">R:R minimo</div>
+          <div class="tf-cell-val val-yellow">1 : 2</div>
+          <div class="tf-cell-sub">rischio/profitto</div>
+        </div>
+      </div>
+      <div class="rr-bar-wrap">
+        <div class="rr-label">Rapporto visivo SL / TP</div>
+        <div class="rr-bar">
+          <div class="rr-sl" style="width:33%"></div>
+          <div class="rr-tp" style="width:67%"></div>
+        </div>
+        <div class="rr-nums">
+          <span style="color:#FF4560">◀ SL 5$</span>
+          <span style="color:#00D4A0">TP 10$ ▶</span>
+        </div>
+      </div>
     </div>
-    <div class="tf-cell">
-      <div class="tf-cell-label">Take Profit</div>
-      <div class="tf-cell-val val-green">8–12$</div>
-      <div class="tf-cell-sub">≈ 0.20–0.30%</div>
-    </div>
-    <div class="tf-cell">
-      <div class="tf-cell-label">R:R minimo</div>
-      <div class="tf-cell-val val-yellow">1 : 2</div>
-      <div class="tf-cell-sub">rischio/profitto</div>
-    </div>
-  </div>
-  <div class="rr-bar-wrap">
-    <div class="rr-label">Rapporto visivo SL / TP</div>
-    <div class="rr-bar">
-      <div class="rr-sl" style="width:33%"></div>
-      <div class="rr-tp" style="width:67%"></div>
-    </div>
-    <div class="rr-nums">
-      <span style="color:#FF4560">◀ SL 5$</span>
-      <span style="color:#00D4A0">TP 10$ ▶</span>
-    </div>
-  </div>
-</div>
 
-<!-- M15 -->
-<div class="tf-card">
-  <div class="tf-card-header">
-    <span class="tf-badge">M15</span>
-    <span class="tf-label">Intraday breve</span>
-    <span class="tf-atr">ATR ≈ 3–6$</span>
-  </div>
-  <div class="tf-grid">
-    <div class="tf-cell">
-      <div class="tf-cell-label">Stop Loss</div>
-      <div class="tf-cell-val val-red">8–12$</div>
-      <div class="tf-cell-sub">≈ 0.20–0.30%</div>
+    <!-- M15 -->
+    <div class="tf-card">
+      <div class="tf-card-header">
+        <span class="tf-badge">M15</span>
+        <span class="tf-label">Intraday breve</span>
+        <span class="tf-atr">ATR ≈ 3–6$</span>
+      </div>
+      <div class="tf-grid">
+        <div class="tf-cell">
+          <div class="tf-cell-label">Stop Loss</div>
+          <div class="tf-cell-val val-red">8–12$</div>
+          <div class="tf-cell-sub">≈ 0.20–0.30%</div>
+        </div>
+        <div class="tf-cell">
+          <div class="tf-cell-label">Take Profit</div>
+          <div class="tf-cell-val val-green">16–24$</div>
+          <div class="tf-cell-sub">≈ 0.40–0.60%</div>
+        </div>
+        <div class="tf-cell">
+          <div class="tf-cell-label">R:R minimo</div>
+          <div class="tf-cell-val val-yellow">1 : 2</div>
+          <div class="tf-cell-sub">rischio/profitto</div>
+        </div>
+      </div>
+      <div class="rr-bar-wrap">
+        <div class="rr-label">Rapporto visivo SL / TP</div>
+        <div class="rr-bar">
+          <div class="rr-sl" style="width:33%"></div>
+          <div class="rr-tp" style="width:67%"></div>
+        </div>
+        <div class="rr-nums">
+          <span style="color:#FF4560">◀ SL 10$</span>
+          <span style="color:#00D4A0">TP 20$ ▶</span>
+        </div>
+      </div>
     </div>
-    <div class="tf-cell">
-      <div class="tf-cell-label">Take Profit</div>
-      <div class="tf-cell-val val-green">16–24$</div>
-      <div class="tf-cell-sub">≈ 0.40–0.60%</div>
-    </div>
-    <div class="tf-cell">
-      <div class="tf-cell-label">R:R minimo</div>
-      <div class="tf-cell-val val-yellow">1 : 2</div>
-      <div class="tf-cell-sub">rischio/profitto</div>
-    </div>
-  </div>
-  <div class="rr-bar-wrap">
-    <div class="rr-label">Rapporto visivo SL / TP</div>
-    <div class="rr-bar">
-      <div class="rr-sl" style="width:33%"></div>
-      <div class="rr-tp" style="width:67%"></div>
-    </div>
-    <div class="rr-nums">
-      <span style="color:#FF4560">◀ SL 10$</span>
-      <span style="color:#00D4A0">TP 20$ ▶</span>
-    </div>
-  </div>
-</div>
 
-<!-- M30 -->
-<div class="tf-card">
-  <div class="tf-card-header">
-    <span class="tf-badge">M30</span>
-    <span class="tf-label">Intraday medio</span>
-    <span class="tf-atr">ATR ≈ 5–10$</span>
-  </div>
-  <div class="tf-grid">
-    <div class="tf-cell">
-      <div class="tf-cell-label">Stop Loss</div>
-      <div class="tf-cell-val val-red">12–18$</div>
-      <div class="tf-cell-sub">≈ 0.30–0.45%</div>
+    <!-- M30 -->
+    <div class="tf-card">
+      <div class="tf-card-header">
+        <span class="tf-badge">M30</span>
+        <span class="tf-label">Intraday medio</span>
+        <span class="tf-atr">ATR ≈ 5–10$</span>
+      </div>
+      <div class="tf-grid">
+        <div class="tf-cell">
+          <div class="tf-cell-label">Stop Loss</div>
+          <div class="tf-cell-val val-red">12–18$</div>
+          <div class="tf-cell-sub">≈ 0.30–0.45%</div>
+        </div>
+        <div class="tf-cell">
+          <div class="tf-cell-label">Take Profit</div>
+          <div class="tf-cell-val val-green">25–40$</div>
+          <div class="tf-cell-sub">≈ 0.60–1.00%</div>
+        </div>
+        <div class="tf-cell">
+          <div class="tf-cell-label">R:R minimo</div>
+          <div class="tf-cell-val val-yellow">1 : 2</div>
+          <div class="tf-cell-sub">rischio/profitto</div>
+        </div>
+      </div>
+      <div class="rr-bar-wrap">
+        <div class="rr-label">Rapporto visivo SL / TP</div>
+        <div class="rr-bar">
+          <div class="rr-sl" style="width:33%"></div>
+          <div class="rr-tp" style="width:67%"></div>
+        </div>
+        <div class="rr-nums">
+          <span style="color:#FF4560">◀ SL 15$</span>
+          <span style="color:#00D4A0">TP 30$ ▶</span>
+        </div>
+      </div>
     </div>
-    <div class="tf-cell">
-      <div class="tf-cell-label">Take Profit</div>
-      <div class="tf-cell-val val-green">25–40$</div>
-      <div class="tf-cell-sub">≈ 0.60–1.00%</div>
-    </div>
-    <div class="tf-cell">
-      <div class="tf-cell-label">R:R minimo</div>
-      <div class="tf-cell-val val-yellow">1 : 2</div>
-      <div class="tf-cell-sub">rischio/profitto</div>
-    </div>
-  </div>
-  <div class="rr-bar-wrap">
-    <div class="rr-label">Rapporto visivo SL / TP</div>
-    <div class="rr-bar">
-      <div class="rr-sl" style="width:33%"></div>
-      <div class="rr-tp" style="width:67%"></div>
-    </div>
-    <div class="rr-nums">
-      <span style="color:#FF4560">◀ SL 15$</span>
-      <span style="color:#00D4A0">TP 30$ ▶</span>
-    </div>
-  </div>
-</div>
 
-<!-- H1 -->
-<div class="tf-card">
-  <div class="tf-card-header">
-    <span class="tf-badge" style="background:rgba(164,126,255,.15);color:#A47EFF;border-color:rgba(164,126,255,.3)">H1</span>
-    <span class="tf-label">Swing intraday</span>
-    <span class="tf-atr">ATR ≈ 8–15$</span>
-  </div>
-  <div class="tf-grid">
-    <div class="tf-cell">
-      <div class="tf-cell-label">Stop Loss</div>
-      <div class="tf-cell-val val-red">20–25$</div>
-      <div class="tf-cell-sub">≈ 0.50–0.60%</div>
+    <!-- H1 -->
+    <div class="tf-card">
+      <div class="tf-card-header">
+        <span class="tf-badge" style="background:rgba(164,126,255,.15);color:#A47EFF;border-color:rgba(164,126,255,.3)">H1</span>
+        <span class="tf-label">Swing intraday</span>
+        <span class="tf-atr">ATR ≈ 8–15$</span>
+      </div>
+      <div class="tf-grid">
+        <div class="tf-cell">
+          <div class="tf-cell-label">Stop Loss</div>
+          <div class="tf-cell-val val-red">20–25$</div>
+          <div class="tf-cell-sub">≈ 0.50–0.60%</div>
+        </div>
+        <div class="tf-cell">
+          <div class="tf-cell-label">Take Profit</div>
+          <div class="tf-cell-val val-green">40–60$</div>
+          <div class="tf-cell-sub">≈ 1.00–1.50%</div>
+        </div>
+        <div class="tf-cell">
+          <div class="tf-cell-label">R:R minimo</div>
+          <div class="tf-cell-val val-yellow">1 : 2.5</div>
+          <div class="tf-cell-sub">rischio/profitto</div>
+        </div>
+      </div>
+      <div class="rr-bar-wrap">
+        <div class="rr-label">Rapporto visivo SL / TP</div>
+        <div class="rr-bar">
+          <div class="rr-sl" style="width:28%"></div>
+          <div class="rr-tp" style="width:72%"></div>
+        </div>
+        <div class="rr-nums">
+          <span style="color:#FF4560">◀ SL 22$</span>
+          <span style="color:#00D4A0">TP 55$ ▶</span>
+        </div>
+      </div>
     </div>
-    <div class="tf-cell">
-      <div class="tf-cell-label">Take Profit</div>
-      <div class="tf-cell-val val-green">40–60$</div>
-      <div class="tf-cell-sub">≈ 1.00–1.50%</div>
-    </div>
-    <div class="tf-cell">
-      <div class="tf-cell-label">R:R minimo</div>
-      <div class="tf-cell-val val-yellow">1 : 2.5</div>
-      <div class="tf-cell-sub">rischio/profitto</div>
-    </div>
-  </div>
-  <div class="rr-bar-wrap">
-    <div class="rr-label">Rapporto visivo SL / TP</div>
-    <div class="rr-bar">
-      <div class="rr-sl" style="width:28%"></div>
-      <div class="rr-tp" style="width:72%"></div>
-    </div>
-    <div class="rr-nums">
-      <span style="color:#FF4560">◀ SL 22$</span>
-      <span style="color:#00D4A0">TP 55$ ▶</span>
-    </div>
-  </div>
-</div>
-```
 
   </div><!-- /tf-cards -->
 </div><!-- /g-sec -->
@@ -1960,7 +1855,6 @@ padding:12px; text-align:center;
 <div class="g-spacer"></div>
 
 <!-- PERCENTUALI -->
-
 <div class="g-sec">
   <div class="g-sec-title">Riferimenti in % sul prezzo</div>
   <div class="pct-grid">
@@ -2000,7 +1894,6 @@ padding:12px; text-align:center;
 <div class="g-spacer"></div>
 
 <!-- TECNICA A SCALA -->
-
 <div class="g-sec">
   <div class="g-sec-title">Tecnica stop a scala</div>
   <div class="scale-box">
@@ -2038,7 +1931,6 @@ padding:12px; text-align:center;
 <div class="g-spacer"></div>
 
 <!-- REGOLE D'ORO -->
-
 <div class="g-sec">
   <div class="g-sec-title">Regole d'oro</div>
   <div class="rules-box">
