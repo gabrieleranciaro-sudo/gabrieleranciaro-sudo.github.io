@@ -427,7 +427,7 @@ letter-spacing: 0.5px;
     </div>
     <div style="font-size:28px" id="signalIcon">⏳</div>
   </div>
-  <div class="signal-desc" id="signalDesc">Premi Aggiorna per caricare i dati di mercato.</div>
+  <div class="signal-desc" id="signalDesc">Premi "Carica dati" per analizzare il timeframe selezionato.</div>
   <div class="signal-score" id="signalScore"></div>
 </div>
 
@@ -483,7 +483,7 @@ letter-spacing: 0.5px;
 <!-- CONTROLS -->
 
 <div class="controls">
-  <button class="btn btn-primary" id="refreshBtn" onclick="fetchData()">↻ Aggiorna</button>
+  <button class="btn btn-primary" id="refreshBtn" onclick="fetchData()">↻ Carica dati</button>
   <button class="btn btn-alert"   id="alertBtn"   onclick="toggleAlerts()">🔔 Alert <span id="alertStatus">OFF</span></button>
 </div>
 
@@ -810,7 +810,7 @@ letter-spacing: 0.5px;
 
 <div class="status-bar">
   <div><span class="status-dot" id="statusDot" style="background:var(--dim)"></span><span id="statusText">Non connesso</span></div>
-  <div id="nextRefresh">—</div>
+  <div id="nextRefresh">Premi Aggiorna per caricare</div>
   <div id="callCounter" style="font-size:9px;color:var(--dim)">0/800</div>
 </div>
 
@@ -952,7 +952,7 @@ async function fetchData() {
 
   isFetching = false;
   hideLoading();
-  resetCountdown();
+  document.getElementById('nextRefresh').textContent = 'Ultimo aggiornamento: ' + new Date().toLocaleTimeString('it-IT');
 }
 
 // ─── PROCESS DATA ──────────────────────────────────────────────────────────
@@ -1136,7 +1136,7 @@ function resetCountdown() {
   secsLeft=REFRESH_MS/1000; clearInterval(countdown);
   countdown=setInterval(()=>{
     secsLeft--;
-    document.getElementById('nextRefresh').textContent=secsLeft>0?`Aggiornamento tra ${secsLeft}s`:'Aggiornamento...';
+    document.getElementById('nextRefresh').textContent='Aggiornamento manuale';
     const cc = document.getElementById('callCounter');
     if (cc) cc.textContent = callCount + '/800';
     if (callCount > 700) { if(cc) cc.style.color='var(--red)'; }
@@ -1448,6 +1448,10 @@ async function refreshDashboard() {
   document.getElementById('dashLoading').style.display = 'block';
   document.getElementById('dashResults').style.display = 'none';
   document.getElementById('dashTime').textContent = 'Aggiornamento...';
+  document.getElementById('dashLoading').innerHTML =
+    `<div style="font-size:24px;margin-bottom:10px">⏳</div>
+     Caricamento 5 timeframe...<br>
+     <div style="font-size:11px;color:var(--dim);margin-top:6px">Usa con moderazione — 800 chiamate/giorno</div>`;
 
   // Results array — fixed order M1 M5 M15 M30 H1
   const results = TF_LIST.map(tf => ({ ...tf, signal:null, error:'In attesa...' }));
@@ -1506,9 +1510,12 @@ async function refreshDashboard() {
   dashFetching = false;
 }
 
-// Auto-run on first open
+// Open on dashboard tab but DON'T auto-fetch
 document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(() => switchTab('dashboard'), 100);
+  setTimeout(() => {
+    switchTab('dashboard');
+    // No auto-fetch — user presses "Aggiorna tutto" manually
+  }, 100);
 });
 
 // ─── TF SWITCH ─────────────────────────────────────────────────────────────
@@ -1521,11 +1528,10 @@ document.getElementById('tfRow').addEventListener('click',e=>{
   fetchQueue = setTimeout(fetchData, 800);
 });
 
-// ─── AUTO REFRESH ──────────────────────────────────────────────────────────
-autoTimer = setInterval(fetchData, REFRESH_MS);
+// Auto-refresh disabled — on demand only
 
-// ─── INIT ──────────────────────────────────────────────────────────────────
-fetchData();
+// ─── INIT — on demand only ──────────────────────────────────────────────────
+// fetchData(); // disabled — user triggers manually
 </script>
 
 <!-- ══════════════════════════════════════════════════════════════
