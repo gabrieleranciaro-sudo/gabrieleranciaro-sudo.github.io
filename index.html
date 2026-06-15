@@ -1510,12 +1510,12 @@ async function refreshDashboard() {
   dashFetching = false;
 }
 
-// Open on dashboard tab but DON'T auto-fetch
+// Open on dashboard and run first check automatically
 document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
     switchTab('dashboard');
-    // No auto-fetch — user presses "Aggiorna tutto" manually
-  }, 100);
+    refreshDashboard(); // first check on open
+  }, 300);
 });
 
 // ─── TF SWITCH ─────────────────────────────────────────────────────────────
