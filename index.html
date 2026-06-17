@@ -1437,7 +1437,7 @@ function renderDashRow(tfObj, signal, err) {
         <div class="dash-signal-name" style="color:${sig.color}">${sig.label}</div>
         <div style="display:flex;gap:4px;margin-top:5px">${pillsHtml}</div>
       </div>
-      <div style="font-size:11px;color:${sig.color};font-weight:700;flex-shrink:0">${signal.buyS+signal.sellS}/3</div>
+      <div style="font-size:11px;color:${sig.color};font-weight:700;flex-shrink:0">${Math.max(signal.buyS,signal.sellS)}/3</div>
     </div>`;
 }
 
