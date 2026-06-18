@@ -326,8 +326,7 @@ letter-spacing: 0.5px;
 <!-- TAB NAV -->
 
 <div class="tab-nav">
-  <div class="tab-btn" onclick="switchTab('dashboard')">📊 OVERVIEW</div>
-  <div class="tab-btn active" onclick="switchTab('scanner')">📡 SCANNER</div>
+  <div class="tab-btn active" onclick="switchTab('dashboard')">📡 SCANNER</div>
   <div class="tab-btn" onclick="switchTab('guide')">📋 GUIDA SL/TP</div>
   <div class="tab-btn" onclick="switchTab('log')">📜 LOG</div>
 </div>
@@ -335,7 +334,7 @@ letter-spacing: 0.5px;
 
 <!-- DASHBOARD TAB -->
 
-<div class="tab-content" id="tab-dashboard">
+<div class="tab-content active" id="tab-dashboard">
 <div style="padding:14px">
 
   <!-- Header row -->
@@ -407,91 +406,6 @@ letter-spacing: 0.5px;
 
 </div>
 </div><!-- end tab-dashboard -->
-
-<!-- SCANNER TAB -->
-
-<div class="tab-content active" id="tab-scanner">
-<!-- TF -->
-<div class="section-title">TIMEFRAME ANALISI</div>
-<div class="tf-row" id="tfRow">
-  <div class="tf-btn" data-tf="1min">M1</div>
-  <div class="tf-btn active" data-tf="5min">M5</div>
-  <div class="tf-btn" data-tf="15min">M15</div>
-  <div class="tf-btn" data-tf="30min">M30</div>
-  <div class="tf-btn" data-tf="1h">H1</div>
-</div>
-
-<!-- SIGNAL -->
-
-<div class="signal-box wait" id="signalBox">
-  <div class="signal-header">
-    <div>
-      <div class="signal-label">SEGNALE ATTIVO</div>
-      <div class="signal-main wait" id="signalMain">IN ATTESA...</div>
-    </div>
-    <div style="font-size:28px" id="signalIcon">⏳</div>
-  </div>
-  <div class="signal-desc" id="signalDesc">Premi "Carica dati" per analizzare il timeframe selezionato.</div>
-  <div class="signal-score" id="signalScore"></div>
-</div>
-
-<!-- INDICATORS -->
-
-<div class="section-title">INDICATORI</div>
-<div class="indicators-grid">
-  <div class="ind-card neut" id="cardEMA">
-    <div class="ind-name">EMA ALLINEAMENTO</div>
-    <div class="ind-value" id="emaAlign">—</div>
-    <div class="ind-sub"   id="emaSub">5 / 10 / 20</div>
-    <span class="ind-badge neut" id="emaBadge">—</span>
-  </div>
-  <div class="ind-card neut" id="cardMACD">
-    <div class="ind-name">MACD (12,26,9)</div>
-    <div class="ind-value" id="macdVal">—</div>
-    <div class="ind-sub"   id="macdSub">DIF / DEA</div>
-    <span class="ind-badge neut" id="macdBadge">—</span>
-  </div>
-  <div class="ind-card neut" id="cardSAR">
-    <div class="ind-name">PARABOLIC SAR</div>
-    <div class="ind-value" id="sarVal">—</div>
-    <div class="ind-sub"   id="sarSub">vs prezzo</div>
-    <span class="ind-badge neut" id="sarBadge">—</span>
-  </div>
-  <div class="ind-card neut" id="cardConf">
-    <div class="ind-name">CONFERME</div>
-    <div class="ind-value" id="confVal">0 / 3</div>
-    <div class="ind-sub"   id="confSub">EMA · MACD · SAR</div>
-    <span class="ind-badge neut" id="confBadge">NESSUNA</span>
-  </div>
-</div>
-
-<!-- EMA DETAIL -->
-
-<div class="section-title">MEDIE MOBILI</div>
-<div class="ema-card">
-  <div class="ema-row"><span class="ema-label" style="color:var(--yellow)">EMA 5</span><span class="ema-val" id="ema5v">—</span></div>
-  <div class="ema-bar" id="ema5bar" style="background:var(--yellow);width:50%"></div>
-  <div class="ema-sep"></div>
-  <div class="ema-row"><span class="ema-label" style="color:#FF6B6B">EMA 10</span><span class="ema-val" id="ema10v">—</span></div>
-  <div class="ema-bar" id="ema10bar" style="background:#FF6B6B;width:50%"></div>
-  <div class="ema-sep"></div>
-  <div class="ema-row"><span class="ema-label" style="color:var(--purple)">EMA 20</span><span class="ema-val" id="ema20v">—</span></div>
-  <div class="ema-bar" id="ema20bar" style="background:var(--purple);width:50%"></div>
-</div>
-
-<!-- CHART -->
-
-<div class="section-title">ANDAMENTO PREZZI (ultimi 30 valori)</div>
-<div class="chart-wrap"><canvas id="priceChart" height="100"></canvas></div>
-
-<!-- CONTROLS -->
-
-<div class="controls">
-  <button class="btn btn-primary" id="refreshBtn" onclick="fetchData()">↻ Carica dati</button>
-  <button class="btn btn-alert"   id="alertBtn"   onclick="toggleAlerts()">🔔 Alert <span id="alertStatus">OFF</span></button>
-</div>
-
-</div><!-- end tab-scanner -->
 
 <!-- GUIDE TAB -->
 
@@ -908,236 +822,13 @@ function ma1060Crossover(closes) {
   };
 }
 
-// ─── FETCH via Anthropic API (no CORS issue) ────────────────────────────────
-async function fetchData() {
-  // ── Rate limit guard ──────────────────────────────────────────────────────
-  if (isFetching) {
-    addLog('Richiesta ignorata — già in corso', 'warn');
-    return;
-  }
-  const nowMin = Math.floor(Date.now() / 60000);
-  if (nowMin === lastCallMin) {
-    callsThisMin++;
-    if (callsThisMin > 3) { // max 3 calls/min (conservative to avoid 429)
-      addLog('Rate limit: attendo il prossimo minuto', 'warn');
-      setTimeout(fetchData, 15000); // retry in 15s
-      return;
-    }
-  } else {
-    lastCallMin  = nowMin;
-    callsThisMin = 1;
-  }
-  callCount++;
-  if (callCount > 750) { // approaching 800/day limit
-    addLog('⚠️ Limite giornaliero vicino (' + callCount + '/800)', 'warn');
-  }
-  isFetching = true;
-  // ─────────────────────────────────────────────────────────────────────────
-
-  showLoading('Recupero dati live XAU/USD...');
-  setStatus('loading');
-
-  try {
-    const url = `https://api.twelvedata.com/time_series?symbol=XAU/USD&interval=${currentTF}&outputsize=60&apikey=${API_KEY}&format=JSON`;
-    const res  = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const json = await res.json();
-
-    if (json.status === 'error') throw new Error(json.message || 'Errore API');
-    if (!json.values || !json.values.length) throw new Error('Nessun dato ricevuto');
-
-    const values = [...json.values].reverse(); // oldest first
-    const closes = values.map(v => parseFloat(v.close));
-    const highs  = values.map(v => parseFloat(v.high));
-    const lows   = values.map(v => parseFloat(v.low));
-    const last   = closes.at(-1);
-    const open   = parseFloat(values[0].open);
-
-    const mkt = {
-      price: last,
-      open,
-      high: Math.max(...highs),
-      low:  Math.min(...lows),
-      closes, highs, lows
-    };
-
-    processMarketData(mkt);
-    updateGuide(mkt.price || mkt.closes.at(-1));
-    calcAll();
-    setStatus('ok');
-    addLog('Dati live ricevuti — ' + last.toFixed(2), '');
-
-  } catch(err) {
-    setStatus('error');
-    addLog('Errore: ' + err.message, 'warn');
-  }
-
-  isFetching = false;
-  hideLoading();
-  document.getElementById('nextRefresh').textContent = 'Ultimo aggiornamento: ' + new Date().toLocaleTimeString('it-IT');
-}
-
-// ─── PROCESS DATA ──────────────────────────────────────────────────────────
-function processMarketData(mkt) {
-  const closes = mkt.closes || [];
-  const highs  = mkt.highs  || closes.map(c=>c*1.001);
-  const lows   = mkt.lows   || closes.map(c=>c*0.999);
-  const last   = mkt.price  || closes.at(-1);
-  const open   = mkt.open   || closes[0];
-
-  // Price header
-  const chg    = last - open;
-  const pct    = (chg/open*100).toFixed(2);
-  const sign   = chg>=0?'+':'';
-  const col    = chg>=0?'var(--green)':'var(--red)';
-  document.getElementById('priceMain').textContent   = last.toFixed(2);
-  document.getElementById('priceChange').textContent = `${sign}${chg.toFixed(2)} (${sign}${pct}%)`;
-  document.getElementById('priceChange').style.color = col;
-  document.getElementById('priceTime').textContent   = new Date().toLocaleTimeString('it-IT');
-
-  // Indicators
-  const e5  = ema(closes,5);
-  const e10 = ema(closes,10);
-  const e20 = ema(closes,20);
-  const m   = macd(closes);
-  const s   = sar(closes,highs,lows);
-
-  // EMA values
-  if (e5&&e10&&e20) {
-    document.getElementById('ema5v').textContent  = e5.toFixed(2);
-    document.getElementById('ema10v').textContent = e10.toFixed(2);
-    document.getElementById('ema20v').textContent = e20.toFixed(2);
-    const mn=Math.min(e5,e10,e20), mx=Math.max(e5,e10,e20), rng=mx-mn||1;
-    const bw=v=>Math.max(20,Math.min(100,((v-mn)/rng)*75+20));
-    document.getElementById('ema5bar').style.width  = bw(e5)+'%';
-    document.getElementById('ema10bar').style.width = bw(e10)+'%';
-    document.getElementById('ema20bar').style.width = bw(e20)+'%';
-    const bull=e5>e10&&e10>e20, bear=e5<e10&&e10<e20;
-    const cls=bull?'bull':bear?'bear':'neut';
-    const lbl=bull?'↑ RIALZISTA':bear?'↓ RIBASSISTA':'→ NEUTRO';
-    setCard('emaAlign',e5.toFixed(2),'emaSub','5 / 10 / 20','emaBadge',lbl,cls,'cardEMA',cls);
-  }
-
-  // MACD
-  if (m) {
-    const bull=m.dif>m.dea&&m.hist>0, bear=m.dif<m.dea&&m.hist<0;
-    const cls=bull?'bull':bear?'bear':'neut';
-    const lbl=bull?'↑ POSITIVO':bear?'↓ NEGATIVO':'→ NEUTRO';
-    setCard('macdVal',m.hist.toFixed(3),'macdSub',`DIF ${m.dif.toFixed(2)} DEA ${m.dea.toFixed(2)}`,'macdBadge',lbl,cls,'cardMACD',cls);
-  }
-
-  // SAR
-  if (s) {
-    const cls=!s.above?'bull':'bear';
-    const lbl=!s.above?'↓ SOTTO — LONG':'↑ SOPRA — SHORT';
-    const sub=!s.above?'SAR sotto il prezzo':'SAR sopra il prezzo';
-    setCard('sarVal',s.val.toFixed(2),'sarSub',sub,'sarBadge',lbl,cls,'cardSAR',cls);
-  }
-
-  // Signal
-  if (e5&&e10&&e20&&m&&s) computeSignal(e5,e10,e20,m,s,last);
-
-  // Chart
-  drawChart(closes.slice(-30));
-}
-
-// ─── SIGNAL ────────────────────────────────────────────────────────────────
-function computeSignal(e5,e10,e20,m,s,price) {
-  const emaBull=e5>e10&&e10>e20, emaBear=e5<e10&&e10<e20;
-  const mBull=m.dif>m.dea&&m.hist>0, mBear=m.dif<m.dea&&m.hist<0;
-  const sBull=!s.above, sBear=s.above;
-
-  const buyS  = [emaBull,mBull,sBull].filter(Boolean).length;
-  const sellS = [emaBear,mBear,sBear].filter(Boolean).length;
-
-  const pills=[
-    {l:'EMA', bull:emaBull, bear:emaBear},
-    {l:'MACD',bull:mBull,   bear:mBear},
-    {l:'SAR', bull:sBull,   bear:sBear},
-  ];
-  document.getElementById('signalScore').innerHTML = pills.map(p=>{
-    const c=p.bull?'ok':p.bear?'no':'warn';
-    const s=p.bull?'✓':p.bear?'✗':'–';
-    const d=p.bull?'↑':p.bear?'↓':'→';
-    return `<span class="score-pill ${c}">${s} ${p.l} ${d}</span>`;
-  }).join('');
-
-  const tot=Math.max(buyS,sellS);
-  const cc=tot===3?'bull':tot===2?'warn':'neut';
-  const cl=tot===3?'🎯 SETUP COMPLETO':tot===2?'⚡ QUASI PRONTO':'IN ATTESA';
-  setCard('confVal',`${tot} / 3`,'confSub','EMA · MACD · SAR','confBadge',cl,cc,'cardConf',cc);
-
-  const box=document.getElementById('signalBox');
-  const sm=document.getElementById('signalMain');
-  const sd=document.getElementById('signalDesc');
-  const si=document.getElementById('signalIcon');
-  box.className='signal-box';
-
-  if (buyS===3) {
-    box.classList.add('buy'); sm.className='signal-main buy'; sm.textContent='🟢 BUY';
-    si.textContent='📈';
-    sd.textContent=`3/3 conferme rialziste. EMA ordinate ↑, MACD positivo, SAR sotto il prezzo. Setup valido — considera ingresso LONG con SL sotto il minimo recente.`;
-    lastSignal='buy';
-    addLog(`🟢 BUY SETUP — ${price.toFixed(2)} — 3/3 conferme`,'buy');
-  } else if (sellS===3) {
-    box.classList.add('sell'); sm.className='signal-main sell'; sm.textContent='🔴 SELL';
-    si.textContent='📉';
-    sd.textContent=`3/3 conferme ribassiste. EMA ordinate ↓, MACD negativo, SAR sopra il prezzo. Setup valido — considera ingresso SHORT con SL sopra il massimo recente.`;
-    lastSignal='sell';
-    addLog(`🔴 SELL SETUP — ${price.toFixed(2)} — 3/3 conferme`,'sell');
-  } else if (buyS===2) {
-    box.classList.add('wait'); sm.className='signal-main wait'; sm.textContent='⚡ QUASI BUY';
-    si.textContent='👀'; sd.textContent=`2/3 conferme rialziste. Manca un segnale al setup completo.`; lastSignal='';
-  } else if (sellS===2) {
-    box.classList.add('wait'); sm.className='signal-main wait'; sm.textContent='⚡ QUASI SELL';
-    si.textContent='👀'; sd.textContent=`2/3 conferme ribassiste. Manca un segnale al setup completo.`; lastSignal='';
-  } else {
-    box.classList.add('wait'); sm.className='signal-main wait'; sm.textContent='⏸ ATTESA';
-    si.textContent='🕐'; sd.textContent=`Indicatori non allineati. Non entrare — aspetta convergenza.`; lastSignal='';
-  }
-}
-
 // ─── ALERT ─────────────────────────────────────────────────────────────────
 function fireAlert(type,price) {
   // Notifications disabled — no-op
   // Re-enable when needed
 }
 
-// ─── CHART ─────────────────────────────────────────────────────────────────
-function drawChart(data) {
-  const canvas=document.getElementById('priceChart');
-  const ctx=canvas.getContext('2d');
-  const dpr=window.devicePixelRatio||1;
-  const W=canvas.offsetWidth, H=100;
-  canvas.width=W*dpr; canvas.height=H*dpr; ctx.scale(dpr,dpr);
-  ctx.clearRect(0,0,W,H);
-  if (!data||data.length<2) return;
-  const mn=Math.min(...data)-1, mx=Math.max(...data)+1, rng=mx-mn;
-  const pad={l:2,r:2,t:8,b:8};
-  const cw=W-pad.l-pad.r, ch=H-pad.t-pad.b;
-  const px=i=>pad.l+(i/(data.length-1))*cw;
-  const py=v=>pad.t+(1-(v-mn)/rng)*ch;
-  const grad=ctx.createLinearGradient(0,pad.t,0,H-pad.b);
-  grad.addColorStop(0,'rgba(61,158,255,.3)');
-  grad.addColorStop(1,'rgba(61,158,255,.0)');
-  ctx.beginPath(); ctx.moveTo(px(0),py(data[0]));
-  for (let i=1;i<data.length;i++) ctx.lineTo(px(i),py(data[i]));
-  ctx.lineTo(px(data.length-1),H); ctx.lineTo(px(0),H); ctx.closePath();
-  ctx.fillStyle=grad; ctx.fill();
-  ctx.beginPath(); ctx.moveTo(px(0),py(data[0]));
-  for (let i=1;i<data.length;i++) ctx.lineTo(px(i),py(data[i]));
-  ctx.strokeStyle='var(--blue)'; ctx.lineWidth=1.5; ctx.stroke();
-  const lx=px(data.length-1), ly=py(data.at(-1));
-  ctx.beginPath(); ctx.arc(lx,ly,3,0,Math.PI*2); ctx.fillStyle='#fff'; ctx.fill();
-}
-
 // ─── HELPERS ───────────────────────────────────────────────────────────────
-function setCard(vid,vv,sid,sv,bid,bv,bc,cid,cc) {
-  document.getElementById(vid).textContent=vv;
-  document.getElementById(sid).textContent=sv;
-  const b=document.getElementById(bid); b.textContent=bv; b.className=`ind-badge ${bc}`;
-  const c=document.getElementById(cid); if(c) c.className=`ind-card ${cc}`;
-}
 function addLog(msg,type) {
   const w=document.getElementById('logWrap');
   const now=new Date().toLocaleTimeString('it-IT');
@@ -1348,7 +1039,8 @@ function calcAll() {
     { id:'H1',  name:'H1',  atrPct:0.300, label:'Swing 2–8 ore' },
   ];
 
-  const price = parseFloat(document.getElementById('priceMain').textContent) || 4100;
+  const priceEl = document.getElementById('dashPrice');
+  const price = (priceEl && parseFloat(priceEl.textContent)) || 4100;
   const res = document.getElementById('calcResults');
   res.innerHTML = tfs.map(tf => {
     const atr   = price * tf.atrPct / 100;
@@ -1649,14 +1341,25 @@ async function refreshDashboard() {
   }
 
   // DXY — one extra API call, staggered after the 5 TF calls
+  // Try multiple symbol formats since exchanges/providers label it differently
   let dxyBoxHtml;
   try {
     await new Promise(r => setTimeout(r, 700));
-    const url  = `https://api.twelvedata.com/time_series?symbol=DXY&interval=15min&outputsize=2&apikey=${API_KEY}&format=JSON`;
-    const res  = await fetch(url);
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const json = await res.json();
-    if (json.status === 'error') throw new Error(json.message);
+    const dxySymbols = ['DXY/USD', 'USDOLLAR', 'DXY'];
+    let json = null, lastErr = null;
+    for (const sym of dxySymbols) {
+      try {
+        const url = `https://api.twelvedata.com/time_series?symbol=${sym}&interval=15min&outputsize=2&apikey=${API_KEY}&format=JSON`;
+        const res = await fetch(url);
+        if (!res.ok) { lastErr = 'HTTP ' + res.status; continue; }
+        const j = await res.json();
+        if (j.status === 'error') { lastErr = j.message; continue; }
+        if (!j.values || j.values.length < 2) { lastErr = 'Dati insufficienti'; continue; }
+        json = j;
+        break;
+      } catch(e) { lastErr = e.message; }
+    }
+    if (!json) throw new Error(lastErr || 'Simbolo non disponibile su questo piano');
     const vals  = [...json.values].reverse();
     const price = parseFloat(vals.at(-1).close);
     const prev  = parseFloat(vals[0].close);
@@ -1684,20 +1387,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }, 300);
 });
 
-// ─── TF SWITCH ─────────────────────────────────────────────────────────────
-document.getElementById('tfRow').addEventListener('click',e=>{
-  const b=e.target.closest('.tf-btn'); if(!b) return;
-  document.querySelectorAll('.tf-btn').forEach(x=>x.classList.remove('active'));
-  b.classList.add('active'); currentTF=b.dataset.tf; lastSignal='';
-  // Debounce: wait 800ms before fetching to avoid multiple calls on fast taps
-  if (fetchQueue) clearTimeout(fetchQueue);
-  fetchQueue = setTimeout(fetchData, 800);
-});
-
 // Auto-refresh disabled — on demand only
 
-// ─── INIT — on demand only ──────────────────────────────────────────────────
-// fetchData(); // disabled — user triggers manually
 </script>
 
 <!-- ══════════════════════════════════════════════════════════════
