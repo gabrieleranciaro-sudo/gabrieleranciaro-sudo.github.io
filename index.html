@@ -362,6 +362,10 @@ letter-spacing: 0.5px;
 
   <div id="dashResults" style="display:none"></div>
 
+  <!-- Extra context: DXY + MA10/60 crossover -->
+
+  <div id="dashExtra" style="display:none;margin-top:10px;display:flex;flex-direction:column;gap:10px"></div>
+
   <!-- Refresh button -->
 
   <button onclick="refreshDashboard()" style="width:100%;padding:14px;background:rgba(61,158,255,.15);border:1px solid rgba(61,158,255,.3);border-radius:12px;color:var(--blue);font-size:13px;font-weight:600;cursor:pointer;margin-top:10px">
@@ -884,6 +888,24 @@ function sar(closes, highs, lows) {
   const bull=closes.at(-1)>closes.at(-5);
   const val=bull ? Math.min(...lows.slice(-5))*0.9985 : Math.max(...highs.slice(-5))*1.0015;
   return { val, above: val>last };
+}
+
+// ─── SMA (simple moving average) — used for the 10/60 crossover ────────────
+function sma(arr, p) {
+  if (arr.length < p) return null;
+  return arr.slice(-p).reduce((a,b)=>a+b,0)/p;
+}
+
+// ─── MA 10/60 crossover — classic gold long-term setup on H1 ───────────────
+function ma1060Crossover(closes) {
+  const ma10 = sma(closes, 10);
+  const ma60 = sma(closes, 60);
+  if (ma10===null || ma60===null) return null;
+  return {
+    ma10, ma60,
+    bull: ma10 > ma60,
+    bear: ma10 < ma60,
+  };
 }
 
 // ─── FETCH via Anthropic API (no CORS issue) ────────────────────────────────
@@ -1441,6 +1463,54 @@ function renderDashRow(tfObj, signal, err) {
     </div>`;
 }
 
+// ─── DXY context box — gold is usually inverse to the dollar ───────────────
+function renderDxyBox(dxy, err) {
+  if (err) {
+    return `
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px">
+        <div style="font-size:10px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">💵 CONTESTO DOLLARO (DXY)</div>
+        <div style="font-size:12px;color:#FFB830">Dato non disponibile — ${err}</div>
+      </div>`;
+  }
+  const { price, chg, pct } = dxy;
+  const rising = chg > 0;
+  const color  = rising ? '#FF4560' : '#00D4A0'; // dollaro su = pressione ribassista sull'oro
+  const note   = rising
+    ? 'Dollaro in salita — pressione ribassista sull\'oro. I segnali BUY sono meno affidabili in questo contesto.'
+    : 'Dollaro in calo — contesto favorevole per l\'oro. I segnali BUY sono più coerenti col contesto.';
+  const sign = chg>=0?'+':'';
+  return `
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+        <div style="font-size:10px;color:var(--dim);letter-spacing:1px;text-transform:uppercase">💵 CONTESTO DOLLARO (DXY)</div>
+        <div style="font-size:13px;color:#fff;font-weight:600">${price.toFixed(2)} <span style="color:${color};font-size:11px">${sign}${chg.toFixed(2)} (${sign}${pct}%)</span></div>
+      </div>
+      <div style="font-size:11px;color:var(--dim);line-height:1.4">${note}</div>
+    </div>`;
+}
+
+// ─── MA10/60 crossover box — classic long-term gold setup on H1 ────────────
+function renderMaCrossBox(ma, err) {
+  if (err) {
+    return `
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px">
+        <div style="font-size:10px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">📊 TREND H1 — INCROCIO MA 10/60</div>
+        <div style="font-size:12px;color:#FFB830">Dato non disponibile — ${err}</div>
+      </div>`;
+  }
+  const dir   = ma.bull ? 'RIALZISTA' : ma.bear ? 'RIBASSISTA' : 'NEUTRO';
+  const color = ma.bull ? '#00D4A0' : ma.bear ? '#FF4560' : '#FFB830';
+  const arrow = ma.bull ? '↑' : ma.bear ? '↓' : '→';
+  return `
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+        <div style="font-size:10px;color:var(--dim);letter-spacing:1px;text-transform:uppercase">📊 TREND H1 — INCROCIO MA 10/60</div>
+        <div style="font-size:13px;color:${color};font-weight:700">${dir} ${arrow}</div>
+      </div>
+      <div style="font-size:11px;color:var(--dim)">MA10: ${ma.ma10.toFixed(2)} &nbsp;·&nbsp; MA60: ${ma.ma60.toFixed(2)}</div>
+    </div>`;
+}
+
 async function refreshDashboard() {
   if (dashFetching) return;
   dashFetching = true;
@@ -1465,6 +1535,7 @@ async function refreshDashboard() {
   }
 
   // Fetch all 5 TF in parallel — fastest possible
+  let h1Closes = null; // reused for MA10/60 crossover
   const fetchOne = async (tfObj, idx) => {
     try {
       const url  = `https://api.twelvedata.com/time_series?symbol=XAU/USD&interval=${tfObj.tf}&outputsize=60&apikey=${API_KEY}&format=JSON`;
@@ -1480,6 +1551,7 @@ async function refreshDashboard() {
       const price  = parseFloat(vals.at(-1).close);
       const open   = parseFloat(vals[0].open);
       results[idx] = { ...tfObj, signal, error: null, price, open };
+      if (tfObj.tf === '1h') h1Closes = closes; // save for MA10/60
       // Update price display from M5
       if (tfObj.tf === '5min' && price) {
         const chg  = price - open;
@@ -1507,8 +1579,53 @@ async function refreshDashboard() {
 
   // Final render in fixed order
   renderAll();
+
+  // ── Extra context: DXY (dollar) + MA10/60 crossover on H1 ─────────────────
+  document.getElementById('dashExtra').style.display = 'flex';
+  document.getElementById('dashExtra').innerHTML =
+    `<div style="font-size:10px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin:4px 0 -2px 2px">CONTESTO AGGIUNTIVO</div>
+     <div style="text-align:center;padding:14px 0;color:var(--dim);font-size:12px">⏳ Carico DXY e trend H1...</div>`;
+
+  // MA10/60 from already-fetched H1 closes — no extra API call needed
+  let maBoxHtml;
+  try {
+    if (h1Closes && h1Closes.length >= 60) {
+      const ma = ma1060Crossover(h1Closes);
+      maBoxHtml = renderMaCrossBox(ma, ma ? null : 'Dati insufficienti');
+    } else {
+      maBoxHtml = renderMaCrossBox(null, 'Dati H1 non disponibili');
+    }
+  } catch(e) {
+    maBoxHtml = renderMaCrossBox(null, e.message);
+  }
+
+  // DXY — one extra API call, staggered after the 5 TF calls
+  let dxyBoxHtml;
+  try {
+    await new Promise(r => setTimeout(r, 700));
+    const url  = `https://api.twelvedata.com/time_series?symbol=DXY&interval=15min&outputsize=2&apikey=${API_KEY}&format=JSON`;
+    const res  = await fetch(url);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const json = await res.json();
+    if (json.status === 'error') throw new Error(json.message);
+    const vals  = [...json.values].reverse();
+    const price = parseFloat(vals.at(-1).close);
+    const prev  = parseFloat(vals[0].close);
+    const chg   = price - prev;
+    const pct   = (chg/prev*100).toFixed(2);
+    dxyBoxHtml = renderDxyBox({ price, chg, pct: pct }, null);
+  } catch(e) {
+    dxyBoxHtml = renderDxyBox(null, e.message);
+  }
+
+  document.getElementById('dashExtra').innerHTML =
+    `<div style="font-size:10px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin:4px 0 -2px 2px">CONTESTO AGGIUNTIVO</div>
+     ${dxyBoxHtml}
+     ${maBoxHtml}`;
+
   dashFetching = false;
 }
+
 
 // Open on dashboard and run first check automatically
 document.addEventListener('DOMContentLoaded', () => {
