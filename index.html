@@ -1419,13 +1419,47 @@ function analyzeTFData(closes, highs, lows) {
   const mBear   = m.dif<m.dea && m.hist<0;
   const sBull   = !s.above;
   const sBear   = s.above;
+  const pullback = detectPullback(closes, lows, highs, e20, emaBull, emaBear);
   return {
     buyS:  [emaBull,mBull,sBull].filter(Boolean).length,
     sellS: [emaBear,mBear,sBear].filter(Boolean).length,
     ema:   emaBull?'bull':emaBear?'bear':'neut',
     macd:  mBull  ?'bull':mBear  ?'bear':'neut',
     sar:   sBull  ?'bull':sBear  ?'bear':'neut',
+    pullback,
   };
+}
+
+// ─── PULLBACK DETECTION ──────────────────────────────────────────────────
+// Mannan's Step 2: price must retrace into EMA20 (our equivalent of his EMA50)
+// then the latest candle must close back in trend direction — that close is
+// the trigger, not the wick. We look at the last 6 candles for a touch/near
+// of EMA20 followed by a directional close.
+function detectPullback(closes, lows, highs, e20, emaBull, emaBear) {
+  if (!emaBull && !emaBear) return { occurred:false, reason:'no-trend' };
+  if (closes.length < 6) return { occurred:false, reason:'insufficient-data' };
+
+  const lastClose = closes.at(-1);
+  const tolerance  = e20 * 0.0015; // ~0.15% band around EMA20 counts as "touch"
+  const window     = 6; // look at the last 6 candles for the retrace
+
+  const recentLows  = lows.slice(-window);
+  const recentHighs = highs.slice(-window);
+
+  if (emaBull) {
+    // did price dip down into the EMA20 zone recently?
+    const touchedZone = recentLows.some(l => l <= e20 + tolerance);
+    // did the latest candle close back above EMA20, in trend direction?
+    const closedBack  = lastClose > e20;
+    const occurred = touchedZone && closedBack;
+    return { occurred, reason: occurred ? 'ok' : (touchedZone ? 'no-close-back' : 'no-retrace') };
+  } else {
+    // bearish: did price pop up into the EMA20 zone recently?
+    const touchedZone = recentHighs.some(h => h >= e20 - tolerance);
+    const closedBack  = lastClose < e20;
+    const occurred = touchedZone && closedBack;
+    return { occurred, reason: occurred ? 'ok' : (touchedZone ? 'no-close-back' : 'no-retrace') };
+  }
 }
 
 function renderDashRow(tfObj, signal, err) {
@@ -1452,12 +1486,27 @@ function renderDashRow(tfObj, signal, err) {
     return `<span class="dash-pill ${match?'ok':'no'}">${p.label}${dir}</span>`;
   }).join('');
 
+  // Pullback frame — independent check, doesn't affect BUY/SELL signal
+  const pb = signal.pullback;
+  let pbHtml = '';
+  if (pb && pb.reason !== 'no-trend') {
+    const pbColor = pb.occurred ? '#00D4A0' : '#FF4560';
+    const pbMark  = pb.occurred ? '✓' : '✗';
+    const pbBg    = pb.occurred ? 'rgba(0,212,160,.08)' : 'rgba(255,69,96,.08)';
+    pbHtml = `
+      <div style="margin-top:6px;display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border:1px solid ${pbColor};border-radius:6px;background:${pbBg}">
+        <span style="font-size:10px;color:${pbColor};font-weight:700;letter-spacing:0.5px">PULLBACK</span>
+        <span style="font-size:11px;color:${pbColor};font-weight:700">${pbMark}</span>
+      </div>`;
+  }
+
   return `
     <div class="dash-row dash-${sig.key}">
       <div class="dash-tf">${tfObj.label}<span class="dash-tf-sub">${tfObj.sub}</span></div>
       <div class="dash-signal">
         <div class="dash-signal-name" style="color:${sig.color}">${sig.label}</div>
         <div style="display:flex;gap:4px;margin-top:5px">${pillsHtml}</div>
+        ${pbHtml}
       </div>
       <div style="font-size:11px;color:${sig.color};font-weight:700;flex-shrink:0">${Math.max(signal.buyS,signal.sellS)}/3</div>
     </div>`;
