@@ -27,7 +27,7 @@
   body { background:var(--bg); color:var(--text); font-family:-apple-system,'SF Pro Display',sans-serif; min-height:100vh; padding-bottom:40px; background-color:#000; }
 
 /* HEADER */
-.header { background:linear-gradient(135deg,#0E1419,#131A21); border-bottom:1px solid var(–border); padding:14px 16px 12px; }
+.header { background:#000; border-bottom:1px solid var(–border); padding:14px 16px 12px; }
 .header-top { display:flex; align-items:center; justify-content:space-between; }
 .logo { display:flex; align-items:center; gap:8px; }
 .logo-dot { width:10px; height:10px; border-radius:50%; background:var(–gold); box-shadow:0 0 8px var(–gold); animation:pulse-gold 2s infinite; }
@@ -315,11 +315,6 @@ letter-spacing: 0.5px;
       </div>
     </div>
     <div class="live-badge"><div class="live-dot"></div><span id="liveLabel">LIVE</span></div>
-  </div>
-  <div class="price-bar">
-    <div class="price-main" id="priceMain">—</div>
-    <div class="price-change" id="priceChange"></div>
-    <div class="price-time" id="priceTime"></div>
   </div>
 </div>
 
@@ -1213,18 +1208,21 @@ function renderDxyBox(fx, err) {
   // EUR/USD down => dollar strengthening => bearish pressure on gold
   // EUR/USD up   => dollar weakening    => bullish context for gold
   const dollarRising = chg < 0;
-  const color  = dollarRising ? '#FF4560' : '#00D4A0';
-  const note   = dollarRising
-    ? 'EUR/USD in calo → dollaro in rafforzamento — pressione ribassista sull\'oro. I segnali BUY sono meno coerenti in questo contesto.'
-    : 'EUR/USD in salita → dollaro in debolezza — contesto favorevole per l\'oro. I segnali BUY sono più coerenti col contesto.';
+  const dollarFlat    = chg === 0;
+  const dir   = dollarFlat ? 'NEUTRO' : dollarRising ? 'DOLLARO SU' : 'DOLLARO GIÙ';
+  const color = dollarFlat ? '#FFB830' : dollarRising ? '#FF4560' : '#00D4A0';
+  const arrow = dollarFlat ? '→' : dollarRising ? '↑' : '↓';
+  const note  = dollarFlat ? 'Dollaro stabile.' : dollarRising
+    ? 'Dollaro in rafforzamento — pressione ribassista sull\'oro.'
+    : 'Dollaro in debolezza — contesto favorevole per l\'oro.';
   const sign = chg>=0?'+':'';
   return `
     <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px">
       <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
         <div style="font-size:10px;color:var(--dim);letter-spacing:1px;text-transform:uppercase">💵 CONTESTO DOLLARO (via EUR/USD)</div>
-        <div style="font-size:13px;color:#fff;font-weight:600">${price.toFixed(4)} <span style="color:${color};font-size:11px">${sign}${chg.toFixed(4)} (${sign}${pct}%)</span></div>
+        <div style="font-size:13px;color:${color};font-weight:700">${dir} ${arrow}</div>
       </div>
-      <div style="font-size:11px;color:var(--dim);line-height:1.4">${note}</div>
+      <div style="font-size:11px;color:var(--dim);line-height:1.4">EUR/USD: ${price.toFixed(4)} (${sign}${pct}%) — ${note}</div>
     </div>`;
 }
 
