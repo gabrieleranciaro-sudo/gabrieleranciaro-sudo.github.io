@@ -1178,18 +1178,15 @@ function renderDashRow(tfObj, signal, err) {
     return `<span class="dash-pill ${match?'ok':'no'}">${p.label}${dir}</span>`;
   }).join('');
 
-  // Pullback frame — independent check, doesn't affect BUY/SELL signal
+  // Pullback pill — independent check, doesn't affect BUY/SELL signal
   const pb = signal.pullback;
-  let pbHtml = '';
+  let pbPillHtml = '';
   if (pb && pb.reason !== 'no-trend') {
     const pbColor = pb.occurred ? '#00D4A0' : '#FF4560';
     const pbMark  = pb.occurred ? '✓' : '✗';
-    const pbBg    = pb.occurred ? 'rgba(0,212,160,.08)' : 'rgba(255,69,96,.08)';
-    pbHtml = `
-      <div style="margin-top:6px;display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border:1px solid ${pbColor};border-radius:6px;background:${pbBg}">
-        <span style="font-size:10px;color:${pbColor};font-weight:700;letter-spacing:0.5px">PULLBACK</span>
-        <span style="font-size:11px;color:${pbColor};font-weight:700">${pbMark}</span>
-      </div>`;
+    const pbBorder= pb.occurred ? 'rgba(0,212,160,.5)' : 'rgba(255,69,96,.5)';
+    const pbBg    = pb.occurred ? 'rgba(0,212,160,.12)' : 'rgba(255,69,96,.12)';
+    pbPillHtml = `<span style="font-size:10px;font-weight:700;letter-spacing:0.3px;padding:3px 7px;border-radius:6px;border:1px solid ${pbBorder};background:${pbBg};color:${pbColor};white-space:nowrap">PULLBACK ${pbMark}</span>`;
   }
 
   return `
@@ -1197,8 +1194,7 @@ function renderDashRow(tfObj, signal, err) {
       <div class="dash-tf">${tfObj.label}<span class="dash-tf-sub">${tfObj.sub}</span></div>
       <div class="dash-signal">
         <div class="dash-signal-name" style="color:${sig.color}">${sig.label}</div>
-        <div style="display:flex;gap:4px;margin-top:5px">${pillsHtml}</div>
-        ${pbHtml}
+        <div style="display:flex;gap:4px;margin-top:5px;flex-wrap:wrap">${pillsHtml}${pbPillHtml}</div>
       </div>
       <div style="font-size:11px;color:${sig.color};font-weight:700;flex-shrink:0">${Math.max(signal.buyS,signal.sellS)}/3</div>
     </div>`;
