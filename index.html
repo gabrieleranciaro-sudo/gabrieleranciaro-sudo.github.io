@@ -1201,26 +1201,28 @@ function renderDashRow(tfObj, signal, err) {
 }
 
 // ─── DXY context box — gold is usually inverse to the dollar ───────────────
-function renderDxyBox(dxy, err) {
+function renderDxyBox(fx, err) {
   if (err) {
     return `
       <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px">
-        <div style="font-size:10px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">💵 CONTESTO DOLLARO (DXY)</div>
+        <div style="font-size:10px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">💵 CONTESTO DOLLARO (via EUR/USD)</div>
         <div style="font-size:12px;color:#FFB830">Dato non disponibile — ${err}</div>
       </div>`;
   }
-  const { price, chg, pct } = dxy;
-  const rising = chg > 0;
-  const color  = rising ? '#FF4560' : '#00D4A0'; // dollaro su = pressione ribassista sull'oro
-  const note   = rising
-    ? 'Dollaro in salita — pressione ribassista sull\'oro. I segnali BUY sono meno affidabili in questo contesto.'
-    : 'Dollaro in calo — contesto favorevole per l\'oro. I segnali BUY sono più coerenti col contesto.';
+  const { price, chg, pct } = fx;
+  // EUR/USD down => dollar strengthening => bearish pressure on gold
+  // EUR/USD up   => dollar weakening    => bullish context for gold
+  const dollarRising = chg < 0;
+  const color  = dollarRising ? '#FF4560' : '#00D4A0';
+  const note   = dollarRising
+    ? 'EUR/USD in calo → dollaro in rafforzamento — pressione ribassista sull\'oro. I segnali BUY sono meno coerenti in questo contesto.'
+    : 'EUR/USD in salita → dollaro in debolezza — contesto favorevole per l\'oro. I segnali BUY sono più coerenti col contesto.';
   const sign = chg>=0?'+':'';
   return `
     <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px">
       <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
-        <div style="font-size:10px;color:var(--dim);letter-spacing:1px;text-transform:uppercase">💵 CONTESTO DOLLARO (DXY)</div>
-        <div style="font-size:13px;color:#fff;font-weight:600">${price.toFixed(2)} <span style="color:${color};font-size:11px">${sign}${chg.toFixed(2)} (${sign}${pct}%)</span></div>
+        <div style="font-size:10px;color:var(--dim);letter-spacing:1px;text-transform:uppercase">💵 CONTESTO DOLLARO (via EUR/USD)</div>
+        <div style="font-size:13px;color:#fff;font-weight:600">${price.toFixed(4)} <span style="color:${color};font-size:11px">${sign}${chg.toFixed(4)} (${sign}${pct}%)</span></div>
       </div>
       <div style="font-size:11px;color:var(--dim);line-height:1.4">${note}</div>
     </div>`;
@@ -1336,26 +1338,17 @@ async function refreshDashboard() {
     maBoxHtml = renderMaCrossBox(null, e.message);
   }
 
-  // DXY — one extra API call, staggered after the 5 TF calls
-  // Try multiple symbol formats since exchanges/providers label it differently
+  // Dollar context via EUR/USD — one extra API call, staggered after the 5 TF calls
+  // EUR/USD is on every free plan; DXY itself requires a paid Twelve Data plan
   let dxyBoxHtml;
   try {
     await new Promise(r => setTimeout(r, 700));
-    const dxySymbols = ['DXY/USD', 'USDOLLAR', 'DXY'];
-    let json = null, lastErr = null;
-    for (const sym of dxySymbols) {
-      try {
-        const url = `https://api.twelvedata.com/time_series?symbol=${sym}&interval=15min&outputsize=2&apikey=${API_KEY}&format=JSON`;
-        const res = await fetch(url);
-        if (!res.ok) { lastErr = 'HTTP ' + res.status; continue; }
-        const j = await res.json();
-        if (j.status === 'error') { lastErr = j.message; continue; }
-        if (!j.values || j.values.length < 2) { lastErr = 'Dati insufficienti'; continue; }
-        json = j;
-        break;
-      } catch(e) { lastErr = e.message; }
-    }
-    if (!json) throw new Error(lastErr || 'Simbolo non disponibile su questo piano');
+    const url = `https://api.twelvedata.com/time_series?symbol=EUR/USD&interval=15min&outputsize=2&apikey=${API_KEY}&format=JSON`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const json = await res.json();
+    if (json.status === 'error') throw new Error(json.message);
+    if (!json.values || json.values.length < 2) throw new Error('Dati insufficienti');
     const vals  = [...json.values].reverse();
     const price = parseFloat(vals.at(-1).close);
     const prev  = parseFloat(vals[0].close);
