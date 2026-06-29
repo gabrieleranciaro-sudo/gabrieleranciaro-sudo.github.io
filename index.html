@@ -1513,20 +1513,20 @@ function evaluateCollaboration(results, maBoxHtml, dxyBoxHtml) {
 
     levelsHtml = `
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
-        <div style="background:rgba(255,255,255,.04);border-radius:8px;padding:8px 6px;text-align:center">
-          <div style="font-size:9px;color:var(--dim);letter-spacing:0.5px;margin-bottom:3px">ENTRY (${refTF.label})</div>
-          <div style="font-size:13px;font-weight:700;color:#fff">${entry.toFixed(2)}</div>
+        <div style="background:rgba(255,255,255,.04);border-radius:8px;padding:10px 6px;text-align:center">
+          <div style="font-size:11px;color:var(--dim);letter-spacing:0.5px;margin-bottom:4px">ENTRY (${refTF.label})</div>
+          <div style="font-size:19px;font-weight:800;color:#fff">${entry.toFixed(2)}</div>
         </div>
-        <div style="background:rgba(255,69,96,.08);border-radius:8px;padding:8px 6px;text-align:center">
-          <div style="font-size:9px;color:var(--dim);letter-spacing:0.5px;margin-bottom:3px">STOP LOSS</div>
-          <div style="font-size:13px;font-weight:700;color:#FF4560">${sl.toFixed(2)}</div>
+        <div style="background:rgba(255,69,96,.08);border-radius:8px;padding:10px 6px;text-align:center">
+          <div style="font-size:11px;color:var(--dim);letter-spacing:0.5px;margin-bottom:4px">STOP LOSS</div>
+          <div style="font-size:19px;font-weight:800;color:#FF4560">${sl.toFixed(2)}</div>
         </div>
-        <div style="background:rgba(0,212,160,.08);border-radius:8px;padding:8px 6px;text-align:center">
-          <div style="font-size:9px;color:var(--dim);letter-spacing:0.5px;margin-bottom:3px">TARGET (${rrMultiple}x)</div>
-          <div style="font-size:13px;font-weight:700;color:#00D4A0">${tp.toFixed(2)}</div>
+        <div style="background:rgba(0,212,160,.08);border-radius:8px;padding:10px 6px;text-align:center">
+          <div style="font-size:11px;color:var(--dim);letter-spacing:0.5px;margin-bottom:4px">TARGET (${rrMultiple}x)</div>
+          <div style="font-size:19px;font-weight:800;color:#00D4A0">${tp.toFixed(2)}</div>
         </div>
       </div>
-      <div style="font-size:10px;color:var(--dim);margin-bottom:10px">Rischio: ${risk.toFixed(2)}$ · Rendimento target: ${(risk*rrMultiple).toFixed(2)}$</div>`;
+      <div style="font-size:12px;color:var(--dim);margin-bottom:10px">Rischio: ${risk.toFixed(2)}$ · Rendimento target: ${(risk*rrMultiple).toFixed(2)}$</div>`;
 
     // Reliability label — tells you how much to trust the numbers alone
     if (score >= 4) {
