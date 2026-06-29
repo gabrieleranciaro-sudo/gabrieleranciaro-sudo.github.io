@@ -1354,7 +1354,10 @@ async function refreshDashboard() {
       const signal = analyzeTFData(closes, highs, lows, opens);
       const price  = parseFloat(vals.at(-1).close);
       const open   = parseFloat(vals[0].open);
-      results[idx] = { ...tfObj, signal, error: null, price, open };
+      const tfAtr  = atr(highs, lows, closes, 14);
+      const swingHigh = Math.max(...highs.slice(-10)); // recent 10-candle swing high
+      const swingLow  = Math.min(...lows.slice(-10));  // recent 10-candle swing low
+      results[idx] = { ...tfObj, signal, error: null, price, open, atr: tfAtr, swingHigh, swingLow };
       if (tfObj.tf === '1h') h1Closes = closes; // save for MA10/60
       // Update price display from M5
       if (tfObj.tf === '5min' && price) {
@@ -1483,6 +1486,68 @@ function evaluateCollaboration(results, maBoxHtml, dxyBoxHtml) {
 
   if (score < 2) return null; // not worth a deep analysis
 
+  // ── Calculate entry/SL/TP using the dominant timeframe with the strongest signal ──
+  // Prefer H1 if it's part of the strong signals (more reliable swing levels),
+  // otherwise use the first TF with the strongest score.
+  const candidates = valid.filter(r =>
+    (dir === 'buy' ? r.signal.buyS : r.signal.sellS) === 3
+  );
+  const refTF = candidates.find(r => r.tf === '1h') || candidates[0] || valid[0];
+
+  let levelsHtml = '';
+  let reliabilityHtml = '';
+  if (refTF && refTF.price && refTF.atr) {
+    const entry = refTF.price;
+    const isBuy = dir === 'buy';
+    // SL: just past the recent swing, with a small ATR buffer (avoids too-tight stops)
+    const slBuffer = refTF.atr * 0.3;
+    const sl = isBuy
+      ? Math.min(refTF.swingLow, entry - refTF.atr * 0.8) - slBuffer
+      : Math.max(refTF.swingHigh, entry + refTF.atr * 0.8) + slBuffer;
+    const risk = Math.abs(entry - sl);
+    // TP: risk/reward depends on setup strength — stronger setup = more ambitious target
+    const rrMultiple = score >= 4 ? 2.5 : score >= 3 ? 2.0 : 1.5;
+    const tp = isBuy ? entry + risk * rrMultiple : entry - risk * rrMultiple;
+
+    levelsHtml = `
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+        <div style="background:rgba(255,255,255,.04);border-radius:8px;padding:8px 6px;text-align:center">
+          <div style="font-size:9px;color:var(--dim);letter-spacing:0.5px;margin-bottom:3px">ENTRY (${refTF.label})</div>
+          <div style="font-size:13px;font-weight:700;color:#fff">${entry.toFixed(2)}</div>
+        </div>
+        <div style="background:rgba(255,69,96,.08);border-radius:8px;padding:8px 6px;text-align:center">
+          <div style="font-size:9px;color:var(--dim);letter-spacing:0.5px;margin-bottom:3px">STOP LOSS</div>
+          <div style="font-size:13px;font-weight:700;color:#FF4560">${sl.toFixed(2)}</div>
+        </div>
+        <div style="background:rgba(0,212,160,.08);border-radius:8px;padding:8px 6px;text-align:center">
+          <div style="font-size:9px;color:var(--dim);letter-spacing:0.5px;margin-bottom:3px">TARGET (${rrMultiple}x)</div>
+          <div style="font-size:13px;font-weight:700;color:#00D4A0">${tp.toFixed(2)}</div>
+        </div>
+      </div>
+      <div style="font-size:10px;color:var(--dim);margin-bottom:10px">Rischio: ${risk.toFixed(2)}$ · Rendimento target: ${(risk*rrMultiple).toFixed(2)}$</div>`;
+
+    // Reliability label — tells you how much to trust the numbers alone
+    if (score >= 4) {
+      reliabilityHtml = `
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px">
+          <span style="font-size:10px;font-weight:800;padding:3px 8px;border-radius:6px;background:rgba(0,212,160,.15);color:#00D4A0;letter-spacing:0.3px">✓ AFFIDABILITÀ ALTA</span>
+          <span style="font-size:10px;color:var(--dim)">puoi usare questi numeri direttamente</span>
+        </div>`;
+    } else if (score === 3) {
+      reliabilityHtml = `
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px">
+          <span style="font-size:10px;font-weight:800;padding:3px 8px;border-radius:6px;background:rgba(255,184,48,.15);color:#FFB830;letter-spacing:0.3px">~ AFFIDABILITÀ MEDIA</span>
+          <span style="font-size:10px;color:var(--dim)">numeri utilizzabili, conferma veloce consigliata</span>
+        </div>`;
+    } else {
+      reliabilityHtml = `
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px">
+          <span style="font-size:10px;font-weight:800;padding:3px 8px;border-radius:6px;background:rgba(255,69,96,.15);color:#FF4560;letter-spacing:0.3px">⚠ AFFIDABILITÀ BASSA</span>
+          <span style="font-size:10px;color:var(--dim)">manda lo screenshot prima di entrare</span>
+        </div>`;
+    }
+  }
+
   // Build the banner
   const dirLabel  = dir === 'buy'  ? 'BUY'  : 'SELL';
   const dirColor  = dir === 'buy'  ? '#00D4A0' : '#FF4560';
@@ -1497,6 +1562,12 @@ function evaluateCollaboration(results, maBoxHtml, dxyBoxHtml) {
   if (maAligned)       reasons.push(`trend H1 MA10/60 allineato`);
   if (dxyAligned)      reasons.push(`dollaro a favore`);
 
+  const actionMsg = score >= 4
+    ? `Setup molto solido. Entry/SL/TP calcolati sopra sono pronti all'uso su ${refTF ? refTF.label : 'H1'}. Verifica solo che il prezzo non si sia mosso troppo da quando hai aperto l'app.`
+    : score === 3
+    ? `Setup buono ma non massimo. I numeri sopra sono una base valida — se vuoi una conferma in più, manda uno screenshot del grafico ${refTF ? refTF.label : 'M15'} prima di entrare.`
+    : `Setup interessante ma con margini di dubbio (alcuni TF minori in disaccordo). Prima di usare questi numeri, manda uno screenshot così verifichiamo insieme il contesto visivo completo.`;
+
   return `
     <div style="background:rgba(255,184,48,.06);border:1.5px solid ${intensityColor};border-radius:14px;padding:14px 16px;margin-top:4px">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
@@ -1509,10 +1580,12 @@ function evaluateCollaboration(results, maBoxHtml, dxyBoxHtml) {
       <div style="font-size:11px;color:rgba(255,255,255,0.7);line-height:1.6;margin-bottom:10px">
         ${reasons.map(r => `· ${r}`).join('<br>')}
       </div>
+      ${reliabilityHtml}
+      ${levelsHtml}
       <div style="background:rgba(255,255,255,.05);border-radius:8px;padding:10px 12px;border-left:3px solid ${intensityColor}">
         <div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:3px">Cosa fare adesso</div>
         <div style="font-size:11px;color:rgba(255,255,255,0.65);line-height:1.5">
-          Apri PUPrime su M15 o H1, fai uno screenshot del grafico e invialo a Claude per analisi. Indica saldo attuale e direzione segnalata.
+          ${actionMsg}
         </div>
       </div>
     </div>`;
