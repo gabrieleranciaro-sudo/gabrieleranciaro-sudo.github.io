@@ -1486,13 +1486,15 @@ function evaluateCollaboration(results, maBoxHtml, dxyBoxHtml) {
 
   if (score < 2) return null; // not worth a deep analysis
 
-  // ── Calculate entry/SL/TP using the dominant timeframe with the strongest signal ──
-  // Prefer H1 if it's part of the strong signals (more reliable swing levels),
-  // otherwise use the first TF with the strongest score.
+  // ── Calculate entry/SL/TP using the most scalping-relevant timeframe ──
+  // Prefer the LOWEST timeframe with a 3/3 signal (most reactive, best for
+  // scalping entries). TF_LIST is already ordered M1→H1, so the first match
+  // is the lowest/fastest one. H1 is used only as fallback context, not as
+  // the default entry reference.
   const candidates = valid.filter(r =>
     (dir === 'buy' ? r.signal.buyS : r.signal.sellS) === 3
   );
-  const refTF = candidates.find(r => r.tf === '1h') || candidates[0] || valid[0];
+  const refTF = candidates[0] || valid[0];
 
   let levelsHtml = '';
   let reliabilityHtml = '';
