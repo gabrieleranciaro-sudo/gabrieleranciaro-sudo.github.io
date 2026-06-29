@@ -360,6 +360,10 @@ letter-spacing: 0.5px;
 
   <div id="dashExtra" style="display:none;margin-top:10px;display:flex;flex-direction:column;gap:10px"></div>
 
+  <!-- Collaboration check banner -->
+
+  <div id="dashCollab" style="display:none;margin-top:6px"></div>
+
   <!-- Refresh button -->
 
   <button onclick="refreshDashboard()" style="width:100%;padding:14px;background:rgba(61,158,255,.15);border:1px solid rgba(61,158,255,.3);border-radius:12px;color:var(--blue);font-size:13px;font-weight:600;cursor:pointer;margin-top:10px">
@@ -1093,7 +1097,7 @@ function signalInfo(buyS, sellS) {
   return                   { key:'wait',     label:'ATTESA',     color:'#FFB830' };
 }
 
-function analyzeTFData(closes, highs, lows) {
+function analyzeTFData(closes, highs, lows, opens) {
   const e5  = ema(closes, 5);
   const e10 = ema(closes, 10);
   const e20 = ema(closes, 20);
@@ -1107,6 +1111,7 @@ function analyzeTFData(closes, highs, lows) {
   const sBull   = !s.above;
   const sBear   = s.above;
   const pullback = detectPullback(closes, lows, highs, e20, emaBull, emaBear);
+  const wick     = opens ? detectWickReversal(opens, highs, lows, closes) : null;
   return {
     buyS:  [emaBull,mBull,sBull].filter(Boolean).length,
     sellS: [emaBear,mBear,sBear].filter(Boolean).length,
@@ -1114,7 +1119,57 @@ function analyzeTFData(closes, highs, lows) {
     macd:  mBull  ?'bull':mBear  ?'bear':'neut',
     sar:   sBull  ?'bull':sBear  ?'bear':'neut',
     pullback,
+    wick,
   };
+}
+
+// ─── ATR (Average True Range) — needed for the wick reversal pattern ───────
+function atr(highs, lows, closes, period) {
+  if (closes.length < period + 1) return null;
+  const trs = [];
+  for (let i = 1; i < closes.length; i++) {
+    const tr = Math.max(
+      highs[i] - lows[i],
+      Math.abs(highs[i] - closes[i-1]),
+      Math.abs(lows[i]  - closes[i-1])
+    );
+    trs.push(tr);
+  }
+  const recent = trs.slice(-period);
+  return recent.reduce((a,b)=>a+b,0) / recent.length;
+}
+
+// ─── WICK REVERSAL — Erick Jablonski's "Long Lower/Upper Wick Reversal" ────
+// Bullish (hammer-style): lower wick >= 2x body AND lower wick >= 0.5x ATR
+// Bearish (shooting-star): upper wick >= 2x body AND upper wick >= 0.5x ATR
+// Checked on the last CLOSED candle only.
+function detectWickReversal(opens, highs, lows, closes) {
+  const WICK_RATIO   = 2.0; // wick must be at least this many times the body
+  const MIN_WICK_ATR = 0.5; // wick must also be at least this fraction of ATR
+  const ATR_LEN      = 14;
+
+  const a = atr(highs, lows, closes, ATR_LEN);
+  if (!a) return { type:'none' };
+
+  const i = closes.length - 1; // last closed candle
+  const o = opens[i], c = closes[i], h = highs[i], l = lows[i];
+  const body       = Math.abs(c - o);
+  const lowerWick  = Math.min(o, c) - l;
+  const upperWick  = h - Math.max(o, c);
+  const isRed      = c < o;
+  const isGreen    = c > o;
+
+  const bullishHammer = isRed   && body > 0
+    && lowerWick >= WICK_RATIO * body
+    && lowerWick >= MIN_WICK_ATR * a;
+
+  const bearishStar = isGreen && body > 0
+    && upperWick >= WICK_RATIO * body
+    && upperWick >= MIN_WICK_ATR * a;
+
+  if (bullishHammer) return { type:'bull', wickSize: lowerWick, atr: a, body };
+  if (bearishStar)   return { type:'bear', wickSize: upperWick, atr: a, body };
+  return { type:'none' };
 }
 
 // ─── PULLBACK DETECTION ──────────────────────────────────────────────────
@@ -1184,12 +1239,23 @@ function renderDashRow(tfObj, signal, err) {
     pbPillHtml = `<span style="font-size:10px;font-weight:700;letter-spacing:0.3px;padding:3px 7px;border-radius:6px;border:1px solid ${pbBorder};background:${pbBg};color:${pbColor};white-space:nowrap">PULLBACK ${pbMark}</span>`;
   }
 
+  // Wick reversal pill — independent candlestick pattern check (Erick Jablonski's method)
+  const wk = signal.wick;
+  let wkPillHtml = '';
+  if (wk && wk.type !== 'none') {
+    const wkColor  = wk.type === 'bull' ? '#00D4A0' : '#FF4560';
+    const wkBorder = wk.type === 'bull' ? 'rgba(0,212,160,.5)' : 'rgba(255,69,96,.5)';
+    const wkBg     = wk.type === 'bull' ? 'rgba(0,212,160,.12)' : 'rgba(255,69,96,.12)';
+    const wkLabel  = wk.type === 'bull' ? 'HAMMER ↑' : 'SHOOTING STAR ↓';
+    wkPillHtml = `<span style="font-size:10px;font-weight:700;letter-spacing:0.3px;padding:3px 7px;border-radius:6px;border:1px solid ${wkBorder};background:${wkBg};color:${wkColor};white-space:nowrap">🕯️ ${wkLabel}</span>`;
+  }
+
   return `
     <div class="dash-row dash-${sig.key}">
       <div class="dash-tf">${tfObj.label}<span class="dash-tf-sub">${tfObj.sub}</span></div>
       <div class="dash-signal">
         <div class="dash-signal-name" style="color:${sig.color}">${sig.label}</div>
-        <div style="display:flex;gap:4px;margin-top:5px;flex-wrap:wrap">${pillsHtml}${pbPillHtml}</div>
+        <div style="display:flex;gap:4px;margin-top:5px;flex-wrap:wrap">${pillsHtml}${pbPillHtml}${wkPillHtml}</div>
       </div>
       <div style="font-size:11px;color:${sig.color};font-weight:700;flex-shrink:0">${Math.max(signal.buyS,signal.sellS)}/3</div>
     </div>`;
@@ -1284,7 +1350,8 @@ async function refreshDashboard() {
       const closes = vals.map(v => parseFloat(v.close));
       const highs  = vals.map(v => parseFloat(v.high));
       const lows   = vals.map(v => parseFloat(v.low));
-      const signal = analyzeTFData(closes, highs, lows);
+      const opens  = vals.map(v => parseFloat(v.open));
+      const signal = analyzeTFData(closes, highs, lows, opens);
       const price  = parseFloat(vals.at(-1).close);
       const open   = parseFloat(vals[0].open);
       results[idx] = { ...tfObj, signal, error: null, price, open };
@@ -1362,7 +1429,93 @@ async function refreshDashboard() {
      ${dxyBoxHtml}
      ${maBoxHtml}`;
 
+  // ── Collaboration check — show banner when setup is worth a deep analysis ──
+  const collabHtml = evaluateCollaboration(results, maBoxHtml, dxyBoxHtml);
+  const collabEl   = document.getElementById('dashCollab');
+  if (collabEl) {
+    collabEl.style.display = collabHtml ? 'block' : 'none';
+    collabEl.innerHTML     = collabHtml || '';
+  }
+
   dashFetching = false;
+}
+
+// ─── COLLABORATION EVALUATOR ────────────────────────────────────────────────
+// Returns a banner HTML string if setup is worth analyzing together,
+// null if nothing significant is happening.
+function evaluateCollaboration(results, maBoxHtml, dxyBoxHtml) {
+  const valid = results.filter(r => r.signal);
+  if (valid.length < 3) return null; // not enough data to evaluate
+
+  // Count strong signals (3/3) by direction
+  const strongBuy  = valid.filter(r => r.signal.buyS  === 3).length;
+  const strongSell = valid.filter(r => r.signal.sellS === 3).length;
+  const dir        = strongBuy >= strongSell ? 'buy' : 'sell';
+  const strongCount= Math.max(strongBuy, strongSell);
+
+  // Count pullbacks confirmed in dominant direction
+  const pullbackOk = valid.filter(r => r.signal.pullback && r.signal.pullback.occurred).length;
+
+  // Count wick reversal patterns aligned with dominant direction
+  const wickOk = valid.filter(r =>
+    r.signal.wick && r.signal.wick.type === dir
+  ).length;
+
+  // Extract MA10/60 H1 trend direction from rendered HTML (simple text check)
+  const maRialz  = maBoxHtml && maBoxHtml.includes('RIALZISTA');
+  const maRibass = maBoxHtml && maBoxHtml.includes('RIBASSISTA');
+  const maAligned = (dir === 'buy' && maRialz) || (dir === 'sell' && maRibass);
+
+  // Extract dollar context from rendered HTML
+  const dxyAligned = dxyBoxHtml && (
+    (dir === 'buy'  && dxyBoxHtml.includes('GIÙ'))  ||  // dollar falling = good for gold BUY
+    (dir === 'sell' && dxyBoxHtml.includes('SU'))        // dollar rising  = good for gold SELL
+  );
+
+  // Score: 0-5 based on how many conditions are met
+  let score = 0;
+  if (strongCount >= 2) score++;  // at least 2 TF with 3/3 signal
+  if (strongCount >= 3) score++;  // bonus: 3+ TF aligned
+  if (pullbackOk >= 1)  score++;  // pullback confirmed on at least one TF
+  if (maAligned)        score++;  // H1 MA10/60 trend aligned
+  if (wickOk >= 1)       score++;  // wick reversal pattern confirms direction
+  // dxy is a bonus context, doesn't add to score but shown in message
+
+  if (score < 2) return null; // not worth a deep analysis
+
+  // Build the banner
+  const dirLabel  = dir === 'buy'  ? 'BUY'  : 'SELL';
+  const dirColor  = dir === 'buy'  ? '#00D4A0' : '#FF4560';
+  const dirArrow  = dir === 'buy'  ? '↑' : '↓';
+  const intensity = score >= 3 ? '🔥 SETUP FORTE' : '⚡ SETUP INTERESSANTE';
+  const intensityColor = score >= 3 ? '#FF8C00' : '#FFB830';
+
+  const reasons = [];
+  reasons.push(`${strongCount}/5 timeframe con segnale ${dirLabel} 3/3`);
+  if (pullbackOk >= 1) reasons.push(`pullback confermato su ${pullbackOk} TF`);
+  if (wickOk >= 1)      reasons.push(`pattern candela (hammer/shooting star) su ${wickOk} TF`);
+  if (maAligned)       reasons.push(`trend H1 MA10/60 allineato`);
+  if (dxyAligned)      reasons.push(`dollaro a favore`);
+
+  return `
+    <div style="background:rgba(255,184,48,.06);border:1.5px solid ${intensityColor};border-radius:14px;padding:14px 16px;margin-top:4px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span style="font-size:15px">📸</span>
+        <span style="font-size:12px;font-weight:800;color:${intensityColor};letter-spacing:0.5px">${intensity}</span>
+      </div>
+      <div style="font-size:14px;font-weight:700;color:${dirColor};margin-bottom:6px">
+        ${dirArrow} Direzione prevalente: ${dirLabel}
+      </div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.7);line-height:1.6;margin-bottom:10px">
+        ${reasons.map(r => `· ${r}`).join('<br>')}
+      </div>
+      <div style="background:rgba(255,255,255,.05);border-radius:8px;padding:10px 12px;border-left:3px solid ${intensityColor}">
+        <div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:3px">Cosa fare adesso</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.65);line-height:1.5">
+          Apri PUPrime su M15 o H1, fai uno screenshot del grafico e invialo a Claude per analisi. Indica saldo attuale e direzione segnalata.
+        </div>
+      </div>
+    </div>`;
 }
 
 
@@ -1849,5 +2002,6 @@ function toggleGuida() {
     : 'linear-gradient(135deg,#FFB830,#FF8C00)';
 }
 </script>
+
 </body>
 </html>
