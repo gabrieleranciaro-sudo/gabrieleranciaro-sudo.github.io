@@ -1438,12 +1438,27 @@ async function refreshDashboard() {
   const collabData    = collabResult ? collabResult.data : null;
   const collabEl       = document.getElementById('dashCollab');
   if (collabEl) {
-    collabEl.style.display = collabHtml ? 'block' : 'none';
-    collabEl.innerHTML     = collabHtml || '';
+    if (collabHtml && collabData) {
+      const setupId = trackSetupHistory(collabData);
+      collabEl.style.display = 'block';
+      collabEl.innerHTML     = collabHtml + renderFeedbackButtons(setupId);
+    } else {
+      collabEl.style.display = 'none';
+      collabEl.innerHTML     = '';
+    }
   }
-  if (collabData) trackSetupHistory(collabData);
 
   dashFetching = false;
+}
+
+// Renders the 👍/👎 feedback row appended below the collaboration banner.
+function renderFeedbackButtons(setupId) {
+  return `
+    <div id="feedback_${setupId}" style="display:flex;align-items:center;gap:10px;margin-top:-2px;padding:0 16px 14px">
+      <span style="font-size:11px;color:var(--dim)">Com'è andata?</span>
+      <button onclick="setSetupFeedback('${setupId}','good')" style="background:rgba(0,212,160,.12);border:1px solid rgba(0,212,160,.4);border-radius:8px;padding:4px 10px;font-size:13px;cursor:pointer">👍</button>
+      <button onclick="setSetupFeedback('${setupId}','bad')" style="background:rgba(255,69,96,.12);border:1px solid rgba(255,69,96,.4);border-radius:8px;padding:4px 10px;font-size:13px;cursor:pointer">👎</button>
+    </div>`;
 }
 
 // ─── SETUP HISTORY TRACKING ──────────────────────────────────────────────
@@ -1462,9 +1477,12 @@ function trackSetupHistory(data) {
     && last.refTF === data.refTF
     && (data.timestamp - last.timestamp) < 10 * 60 * 1000; // 10 min window
 
-  if (isSameSetup) return; // avoid duplicate log entries for the same ongoing setup
+  if (isSameSetup) return last.id; // same ongoing setup — reuse its ID, don't duplicate
 
-  history.unshift(data);
+  const id = 'setup_' + data.timestamp + '_' + Math.random().toString(36).slice(2,7);
+  const record = { ...data, id, feedback: null }; // feedback: null | 'good' | 'bad'
+
+  history.unshift(record);
   if (history.length > 100) history = history.slice(0, 100); // keep last 100 setups
 
   try {
@@ -1474,6 +1492,33 @@ function trackSetupHistory(data) {
   const dirLabel = data.direction === 'buy' ? '🟢 BUY' : '🔴 SELL';
   const strength  = data.score >= 4 ? 'FORTE' : data.score === 3 ? 'BUONO' : 'BASE';
   addLog(`${dirLabel} setup ${strength} rilevato (${data.refTF}, score ${data.score}/5) — entry ${data.entry ? data.entry.toFixed(2) : '—'}`, data.direction === 'buy' ? 'buy' : 'sell');
+
+  return id;
+}
+
+// Records user feedback (good/bad) for a given setup, by ID.
+// Called from the 👍/👎 buttons in the collaboration banner.
+function setSetupFeedback(id, value) {
+  let history = [];
+  try {
+    history = JSON.parse(localStorage.getItem('xau_setup_history') || '[]');
+  } catch(e) { return; }
+
+  const record = history.find(h => h.id === id);
+  if (!record) return;
+  record.feedback = value;
+
+  try {
+    localStorage.setItem('xau_setup_history', JSON.stringify(history));
+  } catch(e) { /* skip silently */ }
+
+  // Update the buttons in place to show the recorded feedback
+  const wrap = document.getElementById('feedback_' + id);
+  if (wrap) {
+    wrap.innerHTML = value === 'good'
+      ? `<span style="font-size:11px;color:#00D4A0;font-weight:700">👍 Segnato come buono — grazie</span>`
+      : `<span style="font-size:11px;color:#FF4560;font-weight:700">👎 Segnato come negativo — grazie</span>`;
+  }
 }
 
 // ─── COLLABORATION EVALUATOR ────────────────────────────────────────────────
