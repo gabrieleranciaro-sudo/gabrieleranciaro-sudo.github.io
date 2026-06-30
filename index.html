@@ -1433,14 +1433,47 @@ async function refreshDashboard() {
      ${maBoxHtml}`;
 
   // ── Collaboration check — show banner when setup is worth a deep analysis ──
-  const collabHtml = evaluateCollaboration(results, maBoxHtml, dxyBoxHtml);
-  const collabEl   = document.getElementById('dashCollab');
+  const collabResult = evaluateCollaboration(results, maBoxHtml, dxyBoxHtml);
+  const collabHtml    = collabResult ? collabResult.html : null;
+  const collabData    = collabResult ? collabResult.data : null;
+  const collabEl       = document.getElementById('dashCollab');
   if (collabEl) {
     collabEl.style.display = collabHtml ? 'block' : 'none';
     collabEl.innerHTML     = collabHtml || '';
   }
+  if (collabData) trackSetupHistory(collabData);
 
   dashFetching = false;
+}
+
+// ─── SETUP HISTORY TRACKING ──────────────────────────────────────────────
+// Persists every detected Setup Forte/Interessante to localStorage so we can
+// later check how often the system was right. Deduplicates by direction+TF
+// within a 10-minute window to avoid logging the same setup on every refresh.
+function trackSetupHistory(data) {
+  let history = [];
+  try {
+    history = JSON.parse(localStorage.getItem('xau_setup_history') || '[]');
+  } catch(e) { history = []; }
+
+  const last = history[0];
+  const isSameSetup = last
+    && last.direction === data.direction
+    && last.refTF === data.refTF
+    && (data.timestamp - last.timestamp) < 10 * 60 * 1000; // 10 min window
+
+  if (isSameSetup) return; // avoid duplicate log entries for the same ongoing setup
+
+  history.unshift(data);
+  if (history.length > 100) history = history.slice(0, 100); // keep last 100 setups
+
+  try {
+    localStorage.setItem('xau_setup_history', JSON.stringify(history));
+  } catch(e) { /* storage full or unavailable — skip silently */ }
+
+  const dirLabel = data.direction === 'buy' ? '🟢 BUY' : '🔴 SELL';
+  const strength  = data.score >= 4 ? 'FORTE' : data.score === 3 ? 'BUONO' : 'BASE';
+  addLog(`${dirLabel} setup ${strength} rilevato (${data.refTF}, score ${data.score}/5) — entry ${data.entry ? data.entry.toFixed(2) : '—'}`, data.direction === 'buy' ? 'buy' : 'sell');
 }
 
 // ─── COLLABORATION EVALUATOR ────────────────────────────────────────────────
@@ -1448,7 +1481,7 @@ async function refreshDashboard() {
 // null if nothing significant is happening.
 function evaluateCollaboration(results, maBoxHtml, dxyBoxHtml) {
   const valid = results.filter(r => r.signal);
-  if (valid.length < 3) return null; // not enough data to evaluate
+  if (valid.length < 3) return { html:null, data:null }; // not enough data to evaluate
 
   // Count strong signals (3/3) by direction
   const strongBuy  = valid.filter(r => r.signal.buyS  === 3).length;
@@ -1477,14 +1510,14 @@ function evaluateCollaboration(results, maBoxHtml, dxyBoxHtml) {
 
   // Score: 0-5 based on how many conditions are met
   let score = 0;
-  if (strongCount >= 2) score++;  // at least 2 TF with 3/3 signal
-  if (strongCount >= 3) score++;  // bonus: 3+ TF aligned
+  if (strongCount >= 3) score++;  // minimum: at least 3 TF with 3/3 signal
+  if (strongCount >= 4) score++;  // bonus: 4+ TF aligned
   if (pullbackOk >= 1)  score++;  // pullback confirmed on at least one TF
   if (maAligned)        score++;  // H1 MA10/60 trend aligned
   if (wickOk >= 1)       score++;  // wick reversal pattern confirms direction
   // dxy is a bonus context, doesn't add to score but shown in message
 
-  if (score < 2) return null; // not worth a deep analysis
+  if (strongCount < 3) return { html:null, data:null }; // require at least 3/5 TF aligned with 3/3 to show banner
 
   // ── Calculate entry/SL/TP using the most scalping-relevant timeframe ──
   // Prefer the LOWEST timeframe with a 3/3 signal (most reactive, best for
@@ -1498,18 +1531,19 @@ function evaluateCollaboration(results, maBoxHtml, dxyBoxHtml) {
 
   let levelsHtml = '';
   let reliabilityHtml = '';
+  let entry = null, sl = null, tp = null, risk = null, rrMultiple = null;
   if (refTF && refTF.price && refTF.atr) {
-    const entry = refTF.price;
+    entry = refTF.price;
     const isBuy = dir === 'buy';
     // SL: just past the recent swing, with a small ATR buffer (avoids too-tight stops)
     const slBuffer = refTF.atr * 0.3;
-    const sl = isBuy
+    sl = isBuy
       ? Math.min(refTF.swingLow, entry - refTF.atr * 0.8) - slBuffer
       : Math.max(refTF.swingHigh, entry + refTF.atr * 0.8) + slBuffer;
-    const risk = Math.abs(entry - sl);
+    risk = Math.abs(entry - sl);
     // TP: risk/reward depends on setup strength — stronger setup = more ambitious target
-    const rrMultiple = score >= 4 ? 2.5 : score >= 3 ? 2.0 : 1.5;
-    const tp = isBuy ? entry + risk * rrMultiple : entry - risk * rrMultiple;
+    rrMultiple = score >= 4 ? 2.5 : score >= 3 ? 2.0 : 1.5;
+    tp = isBuy ? entry + risk * rrMultiple : entry - risk * rrMultiple;
 
     levelsHtml = `
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
@@ -1570,7 +1604,7 @@ function evaluateCollaboration(results, maBoxHtml, dxyBoxHtml) {
     ? `Setup buono ma non massimo. I numeri sopra sono una base valida — se vuoi una conferma in più, manda uno screenshot del grafico ${refTF ? refTF.label : 'M15'} prima di entrare.`
     : `Setup interessante ma con margini di dubbio (alcuni TF minori in disaccordo). Prima di usare questi numeri, manda uno screenshot così verifichiamo insieme il contesto visivo completo.`;
 
-  return `
+  const html = `
     <div style="background:rgba(255,184,48,.06);border:1.5px solid ${intensityColor};border-radius:14px;padding:14px 16px;margin-top:4px">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
         <span style="font-size:15px">📸</span>
@@ -1591,6 +1625,21 @@ function evaluateCollaboration(results, maBoxHtml, dxyBoxHtml) {
         </div>
       </div>
     </div>`;
+
+  const data = {
+    timestamp: Date.now(),
+    direction: dir,
+    score,
+    strongCount,
+    pullbackOk,
+    wickOk,
+    maAligned,
+    dxyAligned,
+    refTF: refTF ? refTF.label : null,
+    entry, sl, tp, risk, rrMultiple,
+  };
+
+  return { html, data };
 }
 
 
@@ -2077,5 +2126,6 @@ function toggleGuida() {
     : 'linear-gradient(135deg,#FFB830,#FF8C00)';
 }
 </script>
+
 </body>
 </html>
