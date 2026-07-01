@@ -364,6 +364,21 @@ letter-spacing: 0.5px;
 
   <div id="dashCollab" style="display:none;margin-top:6px"></div>
 
+  <!-- Grafico EMA 20/50 -->
+
+  <div style="margin-top:14px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div style="font-size:10px;color:var(--dim);letter-spacing:1px;text-transform:uppercase">GRAFICO · EMA 20/50</div>
+      <div id="chartTfSelector" style="display:flex;gap:4px"></div>
+    </div>
+    <canvas id="emaChart" style="width:100%;height:220px;display:block;border-radius:8px;background:#0A0F14"></canvas>
+    <div id="chartLegend" style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:10px;color:var(--dim)">
+      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#FFB830;margin-right:4px"></span>EMA 20</span>
+      <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#3D9EFF;margin-right:4px"></span>EMA 50</span>
+      <span id="chartBiasLabel">—</span>
+    </div>
+  </div>
+
   <!-- Refresh button -->
 
   <button onclick="refreshDashboard()" style="width:100%;padding:14px;background:rgba(61,158,255,.15);border:1px solid rgba(61,158,255,.3);border-radius:12px;color:var(--blue);font-size:13px;font-weight:600;cursor:pointer;margin-top:10px">
@@ -1314,6 +1329,9 @@ function renderMaCrossBox(ma, err) {
     </div>`;
 }
 
+// Cache OHLC per timeframe, riusata dal grafico EMA (evita chiamate API duplicate)
+const TF_DATA_CACHE = {};
+
 async function refreshDashboard() {
   if (dashFetching) return;
   dashFetching = true;
@@ -1359,6 +1377,8 @@ async function refreshDashboard() {
       const swingLow  = Math.min(...lows.slice(-10));  // recent 10-candle swing low
       results[idx] = { ...tfObj, signal, error: null, price, open, atr: tfAtr, swingHigh, swingLow };
       if (tfObj.tf === '1h') h1Closes = closes; // save for MA10/60
+      // Salva OHLC completo per il grafico EMA (candele in ordine cronologico)
+      TF_DATA_CACHE[tfObj.tf] = { opens, highs, lows, closes, times: vals.map(v => v.datetime) };
       // Update price display from M5
       if (tfObj.tf === '5min' && price) {
         const chg  = price - open;
@@ -1449,6 +1469,123 @@ async function refreshDashboard() {
   }
 
   dashFetching = false;
+
+  // Disegna/aggiorna il grafico EMA sul timeframe attualmente selezionato
+  buildChartTfSelector();
+  drawEmaChart(chartActiveTf);
+}
+
+// ── Grafico EMA 20/50 su canvas ─────────────────────────────────────────────
+let chartActiveTf = '15min';
+
+function buildChartTfSelector() {
+  const el = document.getElementById('chartTfSelector');
+  if (!el) return;
+  el.innerHTML = TF_LIST.map(tf => `
+    <button onclick="setChartTf('${tf.tf}')" id="chartTfBtn_${tf.tf}"
+      style="padding:4px 8px;border-radius:6px;font-size:10px;font-weight:600;cursor:pointer;border:1px solid var(--border);
+      background:${tf.tf===chartActiveTf?'rgba(61,158,255,.2)':'transparent'};
+      color:${tf.tf===chartActiveTf?'var(--blue)':'var(--dim)'}">${tf.label}</button>
+  `).join('');
+}
+
+function setChartTf(tf) {
+  chartActiveTf = tf;
+  buildChartTfSelector();
+  drawEmaChart(tf);
+}
+
+// Disegna candele + EMA20/EMA50 su canvas, dati presi da TF_DATA_CACHE (nessuna chiamata API extra)
+function drawEmaChart(tf) {
+  const canvas = document.getElementById('emaChart');
+  const bias   = document.getElementById('chartBiasLabel');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  const dpr = window.devicePixelRatio || 1;
+  const cssW = canvas.clientWidth || canvas.parentElement.clientWidth;
+  const cssH = 220;
+  canvas.width  = cssW * dpr;
+  canvas.height = cssH * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, cssW, cssH);
+
+  const data = TF_DATA_CACHE[tf];
+  if (!data || !data.closes || data.closes.length < 55) {
+    ctx.fillStyle = '#7A92A8';
+    ctx.font = '12px -apple-system';
+    ctx.textAlign = 'center';
+    ctx.fillText('Dati non disponibili — premi "Aggiorna tutto"', cssW/2, cssH/2);
+    if (bias) bias.textContent = '—';
+    return;
+  }
+
+  const { opens, highs, lows, closes } = data;
+  const e20 = ema(closes, 20);
+  const e50 = ema(closes, 50);
+
+  const N = Math.min(40, closes.length);
+  const sOpens  = opens.slice(-N);
+  const sHighs  = highs.slice(-N);
+  const sLows   = lows.slice(-N);
+  const sCloses = closes.slice(-N);
+  const sE20    = e20.slice(-N);
+  const sE50    = e50.slice(-N);
+
+  const allVals = [...sHighs, ...sLows, ...sE20, ...sE50];
+  const maxV = Math.max(...allVals);
+  const minV = Math.min(...allVals);
+  const pad  = (maxV - minV) * 0.08 || 1;
+  const top  = maxV + pad;
+  const bot  = minV - pad;
+
+  const padL = 4, padR = 4, padT = 6, padB = 6;
+  const plotW = cssW - padL - padR;
+  const plotH = cssH - padT - padB;
+  const xStep = plotW / N;
+
+  const yOf = v => padT + (top - v) / (top - bot) * plotH;
+  const xOf = i => padL + i * xStep + xStep/2;
+
+  for (let i = 0; i < N; i++) {
+    const x = xOf(i);
+    const o = sOpens[i], c = sCloses[i], h = sHighs[i], l = sLows[i];
+    const up = c >= o;
+    ctx.strokeStyle = up ? '#00D4A0' : '#FF4560';
+    ctx.fillStyle   = up ? '#00D4A0' : '#FF4560';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(x, yOf(h));
+    ctx.lineTo(x, yOf(l));
+    ctx.stroke();
+    const bodyW = Math.max(xStep * 0.55, 1.5);
+    const yO = yOf(o), yC = yOf(c);
+    ctx.fillRect(x - bodyW/2, Math.min(yO,yC), bodyW, Math.max(Math.abs(yC-yO), 1));
+  }
+
+  function drawLine(series, color) {
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    series.forEach((v, i) => {
+      const x = xOf(i), y = yOf(v);
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+  }
+  drawLine(sE20, '#FFB830');
+  drawLine(sE50, '#3D9EFF');
+
+  if (bias) {
+    const lastE20 = sE20.at(-1), lastE50 = sE50.at(-1);
+    if (lastE20 > lastE50) {
+      bias.innerHTML = '<span style="color:var(--green)">Bias: LONG (20 sopra 50)</span>';
+    } else if (lastE20 < lastE50) {
+      bias.innerHTML = '<span style="color:var(--red)">Bias: SHORT (20 sotto 50)</span>';
+    } else {
+      bias.textContent = 'Bias: neutro';
+    }
+  }
 }
 
 // Renders the 👍/👎 feedback row appended below the collaboration banner.
@@ -1690,6 +1827,7 @@ function evaluateCollaboration(results, maBoxHtml, dxyBoxHtml) {
 
 // Open on dashboard and run first check automatically
 document.addEventListener('DOMContentLoaded', () => {
+  buildChartTfSelector();
   setTimeout(() => {
     switchTab('dashboard');
     refreshDashboard(); // first check on open
