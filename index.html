@@ -1475,6 +1475,23 @@ async function refreshDashboard() {
   drawEmaChart(chartActiveTf);
 }
 
+// Serie storica di EMA (un valore per ogni candela), usata SOLO per disegnare la linea nel grafico.
+// Diversa da ema() che restituisce solo l'ultimo valore per i segnali dashboard.
+function emaSeries(arr, p) {
+  if (arr.length < p) return [];
+  const k = 2 / (p + 1);
+  const out = new Array(arr.length).fill(null);
+  let v = arr.slice(0, p).reduce((a, b) => a + b, 0) / p;
+  out[p - 1] = v;
+  for (let i = p; i < arr.length; i++) {
+    v = arr[i] * k + v * (1 - k);
+    out[i] = v;
+  }
+  // Riempi le prime p-1 posizioni (senza EMA valida) col primo valore disponibile, per evitare buchi nel disegno
+  for (let i = 0; i < p - 1; i++) out[i] = v !== undefined ? out[p - 1] : arr[i];
+  return out;
+}
+
 // ── Grafico EMA 20/50 su canvas ─────────────────────────────────────────────
 let chartActiveTf = '15min';
 
@@ -1503,7 +1520,8 @@ function drawEmaChart(tf) {
   const ctx = canvas.getContext('2d');
 
   const dpr = window.devicePixelRatio || 1;
-  const cssW = canvas.clientWidth || canvas.parentElement.clientWidth;
+  let cssW = canvas.clientWidth || (canvas.parentElement && canvas.parentElement.clientWidth) || 320;
+  if (cssW < 50) cssW = 320; // fallback estremo se il layout non è ancora pronto
   const cssH = 220;
   canvas.width  = cssW * dpr;
   canvas.height = cssH * dpr;
@@ -1521,8 +1539,17 @@ function drawEmaChart(tf) {
   }
 
   const { opens, highs, lows, closes } = data;
-  const e20 = ema(closes, 20);
-  const e50 = ema(closes, 50);
+  const e20 = emaSeries(closes, 20);
+  const e50 = emaSeries(closes, 50);
+
+  if (!e20.length || !e50.length) {
+    ctx.fillStyle = '#7A92A8';
+    ctx.font = '12px -apple-system';
+    ctx.textAlign = 'center';
+    ctx.fillText('Dati insufficienti per calcolare EMA50', cssW/2, cssH/2);
+    if (bias) bias.textContent = '—';
+    return;
+  }
 
   const N = Math.min(40, closes.length);
   const sOpens  = opens.slice(-N);
