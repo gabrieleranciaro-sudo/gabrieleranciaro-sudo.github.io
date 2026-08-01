@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Trading Journal · ORB / ARB</title>
+<style>
+  :root{
+    --bg:#101418;--panel:#1a2027;--panel2:#232b34;--line:#2e3944;
+    --text:#e8edf2;--muted:#8b98a5;--gold:#e3b341;--green:#3fb68b;--red:#e5534b;--blue:#539bf5;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+       font-size:16px;line-height:1.5;padding:16px 14px 48px;max-width:560px;margin:0 auto}
+  .eyebrow{color:var(--gold);font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:600}
+  h1{font-size:24px;font-weight:800;letter-spacing:-.02em;margin:2px 0 14px}
+  .mono{font-variant-numeric:tabular-nums;font-family:"SF Mono",ui-monospace,Menlo,monospace}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px}
+  .card h2{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;font-weight:600}
+  /* calendario */
+  .calhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+  .calhead b{font-size:17px}
+  .calhead button{background:var(--panel2);border:1px solid var(--line);color:var(--text);
+                  border-radius:9px;font-size:17px;width:38px;height:34px;cursor:pointer}
+  .dow,.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+  .dow div{text-align:center;font-size:10.5px;color:var(--muted);letter-spacing:.05em;padding-bottom:4px}
+  .day{aspect-ratio:1;border-radius:9px;background:var(--panel2);border:1px solid var(--line);
+       display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;
+       font-size:13.5px;position:relative}
+  .day.blank{background:none;border:none;cursor:default}
+  .day.today{border-color:var(--blue)}
+  .day .r{font-size:9.5px;font-weight:700;margin-top:1px}
+  .day.win{background:rgba(63,182,139,.22);border-color:var(--green)}
+  .day.win .r{color:var(--green)}
+  .day.loss{background:rgba(229,83,75,.20);border-color:var(--red)}
+  .day.loss .r{color:var(--red)}
+  .day.flat{background:rgba(83,155,245,.15);border-color:#3a5a80}
+  .day.flat .r{color:var(--blue)}
+  .day.viol::after{content:"";position:absolute;top:3px;right:3px;width:7px;height:7px;border-radius:50%;background:var(--gold)}
+  .legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;font-size:11.5px;color:var(--muted)}
+  .legend span{display:flex;align-items:center;gap:5px}
+  .dot{width:10px;height:10px;border-radius:3px;display:inline-block}
+  /* form */
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;z-index:10}
+  .sheet{position:fixed;left:0;right:0;bottom:0;max-height:88vh;overflow-y:auto;background:var(--panel);
+         border-radius:18px 18px 0 0;border-top:1px solid var(--line);padding:16px 16px 34px;display:none;z-index:11;
+         max-width:560px;margin:0 auto}
+  .sheet.show,.overlay.show{display:block}
+  .sheet h3{font-size:18px;margin-bottom:2px}
+  .sheet .sub{font-size:13px;color:var(--muted);margin-bottom:12px}
+  .frow{margin-bottom:12px}
+  .frow label{display:block;font-size:13px;font-weight:700;margin-bottom:5px}
+  .frow label small{font-weight:400;color:var(--muted)}
+  .frow input[type=text],.frow input[type=number],.frow textarea{
+    width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:10px;
+    color:var(--text);font-size:17px;padding:10px 12px;font-family:"SF Mono",ui-monospace,Menlo,monospace}
+  .frow textarea{font-family:inherit;font-size:15px;min-height:60px}
+  .frow input:focus,.frow textarea:focus{outline:none;border-color:var(--blue)}
+  .chips{display:flex;gap:7px;flex-wrap:wrap}
+  .chips button{background:var(--panel2);border:1px solid var(--line);color:var(--muted);
+                border-radius:20px;font-size:14px;padding:8px 14px;cursor:pointer}
+  .chips button.on{background:var(--gold);border-color:var(--gold);color:#161006;font-weight:700}
+  .chips button.on.green{background:var(--green);border-color:var(--green);color:#06231a}
+  .chips button.on.red{background:var(--red);border-color:var(--red);color:#fff}
+  .half{display:flex;gap:10px}.half>.frow{flex:1}
+  .btnrow{display:flex;gap:8px;margin-top:14px}
+  .btnrow .primary{flex:1;background:var(--gold);color:#161006;border:none;border-radius:12px;
+                   font-size:16px;font-weight:700;padding:13px;cursor:pointer}
+  .btnrow .ghost{background:none;border:1px solid var(--line);color:var(--muted);border-radius:12px;
+                 font-size:15px;padding:13px 16px;cursor:pointer}
+  .btnrow .danger{color:var(--red);border-color:var(--red)}
+  .autonote{font-size:13px;margin-top:5px;color:var(--muted)}
+  .autonote b.ok{color:var(--green)} .autonote b.no{color:var(--red)}
+  /* stats */
+  .statgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+  .stat{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 6px;text-align:center}
+  .stat .v{font-size:19px;font-weight:800}
+  .stat .v.g{color:var(--green)}.stat .v.r{color:var(--red)}.stat .v.gold{color:var(--gold)}
+  .stat .l{font-size:9.5px;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;margin-top:2px;line-height:1.3}
+  .statnote{font-size:12.5px;color:var(--muted);margin-top:10px;line-height:1.5}
+  .segstats{display:flex;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:3px;margin-bottom:10px}
+  .segstats button{flex:1;background:none;border:none;color:var(--muted);font-size:13.5px;font-weight:700;padding:7px;border-radius:7px;cursor:pointer}
+  .segstats button.on{background:var(--gold);color:#161006}
+  #spark{width:100%;height:64px;margin-top:12px}
+  .warn{background:rgba(227,179,65,.1);border:1px solid rgba(227,179,65,.4);border-radius:10px;
+        padding:10px 12px;font-size:13px;color:var(--gold);margin-top:10px;display:none}
+</style>
+</head>
+<body>
+
+<div class="eyebrow">XAU/USD · Demo</div>
+<h1>Trading Journal</h1>
+
+<!-- CALENDARIO -->
+
+<div class="card">
+  <div class="calhead">
+    <button id="prev">‹</button><b id="mtitle"></b><button id="next">›</button>
+  </div>
+  <div class="dow"><div>LUN</div><div>MAR</div><div>MER</div><div>GIO</div><div>VEN</div><div>SAB</div><div>DOM</div></div>
+  <div class="grid" id="grid"></div>
+  <div class="legend">
+    <span><span class="dot" style="background:rgba(63,182,139,.5)"></span>giorno positivo</span>
+    <span><span class="dot" style="background:rgba(229,83,75,.5)"></span>giorno negativo</span>
+    <span><span class="dot" style="background:rgba(83,155,245,.4)"></span>loggato, nessun trade</span>
+    <span><span class="dot" style="background:var(--gold);border-radius:50%"></span>regole violate</span>
+  </div>
+</div>
+
+<!-- STATISTICHE -->
+
+<div class="card">
+  <h2>Statistiche di sistema</h2>
+  <div class="segstats">
+    <button data-f="TUTTI" class="on">Tutti</button>
+    <button data-f="ORB">ORB</button>
+    <button data-f="ARB">ARB</button>
+  </div>
+  <div class="statgrid" id="stats"></div>
+  <svg id="spark" viewBox="0 0 300 64" preserveAspectRatio="none"></svg>
+  <div class="statnote" id="statnote"></div>
+  <div class="warn" id="warn"></div>
+</div>
+
+<div class="card">
+  <div class="btnrow" style="margin-top:0">
+    <button class="ghost" id="expCSV" style="flex:1">Esporta CSV</button>
+    <button class="ghost" id="expJSON" style="flex:1">Backup</button>
+    <button class="ghost" id="impJSON" style="flex:1">Ripristina</button>
+  </div>
+  <div class="statnote" style="margin-top:8px">I dati vivono nella memoria di Safari su questo iPhone. Una volta a settimana tocca <b>Backup</b> e incolla il testo in una nota o su Drive: se mai cambi telefono o pulisci Safari, con <b>Ripristina</b> torni al punto esatto.</div>
+</div>
+
+<!-- SHEET INSERIMENTO -->
+
+<div class="overlay" id="overlay"></div>
+<div class="sheet" id="sheet">
+  <h3 id="sh_date"></h3>
+  <div class="sub">Compila solo quello che è successo: se il filtro dice no, bastano i primi campi.</div>
+
+  <div class="frow">
+    <label>Protocollo</label>
+    <div class="chips" id="ch_proto">
+      <button data-v="ORB">ORB</button><button data-v="ARB">ARB</button>
+    </div>
+  </div>
+
+  <div class="half">
+    <div class="frow"><label>ATR H1 <small>($, letto a orario da protocollo)</small></label>
+      <input type="text" inputmode="decimal" id="f_atr" placeholder="17,90"></div>
+    <div class="frow"><label>Range <small>($, H − L)</small></label>
+      <input type="text" inputmode="decimal" id="f_range" placeholder="12,40"></div>
+  </div>
+  <div class="autonote" id="filtronote"></div>
+
+  <div class="frow">
+    <label>Giorno con news ad alto impatto? <small>(NFP, CPI, FOMC…)</small></label>
+    <div class="chips" id="ch_news"><button data-v="no">No</button><button data-v="sì">Sì</button></div>
+  </div>
+
+  <div class="frow">
+    <label>Breakout</label>
+    <div class="chips" id="ch_bo">
+      <button data-v="nessuno">Nessuno</button><button data-v="long">Long</button><button data-v="short">Short</button>
+    </div>
+  </div>
+
+  <div class="frow">
+    <label>Sequenza completata? <small>(retest + rejection + conferma → entry)</small></label>
+    <div class="chips" id="ch_seq">
+      <button data-v="no retest">Retest mai arrivato</button><button data-v="annullato">Setup annullato</button><button data-v="entry">Entry eseguita</button>
+    </div>
+  </div>
+
+  <div class="frow" id="row_r" style="display:none">
+    <label>Esito del trade in R <small>(es. -1 · +1 · +2 · +0,5 se chiuso a metà)</small></label>
+    <input type="text" inputmode="text" id="f_r" placeholder="+2">
+  </div>
+
+  <div class="frow">
+    <label>Regole rispettate al 100%?</label>
+    <div class="chips" id="ch_disc">
+      <button data-v="sì" class="isgreen">Sì</button><button data-v="no" class="isred">No</button>
+    </div>
+  </div>
+
+  <div class="frow">
+    <label>Note <small>(facoltative: errori, emozioni, contesto)</small></label>
+    <textarea id="f_note" placeholder="es. entrato una candela in anticipo per fretta"></textarea>
+  </div>
+
+  <div class="btnrow">
+    <button class="primary" id="save">Salva giornata</button>
+    <button class="ghost danger" id="del">Elimina</button>
+    <button class="ghost" id="close">Chiudi</button>
+  </div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const KEY='trading-journal-v1';
+let DB={}; // {'2026-07-17_ORB':{...}}
+let cur=new Date(); cur.setDate(1);
+let selDate=null, filter='TUTTI';
+const SOGLIE={ORB:[0.3,1.5],ARB:[0.5,2]};
+
+function pn(s){if(!s)return NaN;s=String(s).trim().replace(/\+/g,'').replace(/\$/g,'');
+  if(/,\d{1,2}$/.test(s))s=s.replace(/\./g,'').replace(',','.');else s=s.replace(/,/g,'');
+  return parseFloat(s);}
+const f1=(n,d=2)=>n.toLocaleString('it-IT',{minimumFractionDigits:d,maximumFractionDigits:d});
+const iso=d=>d.toISOString().slice(0,10);
+
+// ---------- storage ----------
+async function load(){try{const r=localStorage.getItem(KEY);DB=r?JSON.parse(r):{};}catch(e){DB={};}
+  render();}
+async function persist(){try{localStorage.setItem(KEY,JSON.stringify(DB));}catch(e){alert('Salvataggio non riuscito: spazio esaurito o modalità privata di Safari.');}}
+
+// ---------- entries per data ----------
+function entriesFor(dateIso){return Object.keys(DB).filter(k=>k.startsWith(dateIso)).map(k=>DB[k]);}
+function dayClass(dateIso){
+  const es=entriesFor(dateIso);if(!es.length)return null;
+  let r=0,traded=false,viol=false;
+  es.forEach(e=>{if(e.r!=null&&!isNaN(e.r)){r+=e.r;traded=true;} if(e.disc==='no')viol=true;});
+  return {cls:traded?(r>0?'win':(r<0?'loss':'flat')):'flat',r:traded?r:null,viol};
+}
+
+// ---------- calendario ----------
+function render(){
+  const y=cur.getFullYear(),m=cur.getMonth();
+  $('mtitle').textContent=cur.toLocaleDateString('it-IT',{month:'long',year:'numeric'}).replace(/^./,c=>c.toUpperCase());
+  const first=new Date(y,m,1),start=(first.getDay()+6)%7,days=new Date(y,m+1,0).getDate();
+  const g=$('grid');g.innerHTML='';
+  const todayIso=iso(new Date());
+  for(let i=0;i<start;i++){const d=document.createElement('div');d.className='day blank';g.appendChild(d);}
+  for(let d=1;d<=days;d++){
+    const el=document.createElement('div');el.className='day';
+    const di=iso(new Date(Date.UTC(y,m,d)));
+    if(di===todayIso)el.classList.add('today');
+    const st=dayClass(di);
+    let inner=`<span>${d}</span>`;
+    if(st){el.classList.add(st.cls);if(st.viol)el.classList.add('viol');
+      inner+=`<span class="r mono">${st.r!=null?(st.r>0?'+':'')+f1(st.r,1)+'R':'—'}</span>`;}
+    el.innerHTML=inner;
+    el.onclick=()=>openSheet(di);
+    g.appendChild(el);
+  }
+  renderStats();
+}
+$('prev').onclick=()=>{cur.setMonth(cur.getMonth()-1);render();};
+$('next').onclick=()=>{cur.setMonth(cur.getMonth()+1);render();};
+
+// ---------- sheet ----------
+function chipInit(id,onchange){
+  const box=$(id);
+  box.querySelectorAll('button').forEach(b=>b.onclick=()=>{
+    box.querySelectorAll('button').forEach(x=>x.classList.remove('on','green','red'));
+    b.classList.add('on');
+    if(b.classList.contains('isgreen'))b.classList.add('green');
+    if(b.classList.contains('isred'))b.classList.add('red');
+    if(onchange)onchange(b.dataset.v);
+  });
+}
+function chipGet(id){const b=$(id).querySelector('button.on');return b?b.dataset.v:null;}
+function chipSet(id,v){$(id).querySelectorAll('button').forEach(b=>{
+  b.classList.toggle('on',b.dataset.v===v);
+  if(b.dataset.v===v&&b.classList.contains('isgreen'))b.classList.add('green');else b.classList.remove('green');
+  if(b.dataset.v===v&&b.classList.contains('isred'))b.classList.add('red');else b.classList.remove('red');});}
+
+chipInit('ch_proto',()=>updFiltro());
+chipInit('ch_news');chipInit('ch_bo');chipInit('ch_disc');
+chipInit('ch_seq',v=>{$('row_r').style.display=v==='entry'?'block':'none';});
+['f_atr','f_range'].forEach(id=>$(id).addEventListener('input',updFiltro));
+
+function updFiltro(){
+  const p=chipGet('ch_proto'),atr=pn($('f_atr').value),rg=pn($('f_range').value);
+  const n=$('filtronote');
+  if(!p||isNaN(atr)||isNaN(rg)){n.innerHTML='Il verdetto del filtro apparirà qui appena inserisci protocollo, ATR e range.';return;}
+  const [kL,kH]=SOGLIE[p],min=kL*atr,max=kH*atr,ok=rg>=min&&rg<=max;
+  n.innerHTML=`Filtro ${p}: finestra ${f1(min)}–${f1(max)} $ → `+(ok?'<b class="ok">giornata VALIDA</b>':'<b class="no">NO TRADE</b>');
+}
+
+function openSheet(dateIso){
+  selDate=dateIso;
+  const d=new Date(dateIso+'T12:00:00');
+  $('sh_date').textContent=d.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).replace(/^./,c=>c.toUpperCase());
+  // se esiste una sola entry la carico; se due (ORB+ARB) carico la prima e l'utente cambia protocollo per l'altra
+  const es=Object.keys(DB).filter(k=>k.startsWith(dateIso));
+  const e=es.length?DB[es[0]]:null;
+  chipSet('ch_proto',e?e.proto:null);
+  $('f_atr').value=e&&e.atr!=null?f1(e.atr):'';
+  $('f_range').value=e&&e.range!=null?f1(e.range):'';
+  chipSet('ch_news',e?e.news:'no');
+  chipSet('ch_bo',e?e.bo:null);
+  chipSet('ch_seq',e?e.seq:null);
+  $('row_r').style.display=e&&e.seq==='entry'?'block':'none';
+  $('f_r').value=e&&e.r!=null?(e.r>0?'+':'')+String(e.r).replace('.',','):'';
+  chipSet('ch_disc',e?e.disc:null);
+  $('f_note').value=e?e.note||'':'';
+  updFiltro();
+  $('overlay').classList.add('show');$('sheet').classList.add('show');
+}
+function closeSheet(){$('overlay').classList.remove('show');$('sheet').classList.remove('show');}
+$('close').onclick=closeSheet;$('overlay').onclick=closeSheet;
+
+// quando cambio protocollo nella sheet, ricarico l'eventuale entry di quel protocollo per quel giorno
+$('ch_proto').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+  const k=selDate+'_'+b.dataset.v, e=DB[k];
+  if(e){$('f_atr').value=e.atr!=null?f1(e.atr):'';$('f_range').value=e.range!=null?f1(e.range):'';
+    chipSet('ch_news',e.news);chipSet('ch_bo',e.bo);chipSet('ch_seq',e.seq);
+    $('row_r').style.display=e.seq==='entry'?'block':'none';
+    $('f_r').value=e.r!=null?(e.r>0?'+':'')+String(e.r).replace('.',','):'';
+    chipSet('ch_disc',e.disc);$('f_note').value=e.note||'';updFiltro();}
+}));
+
+$('save').onclick=async()=>{
+  const proto=chipGet('ch_proto');
+  if(!proto){alert('Scegli il protocollo (ORB o ARB).');return;}
+  const seq=chipGet('ch_seq');
+  let r=null;
+  if(seq==='entry'){r=pn($('f_r').value);if(isNaN(r)){alert('Hai segnato "Entry eseguita": inserisci l\u2019esito in R (es. -1 o +2).');return;}}
+  DB[selDate+'_'+proto]={
+    date:selDate,proto,
+    atr:isNaN(pn($('f_atr').value))?null:pn($('f_atr').value),
+    range:isNaN(pn($('f_range').value))?null:pn($('f_range').value),
+    news:chipGet('ch_news')||'no',
+    bo:chipGet('ch_bo')||'nessuno',
+    seq:seq||'no retest',
+    r,
+    disc:chipGet('ch_disc'),
+    note:$('f_note').value.trim()
+  };
+  await persist();closeSheet();render();
+};
+$('del').onclick=async()=>{
+  const proto=chipGet('ch_proto');
+  const k=proto?selDate+'_'+proto:null;
+  if(k&&DB[k]){if(!confirm('Eliminare la registrazione '+proto+' di questo giorno?'))return;
+    delete DB[k];await persist();closeSheet();render();}
+  else closeSheet();
+};
+
+// ---------- statistiche ----------
+document.querySelectorAll('.segstats button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.segstats button').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');filter=b.dataset.f;renderStats();
+});
+
+function renderStats(){
+  const all=Object.values(DB).filter(e=>filter==='TUTTI'||e.proto===filter)
+            .sort((a,b)=>a.date.localeCompare(b.date));
+  const days=all.length;
+  const trades=all.filter(e=>e.r!=null&&!isNaN(e.r));
+  const wins=trades.filter(e=>e.r>0),losses=trades.filter(e=>e.r<0);
+  const totR=trades.reduce((s,e)=>s+e.r,0);
+  const wr=trades.length?wins.length/trades.length*100:null;
+  const avgW=wins.length?wins.reduce((s,e)=>s+e.r,0)/wins.length:null;
+  const avgL=losses.length?losses.reduce((s,e)=>s+e.r,0)/losses.length:null;
+  const expTrade=trades.length?totR/trades.length:null;
+  const expDay=days?totR/days:null;
+  const discEntries=all.filter(e=>e.disc);
+  const disc=discEntries.length?discEntries.filter(e=>e.disc==='sì').length/discEntries.length*100:null;
+  const filtered=all.filter(e=>e.range!=null&&e.atr!=null&&(()=>{const[kL,kH]=SOGLIE[e.proto];return e.range<kL*e.atr||e.range>kH*e.atr;})()).length;
+  // drawdown in R
+  let peak=0,eq=0,dd=0;const curve=[0];
+  trades.forEach(e=>{eq+=e.r;curve.push(eq);peak=Math.max(peak,eq);dd=Math.min(dd,eq-peak);});
+  const S=(v,l,cls='')=>`<div class="stat"><div class="v ${cls} mono">${v}</div><div class="l">${l}</div></div>`;
+  $('stats').innerHTML=
+    S(days,'giornate loggate')+
+    S(trades.length,'trade eseguiti')+
+    S(filtered,'giorni filtrati (no trade)')+
+    S(wr!=null?f1(wr,0)+'%':'—','win rate')+
+    S(avgW!=null?'+'+f1(avgW,2):'—','R media vincite','g')+
+    S(avgL!=null?f1(avgL,2):'—','R media perdite','r')+
+    S(expTrade!=null?(expTrade>=0?'+':'')+f1(expTrade,2)+'R':'—','spettanza / trade',expTrade>0?'g':(expTrade<0?'r':''))+
+    S(expDay!=null?(expDay>=0?'+':'')+f1(expDay,2)+'R':'—','spettanza / giornata',expDay>0?'g':(expDay<0?'r':''))+
+    S(disc!=null?f1(disc,0)+'%':'—','regole rispettate',disc!=null&&disc<90?'gold':'');
+  // sparkline equity in R
+  const svg=$('spark');svg.innerHTML='';
+  if(curve.length>1){
+    const min=Math.min(...curve,0),max=Math.max(...curve,0.01),W=300,H=64,pad=4;
+    const X=i=>pad+(W-2*pad)*i/(curve.length-1);
+    const Y=v=>H-pad-(H-2*pad)*(v-min)/(max-min||1);
+    const zero=Y(0);
+    svg.innerHTML=`<line x1="0" y1="${zero}" x2="${W}" y2="${zero}" stroke="#2e3944" stroke-width="1"/>`+
+      `<polyline fill="none" stroke="${eq>=0?'#3fb68b':'#e5534b'}" stroke-width="2" points="${curve.map((v,i)=>X(i)+','+Y(v)).join(' ')}"/>`;
+  }
+  // note dinamiche
+  let msg;
+  if(trades.length===0)msg='Ancora nessun trade: registra anche i giorni no-trade, sono dati.';
+  else if(trades.length<30)msg=`Campione: ${trades.length} trade. Sotto i 30–40 qualunque numero è rumore statistico — nessuna conclusione prima. La linea mostra l'equity cumulata in R (drawdown max: ${f1(dd,1)}R).`;
+  else msg=`Campione: ${trades.length} trade su ${days} giornate. Spettanza/giornata è il numero che conta per confrontare ORB e ARB. Drawdown max: ${f1(dd,1)}R.`;
+  $('statnote').textContent=msg;
+  const w=$('warn');
+  if(disc!=null&&disc<90&&trades.length>=5){w.style.display='block';
+    w.textContent='⚠ Regole rispettate sotto il 90%: finché la disciplina non è stabile, questi numeri misurano te, non il sistema.';}
+  else w.style.display='none';
+}
+
+// ---------- export ----------
+$('expCSV').onclick=()=>{
+  let csv='data;protocollo;atr_h1;range;news;breakout;sequenza;esito_R;regole_ok;note\n';
+  Object.values(DB).sort((a,b)=>a.date.localeCompare(b.date)).forEach(e=>{
+    csv+=[e.date,e.proto,e.atr!=null?f1(e.atr):'',e.range!=null?f1(e.range):'',e.news,e.bo,e.seq,
+          e.r!=null?String(e.r).replace('.',','):'',e.disc||'',(e.note||'').replace(/[;\n]/g,' ')].join(';')+'\n';
+  });
+  navigator.clipboard.writeText(csv);
+  $('expCSV').textContent='✓ Copiato negli appunti';
+  setTimeout(()=>$('expCSV').textContent='Esporta CSV',1800);
+};
+
+$('expJSON').onclick=()=>{
+  navigator.clipboard.writeText(JSON.stringify(DB));
+  $('expJSON').textContent='✓ Copiato';
+  setTimeout(()=>$('expJSON').textContent='Backup',1800);
+};
+$('impJSON').onclick=async()=>{
+  const t=prompt('Incolla qui il testo del backup:');
+  if(!t)return;
+  try{
+    const obj=JSON.parse(t);
+    if(typeof obj!=='object'||Array.isArray(obj))throw 0;
+    const n=Object.keys(obj).length;
+    if(!confirm('Trovate '+n+' registrazioni nel backup. Sostituiscono i dati attuali: procedere?'))return;
+    DB=obj;await persist();render();
+    alert('Ripristino completato: '+n+' registrazioni.');
+  }catch(e){alert('Il testo incollato non è un backup valido.');}
+};
+load();
+</script>
+
+</body>
+</html>
