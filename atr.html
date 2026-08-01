@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Calcolo Filtro ATR · ORB / ARB</title>
+<style>
+  :root{
+    --bg:#101418;--panel:#1a2027;--panel2:#232b34;--line:#2e3944;
+    --text:#e8edf2;--muted:#8b98a5;--gold:#e3b341;--green:#3fb68b;--red:#e5534b;--blue:#539bf5;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+       font-size:16px;line-height:1.5;padding:16px 14px 48px;max-width:560px;margin:0 auto}
+  .eyebrow{color:var(--gold);font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:600}
+  h1{font-size:24px;font-weight:800;letter-spacing:-.02em;margin:2px 0 16px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+  .card h2{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;font-weight:600}
+  /* toggle protocollo */
+  .seg{display:flex;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:14px}
+  .seg button{flex:1;background:none;border:none;color:var(--muted);font-size:15px;font-weight:700;
+              padding:10px;border-radius:9px;cursor:pointer}
+  .seg button.on{background:var(--gold);color:#161006}
+  .segnote{font-size:13px;color:var(--muted);text-align:center;margin:-6px 0 14px}
+  /* campi */
+  .field{margin-bottom:14px}
+  .field label{display:block;font-size:14px;font-weight:700;margin-bottom:2px}
+  .field .spiega{font-size:13px;color:var(--muted);margin-bottom:6px;line-height:1.45}
+  .field .spiega b{color:var(--gold);font-weight:600}
+  .field input{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:10px;
+               color:var(--text);font-size:20px;padding:12px;font-variant-numeric:tabular-nums;
+               font-family:"SF Mono",ui-monospace,Menlo,monospace}
+  .field input:focus{outline:none;border-color:var(--blue)}
+  /* risultati */
+  .res{display:none}
+  .res.show{display:block}
+  .verdict{border-radius:12px;padding:14px;text-align:center;margin-bottom:12px}
+  .verdict.ok{background:rgba(63,182,139,.12);border:1px solid var(--green)}
+  .verdict.no{background:rgba(229,83,75,.12);border:1px solid var(--red)}
+  .verdict .big{font-size:24px;font-weight:800}
+  .verdict.ok .big{color:var(--green)}
+  .verdict.no .big{color:var(--red)}
+  .verdict .why{font-size:13.5px;color:var(--muted);margin-top:3px}
+  .steps{font-size:14px}
+  .step{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
+  .step:last-child{border:none}
+  .step .n{color:var(--gold);font-weight:800;min-width:18px}
+  .step .mono{font-family:"SF Mono",ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
+  .step b.g{color:var(--green)} .step b.r{color:var(--red)}
+  /* barra visiva */
+  .gauge{margin-top:14px}
+  .gtrack{position:relative;height:14px;border-radius:7px;overflow:hidden;display:flex}
+  .gz{height:100%}
+  .gz.out{background:#59372f}
+  .gz.mid{background:#274436}
+  .gmark{position:absolute;top:-5px;width:3px;height:24px;background:var(--gold);border-radius:2px;
+         box-shadow:0 0 6px rgba(227,179,65,.8)}
+  .glabels{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:7px}
+  /* promemoria */
+  details{margin-bottom:10px}
+  summary{font-size:14px;font-weight:700;color:var(--gold);cursor:pointer;padding:6px 0}
+  details p{font-size:13.5px;color:var(--muted);padding:4px 0 8px;line-height:1.5}
+  details p b{color:var(--text)}
+  .err{color:var(--red);font-size:14px;margin-top:6px;min-height:18px}
+</style>
+</head>
+<body>
+
+<div class="eyebrow">Regola 4 · Filtro di validità</div>
+<h1>Calcolo soglie ATR</h1>
+
+<div class="seg">
+  <button id="bORB" class="on">ORB · 15:30</button>
+  <button id="bARB">ARB · notte asiatica</button>
+</div>
+<div class="segnote" id="segnote">Coefficienti ORB: 0,3× – 1,5× ATR · si legge alle 15:45</div>
+
+<div class="card">
+  <h2>Inserisci i 3 numeri che leggi sul grafico</h2>
+
+  <div class="field">
+    <label>1 · ATR(14) su H1 — in dollari</label>
+    <div class="spiega">È il numero nel pannello sotto il grafico con il grafico impostato su <b>1H</b> (es. "ATR 14  17,90"). Misura di quanti dollari si muove l'oro in media ogni ora: è il metro con cui giudichiamo se il range è normale. <b>Attenzione:</b> se il grafico è su 1m o 15m, quel numero NON va bene — passa prima a 1H.</div>
+    <input inputmode="decimal" id="atr" placeholder="es. 17,90">
+  </div>
+
+  <div class="field">
+    <label>2 · High del range — in dollari</label>
+    <div class="spiega" id="spH">Il <b>massimo</b> della candela 15m delle 15:30 italiane (etichettata <b>16:30</b> sul grafico PUPrime). Cursore sulla candela → leggi <b>H - Max</b> nella barra in alto.</div>
+    <input inputmode="decimal" id="hi" placeholder="es. 4003,59">
+  </div>
+
+  <div class="field">
+    <label>3 · Low del range — in dollari</label>
+    <div class="spiega" id="spL">Il <b>minimo</b> della stessa candela: valore <b>L - Min</b> nella barra in alto.</div>
+    <input inputmode="decimal" id="lo" placeholder="es. 3963,72">
+  </div>
+
+  <div class="err" id="err"></div>
+</div>
+
+<!-- RISULTATO -->
+
+<div class="res" id="res">
+  <div class="verdict" id="verdict">
+    <div class="big" id="vbig"></div>
+    <div class="why" id="vwhy"></div>
+  </div>
+
+  <div class="card">
+    <h2>Il calcolo, passo per passo</h2>
+    <div class="steps">
+      <div class="step"><div class="n">1</div><div>Range = High − Low = <span class="mono" id="c1"></span></div></div>
+      <div class="step"><div class="n">2</div><div>Soglia minima = <span id="cmL"></span> × ATR = <span class="mono" id="c2"></span><br><span style="color:var(--muted);font-size:13px">sotto questa cifra il range è troppo stretto: il prezzo lo romperebbe per puro rumore</span></div></div>
+      <div class="step"><div class="n">3</div><div>Soglia massima = <span id="cmH"></span> × ATR = <span class="mono" id="c3"></span><br><span style="color:var(--muted);font-size:13px">sopra questa cifra il range è anomalo (news): lo stop costerebbe troppo</span></div></div>
+      <div class="step"><div class="n">4</div><div id="c4"></div></div>
+    </div>
+    <div class="gauge">
+      <div class="gtrack">
+        <div class="gz out" id="gzL"></div>
+        <div class="gz mid" id="gzM"></div>
+        <div class="gz out" style="flex-grow:1"></div>
+        <div class="gmark" id="gmark"></div>
+      </div>
+      <div class="glabels"><span id="glMin"></span><span>finestra valida (verde)</span><span id="glMax"></span></div>
+    </div>
+  </div>
+</div>
+
+<!-- PROMEMORIA -->
+
+<div class="card">
+  <h2>Promemoria (tocca per aprire)</h2>
+  <details><summary>Cos'è l'ATR, in una frase</summary>
+    <p><b>Average True Range</b> = di quanti dollari si muove il prezzo, in media, per ogni candela del timeframe scelto. Con periodo 14 su H1: la media dell'escursione delle ultime 14 ore. Non dice la direzione, solo l'ampiezza. Serve a dare un contesto: 10$ di range sono tanti in una giornata calma, pochi in una giornata di CPI.</p>
+  </details>
+  <details><summary>Perché le soglie sono "× ATR" e non numeri fissi</summary>
+    <p>Perché la volatilità dell'oro cambia di settimana in settimana. Un filtro fisso (es. "range tra 5 e 25$") diventerebbe sbagliato appena l'ATR raddoppia o si dimezza. Ancorando le soglie all'ATR, il filtro si adatta da solo.</p>
+  </details>
+  <details><summary>Orari: Italia vs grafico</summary>
+    <p>Il server PUPrime è su GMT+3: il grafico è <b>avanti di 1 ora</b> rispetto all'Italia (in ora legale). Candela ORB delle 15:30 italiane = etichetta <b>16:30</b> sul grafico. Range asiatico 02:00–06:00 italiane = candele <b>03:00–07:00</b> sul grafico. In ora solare (da fine ottobre) diventa +2: ricontrolla.</p>
+  </details>
+  <details><summary>Differenza ORB / ARB in questo calcolo</summary>
+    <p><b>ORB</b>: il range è una sola candela 15m (15:30–15:45) e le soglie sono 0,3×–1,5× ATR; si calcola alle 15:45. <b>ARB</b>: il range sono le prime 4 ore di Tokyo (16 candele 15m) e le soglie sono 0,5×–2× ATR, più larghe perché un range di 4 ore è naturalmente più ampio; si calcola alle 09:00, prima di Londra. Il verdetto dice solo se la giornata è tradabile: il trade poi richiede comunque breakout a corpo + retest + conferma.</p>
+  </details>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+let mode='ORB';
+const CFG={
+  ORB:{kL:0.3,kH:1.5,nota:'Coefficienti ORB: 0,3× – 1,5× ATR · si legge alle 15:45',
+       spH:'Il <b>massimo</b> della candela 15m delle 15:30 italiane (etichettata <b>16:30</b> sul grafico PUPrime). Cursore sulla candela → leggi <b>H - Max</b> nella barra in alto.',
+       spL:'Il <b>minimo</b> della stessa candela: valore <b>L - Min</b> nella barra in alto.'},
+  ARB:{kL:0.5,kH:2,nota:'Coefficienti ARB: 0,5× – 2× ATR · si legge alle 09:00, prima di Londra',
+       spH:'Il <b>massimo</b> toccato tra le 02:00 e le 06:00 italiane (candele <b>03:00–07:00</b> sul grafico). Su 15m: il punto più alto di quelle 16 candele. Comodo: traccia la riga sul massimo e leggi il valore sull\u2019asse dei prezzi.',
+       spL:'Il <b>minimo</b> della stessa fascia notturna: il punto più basso delle 16 candele.'}
+};
+function setMode(m){
+  mode=m;
+  $('bORB').classList.toggle('on',m==='ORB');
+  $('bARB').classList.toggle('on',m==='ARB');
+  $('segnote').textContent=CFG[m].nota;
+  $('spH').innerHTML=CFG[m].spH;
+  $('spL').innerHTML=CFG[m].spL;
+  calc();
+}
+$('bORB').onclick=()=>setMode('ORB');
+$('bARB').onclick=()=>setMode('ARB');
+
+function pn(s){
+  if(!s)return NaN;
+  s=String(s).trim().replace(/\$/g,'').replace(/\s/g,'');
+  if(/,\d{1,2}$/.test(s))s=s.replace(/\./g,'').replace(',','.');
+  else s=s.replace(/,/g,'');
+  return parseFloat(s);
+}
+const f=(n,d=2)=>n.toLocaleString('it-IT',{minimumFractionDigits:d,maximumFractionDigits:d});
+
+function calc(){
+  const atr=pn($('atr').value),H=pn($('hi').value),L=pn($('lo').value);
+  const err=$('err');err.textContent='';
+  if(isNaN(atr)&&isNaN(H)&&isNaN(L)){$('res').classList.remove('show');return;}
+  if(isNaN(atr)||isNaN(H)||isNaN(L)){$('res').classList.remove('show');return;}
+  if(H<=L){err.textContent='Il High deve essere più grande del Low: controlla di non averli invertiti.';$('res').classList.remove('show');return;}
+  if(atr<=0){err.textContent='ATR deve essere maggiore di zero.';$('res').classList.remove('show');return;}
+  const {kL,kH}=CFG[mode];
+  const range=H-L,min=kL*atr,max=kH*atr;
+  const ok=range>=min&&range<=max;
+  $('res').classList.add('show');
+  $('verdict').className='verdict '+(ok?'ok':'no');
+  $('vbig').textContent=ok?'GIORNATA VALIDA ('+mode+')':'NO TRADE ('+mode+')';
+  $('vwhy').textContent=ok
+    ?'Il range è proporzionato alla volatilità: aspetta il breakout a corpo, poi retest e conferma.'
+    :(range>max?'Range sopra la soglia massima: movimento anomalo, oggi si guarda e basta.'
+               :'Range sotto la soglia minima: troppo stretto, sarebbe solo rumore.');
+  $('cmL').textContent=String(kL).replace('.',',');
+  $('cmH').textContent=String(kH).replace('.',',');
+  $('c1').textContent=`${f(H)} − ${f(L)} = ${f(range)} $`;
+  $('c2').textContent=f(min)+' $';
+  $('c3').textContent=f(max)+' $';
+  $('c4').innerHTML=ok
+    ?`${f(range)} $ è <b class="g">tra ${f(min)} e ${f(max)}</b> → dentro la finestra ✓`
+    :(range>max
+      ?`${f(range)} $ è <b class="r">più di ${f(max)}</b> → fuori dalla finestra ✗`
+      :`${f(range)} $ è <b class="r">meno di ${f(min)}</b> → fuori dalla finestra ✗`);
+  const span=max*2;
+  $('gzL').style.width=(min/span*100)+'%';
+  $('gzM').style.width=((max-min)/span*100)+'%';
+  $('gmark').style.left=Math.min(range/span*100,99)+'%';
+  $('glMin').textContent=f(min,1)+' $';
+  $('glMax').textContent=f(max,1)+' $';
+}
+['atr','hi','lo'].forEach(id=>$(id).addEventListener('input',calc));
+</script>
+
+</body>
+</html>
