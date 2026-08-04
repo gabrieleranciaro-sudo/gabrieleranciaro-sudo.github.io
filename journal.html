@@ -205,9 +205,20 @@ let cur=new Date(); cur.setDate(1);
 let selDate=null, filter='TUTTI';
 const SOGLIE={ORB:[0.3,1.5],ARB:[0.5,2]};
 
-function pn(s){if(!s)return NaN;s=String(s).trim().replace(/\+/g,'').replace(/\$/g,'');
-  if(/,\d{1,2}$/.test(s))s=s.replace(/\./g,'').replace(',','.');else s=s.replace(/,/g,'');
-  return parseFloat(s);}
+function pn(s){
+  if(!s)return NaN;
+  s=String(s).trim().replace(/\$/g,'').replace(/\s/g,'').replace(/\+/g,'');
+  const hasC=s.includes(','),hasD=s.includes('.');
+  if(hasC&&hasD){
+    if(s.lastIndexOf(',')>s.lastIndexOf('.'))s=s.replace(/\./g,'').replace(/,/g,'.');
+    else s=s.replace(/,/g,'');
+  }else if(hasC){
+    const i=s.lastIndexOf(',');s=s.slice(0,i).replace(/,/g,'')+'.'+s.slice(i+1);
+  }else if(hasD&&s.split('.').length>2){
+    s=s.replace(/\./g,'');
+  }
+  return parseFloat(s);
+}
 const f1=(n,d=2)=>n.toLocaleString('it-IT',{minimumFractionDigits:d,maximumFractionDigits:d});
 const iso=d=>d.toISOString().slice(0,10);
 
