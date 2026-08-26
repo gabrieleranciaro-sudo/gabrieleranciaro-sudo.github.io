@@ -1,0 +1,128 @@
+{
+  "meta": {
+    "name": "CSP — Claude Shadow Portfolio",
+    "start_date": "2026-08-26",
+    "initial_capital_eur": 2000,
+    "benchmark": "S&P 500",
+    "base_currency": "EUR",
+    "last_updated": "2026-08-26",
+    "status": "Holdings correnti in verifica"
+  },
+  "kpis": {
+    "shadow_value_eur": 2000,
+    "shadow_return_pct": 0,
+    "benchmark_value_eur": 2000,
+    "benchmark_return_pct": 0,
+    "alpha_pct": 0
+  },
+  "current_holdings": [],
+  "operations": [],
+  "daily_performance": [
+    {
+      "date": "2026-08-26",
+      "shadow_value_eur": 2000,
+      "benchmark_value_eur": 2000,
+      "note": "Day 0 — holdings correnti in verifica"
+    }
+  ],
+  "historical_snapshots": [
+    {
+      "date": "2026-06-29",
+      "ticker": "NOW",
+      "weight": 0.126,
+      "status": "CONFERMATO"
+    },
+    {
+      "date": "2026-06-29",
+      "ticker": "VST",
+      "weight": 0.103,
+      "status": "CONFERMATO"
+    },
+    {
+      "date": "2026-06-29",
+      "ticker": "ZETA",
+      "weight": 0.095,
+      "status": "CONFERMATO"
+    },
+    {
+      "date": "2026-06-29",
+      "ticker": "SGOV",
+      "weight": 0.093,
+      "status": "CONFERMATO"
+    },
+    {
+      "date": "2026-06-29",
+      "ticker": "MGNI",
+      "weight": 0.078,
+      "status": "CONFERMATO"
+    },
+    {
+      "date": "2026-06-29",
+      "ticker": "HALO",
+      "weight": 0.066,
+      "status": "CONFERMATO"
+    },
+    {
+      "date": "2026-06-29",
+      "ticker": "RDDT",
+      "weight": 0.061,
+      "status": "CONFERMATO"
+    },
+    {
+      "date": "2026-06-29",
+      "ticker": "PGY",
+      "weight": 0.059,
+      "status": "CONFERMATO"
+    },
+    {
+      "date": "2026-06-29",
+      "ticker": "PLMR",
+      "weight": 0.056,
+      "status": "CONFERMATO"
+    },
+    {
+      "date": "2026-06-29",
+      "ticker": "ARDX",
+      "weight": 0.053,
+      "status": "CONFERMATO"
+    },
+    {
+      "date": "2026-06-29",
+      "ticker": "ICE",
+      "weight": 0.051,
+      "status": "CONFERMATO"
+    },
+    {
+      "date": "2026-06-29",
+      "ticker": "INTR",
+      "weight": 0.047,
+      "status": "CONFERMATO"
+    },
+    {
+      "date": "2026-06-29",
+      "ticker": "KTOS",
+      "weight": 0.042,
+      "status": "CONFERMATO"
+    },
+    {
+      "date": "2026-06-29",
+      "ticker": "QXO",
+      "weight": 0.037,
+      "status": "CONFERMATO"
+    },
+    {
+      "date": "2026-06-29",
+      "ticker": "AVGO",
+      "weight": 0.034,
+      "status": "CONFERMATO"
+    }
+  ],
+  "sources": [
+    {
+      "date": "2026-06-29",
+      "event": "Snapshot completo 15 holdings",
+      "status": "CONFERMATO",
+      "url": "https://lightbrd.com/therogueoracle/status/2071658862395204026"
+    }
+  ]
+}
