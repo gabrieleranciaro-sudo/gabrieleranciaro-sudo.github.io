@@ -6,7 +6,7 @@
     "benchmark": "S&P 500",
     "base_currency": "EUR",
     "last_updated": "2026-08-26",
-    "status": "Holdings correnti in verifica"
+    "status": "Holdings correnti in verifica — CSP"
   },
   "kpis": {
     "shadow_value_eur": 2000,
