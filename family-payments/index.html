@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0b1220">
+  <title>Pagamenti Familiari</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    :root {
+      --bg: #07101d;
+      --panel: #101a2b;
+      --panel2: #162236;
+      --border: #26364d;
+      --text: #f4f7fb;
+      --muted: #94a3b8;
+      --blue: #3b82f6;
+      --green: #22c55e;
+      --red: #ef4444;
+      --yellow: #eab308;
+      --orange: #f97316;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+    }
+
+    button { cursor: pointer; }
+
+    .hidden { display: none !important; }
+
+    .container {
+      max-width: 1050px;
+      margin: auto;
+      padding: 22px 18px 100px;
+    }
+
+    /* LOGIN */
+
+    #loginView {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 410px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 28px;
+    }
+
+    .login-card h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+
+    .login-card p {
+      color: var(--muted);
+      margin-bottom: 25px;
+    }
+
+    /* FORM */
+
+    label {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      margin: 15px 0 7px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      background: #0b1422;
+      color: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 13px;
+      outline: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--blue);
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .primary {
+      width: 100%;
+      margin-top: 20px;
+      border: 0;
+      border-radius: 12px;
+      padding: 14px;
+      font-weight: 700;
+      background: var(--blue);
+      color: white;
+    }
+
+    .secondary {
+      border: 1px solid var(--border);
+      background: var(--panel2);
+      color: white;
+      border-radius: 10px;
+      padding: 10px 13px;
+    }
+
+    .danger {
+      background: var(--red);
+      color: white;
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 14px;
+    }
+
+    /* HEADER */
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 24px;
+    }
+
+    header h1 {
+      font-size: 26px;
+      margin: 0;
+    }
+
+    header small { color: var(--muted); }
+
+    /* KPI */
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 25px;
+    }
+
+    .stat {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      padding: 16px;
+    }
+
+    .stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 7px;
+    }
+
+    .stat strong { font-size: 22px; }
+
+    /* CALENDAR */
+
+    .calendar-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .calendar-header h2 {
+      margin: 0;
+      text-transform: capitalize;
+      font-size: 20px;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 7px;
+    }
+
+    .nav-buttons button {
+      border: 1px solid var(--border);
+      background: var(--panel2);
+      color: white;
+      width: 38px;
+      height: 38px;
+      border-radius: 9px;
+    }
+
+    .weekdays, .calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+    }
+
+    .weekday {
+      padding: 11px 4px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 11px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .day {
+      min-height: 115px;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 7px;
+      overflow: hidden;
+    }
+
+    .day:nth-child(7n) { border-right: 0; }
+
+    .day.empty { opacity: .3; }
+
+    .day-number {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 5px;
+    }
+
+    .today .day-number {
+      display: inline-flex;
+      width: 25px;
+      height: 25px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: var(--blue);
+      color: white;
+    }
+
+    .payment {
+      border-radius: 7px;
+      padding: 5px 6px;
+      margin-top: 4px;
+      font-size: 10px;
+      line-height: 1.25;
+      cursor: pointer;
+      color: white;
+      overflow: hidden;
+    }
+
+    .payment.unpaid { background: var(--red); }
+    .payment.overdue { background: #991b1b; }
+    .payment.paid { background: var(--green); }
+    .payment.paid_late { background: var(--yellow); color: #111827; }
+
+    .payment-title {
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* FAB */
+
+    .fab {
+      position: fixed;
+      right: 24px;
+      bottom: 25px;
+      width: 62px;
+      height: 62px;
+      border: 0;
+      border-radius: 50%;
+      background: var(--blue);
+      color: white;
+      font-size: 35px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.35);
+      z-index: 20;
+    }
+
+    /* MODALS */
+
+    .modal-bg {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 100;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 510px;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 21px;
+    }
+
+    .modal-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-top h2 { margin: 0; }
+
+    .close {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font-size: 28px;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      border-bottom: 1px solid var(--border);
+      padding: 12px 0;
+    }
+
+    .detail-row span { color: var(--muted); }
+
+    .status {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 7px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .status.unpaid { background: var(--red); }
+    .status.overdue { background: #991b1b; }
+    .status.paid { background: var(--green); }
+    .status.paid_late { background: var(--yellow); color:#111827; }
+
+    .actions {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .actions button {
+      flex: 1;
+      min-width: 130px;
+    }
+
+    #message {
+      position: fixed;
+      left: 50%;
+      bottom: 25px;
+      transform: translateX(-50%);
+      background: #fff;
+      color: #111827;
+      border-radius: 10px;
+      padding: 11px 16px;
+      z-index: 999;
+      box-shadow: 0 5px 30px rgba(0,0,0,.4);
+    }
+
+    @media(max-width: 700px) {
+      .container { padding: 15px 9px 90px; }
+
+      header h1 { font-size: 21px; }
+
+      .stats {
+        grid-template-columns: 1fr;
+        gap: 7px;
+      }
+
+      .stat {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 14px;
+      }
+
+      .stat span { margin: 0; }
+      .stat strong { font-size: 18px; }
+
+      .calendar-header { padding: 13px; }
+
+      .day {
+        min-height: 83px;
+        padding: 4px;
+      }
+
+      .payment {
+        font-size: 8px;
+        padding: 4px;
+      }
+
+      .payment .amount { display: none; }
+
+      .weekday { font-size: 9px; }
+
+      .fab {
+        width: 58px;
+        height: 58px;
+        right: 17px;
+        bottom: 17px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- LOGIN -->
+  <section id="loginView">
+    <div class="login-card">
+      <h1>💳 Pagamenti Familiari</h1>
+      <p>Accedi per visualizzare scadenze, pagamenti e ricevute.</p>
+
+      <label>Email</label>
+      <input id="email" type="email" autocomplete="email">
+
+      <label>Password</label>
+      <input id="password" type="password" autocomplete="current-password">
+
+      <button class="primary" onclick="login()">Accedi</button>
+    </div>
+  </section>
+
+  <!-- APP -->
+  <main id="appView" class="hidden">
+    <div class="container">
+
+      <header>
+        <div>
+          <h1>Pagamenti Familiari</h1>
+          <small id="userLabel"></small>
+        </div>
+        <button class="secondary" onclick="logout()">Esci</button>
+      </header>
+
+      <section class="stats">
+        <div class="stat">
+          <span>Da pagare questo mese</span>
+          <strong id="toPay">€0,00</strong>
+        </div>
+
+        <div class="stat">
+          <span>Pagato questo mese</span>
+          <strong id="paidTotal">€0,00</strong>
+        </div>
+
+        <div class="stat">
+          <span>Scaduto</span>
+          <strong id="overdueTotal">€0,00</strong>
+        </div>
+      </section>
+
+      <section class="calendar-card">
+
+        <div class="calendar-header">
+          <h2 id="monthTitle"></h2>
+
+          <div class="nav-buttons">
+            <button onclick="changeMonth(-1)">‹</button>
+            <button onclick="goToday()">●</button>
+            <button onclick="changeMonth(1)">›</button>
+          </div>
+        </div>
+
+        <div class="weekdays">
+          <div class="weekday">LUN</div>
+          <div class="weekday">MAR</div>
+          <div class="weekday">MER</div>
+          <div class="weekday">GIO</div>
+          <div class="weekday">VEN</div>
+          <div class="weekday">SAB</div>
+          <div class="weekday">DOM</div>
+        </div>
+
+        <div id="calendar" class="calendar"></div>
+
+      </section>
+    </div>
+
+    <button class="fab" onclick="openNewPayment()">+</button>
+  </main>
+
+  <!-- NUOVA RATA -->
+  <div id="newModal" class="modal-bg hidden">
+    <div class="modal">
+
+      <div class="modal-top">
+        <h2>Nuova scadenza</h2>
+        <button class="close" onclick="closeModal('newModal')">×</button>
+      </div>
+
+      <label>Cosa pago</label>
+      <input id="newTitle" placeholder="Es. Abbanoa">
+
+      <label>Importo €</label>
+      <input id="newAmount" type="number" min="0" step="0.01" placeholder="84,50">
+
+      <label>Prima scadenza</label>
+      <input id="newDate" type="date">
+
+      <label>Ricorrenza</label>
+      <select id="newRecurrence">
+        <option value="once">Una sola volta</option>
+        <option value="monthly" selected>Mensile</option>
+        <option value="bimonthly">Ogni 2 mesi</option>
+        <option value="quarterly">Trimestrale</option>
+        <option value="semiannual">Semestrale</option>
+        <option value="annual">Annuale</option>
+      </select>
+
+      <label>Numero ricorrenze</label>
+      <input id="newCount" type="number" min="1" max="120" value="1">
+
+      <label>Note (facoltative)</label>
+      <textarea id="newNotes"></textarea>
+
+      <button class="primary" onclick="createSeries()">Crea scadenza</button>
+    </div>
+  </div>
+
+  <!-- DETTAGLIO -->
+  <div id="detailModal" class="modal-bg hidden">
+    <div class="modal">
+
+      <div class="modal-top">
+        <h2 id="detailTitle"></h2>
+        <button class="close" onclick="closeModal('detailModal')">×</button>
+      </div>
+
+      <div id="detailStatus"></div>
+
+      <div class="detail-row">
+        <span>Scadenza</span>
+        <strong id="detailDue"></strong>
+      </div>
+
+      <div class="detail-row">
+        <span>Importo</span>
+        <strong id="detailAmount"></strong>
+      </div>
+
+      <div class="detail-row">
+        <span>Pagato il</span>
+        <strong id="detailPaid">—</strong>
+      </div>
+
+      <div id="paymentArea">
+
+        <label>Data effettiva pagamento</label>
+        <input id="paidDate" type="date">
+
+        <label>Importo pagato</label>
+        <input id="paidAmount" type="number" min="0" step="0.01">
+
+        <label>Ricevuta (PDF o foto)</label>
+        <input id="receiptFile"
+               type="file"
+               accept=".pdf,image/jpeg,image/png,image/heic,image/webp">
+
+        <button class="primary" onclick="markPaid()">
+          Segna come pagato
+        </button>
+
+      </div>
+
+      <div id="receiptArea" class="hidden">
+        <button class="secondary" style="width:100%;margin-top:15px"
+                onclick="openReceipt()">
+          📎 Apri ricevuta
+        </button>
+      </div>
+
+      <div class="actions">
+        <button class="secondary" onclick="editPaymentAmount()">
+          Modifica importo
+        </button>
+
+        <button class="danger" onclick="deletePayment()">
+          Elimina scadenza
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="message" class="hidden"></div>
+
+<script>
+
+  /* =====================================================
+     INSERISCI QUI I 2 DATI SUPABASE
+     ===================================================== */
+
+  const SUPABASE_URL = 'https://lhclscufctjhcuzhbjpp.supabase.co';
+
+  const SUPABASE_KEY = 'sb_publishable_BJSdakRk5w9EufXGK1FysA_RANZbBvm';
+
+
+  /* ===================================================== */
+
+  const client = supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+  let currentUser = null;
+  let householdId = null;
+  let payments = [];
+  let selectedPayment = null;
+
+  let viewDate = new Date();
+  viewDate.setDate(1);
+
+
+  /* =====================================================
+     UTILITÀ
+     ===================================================== */
+
+  function money(value) {
+    return new Intl.NumberFormat(
+      'it-IT',
+      {
+        style: 'currency',
+        currency: 'EUR'
+      }
+    ).format(Number(value || 0));
+  }
+
+  function formatDate(date) {
+    if (!date) return '—';
+
+    const [y,m,d] = date.split('-');
+
+    return `${d}/${m}/${y}`;
+  }
+
+  function localISODate(date = new Date()) {
+    const y = date.getFullYear();
+    const m = String(date.getMonth()+1).padStart(2,'0');
+    const d = String(date.getDate()).padStart(2,'0');
+
+    return `${y}-${m}-${d}`;
+  }
+
+  function showMessage(text) {
+    const el = document.getElementById('message');
+
+    el.textContent = text;
+    el.classList.remove('hidden');
+
+    setTimeout(() => {
+      el.classList.add('hidden');
+    }, 3000);
+  }
+
+  function closeModal(id) {
+    document.getElementById(id).classList.add('hidden');
+  }
+
+
+  /* =====================================================
+     AUTH
+     ===================================================== */
+
+  async function login() {
+
+    const email =
+      document.getElementById('email').value.trim();
+
+    const password =
+      document.getElementById('password').value;
+
+    const { data, error } =
+      await client.auth.signInWithPassword({
+        email,
+        password
+      });
+
+    if (error) {
+      alert('Accesso non riuscito: ' + error.message);
+      return;
+    }
+
+    currentUser = data.user;
+
+    await startApp();
+  }
+
+
+  async function logout() {
+    await client.auth.signOut();
+    location.reload();
+  }
+
+
+  async function checkSession() {
+
+    const { data } =
+      await client.auth.getSession();
+
+    if (data.session) {
+      currentUser = data.session.user;
+      await startApp();
+    }
+  }
+
+
+  async function startApp() {
+
+    const { data, error } =
+      await client
+        .from('household_members')
+        .select('household_id')
+        .eq('user_id', currentUser.id)
+        .limit(1)
+        .single();
+
+    if (error || !data) {
+      alert('Nucleo familiare non trovato.');
+      return;
+    }
+
+    householdId = data.household_id;
+
+    document.getElementById('loginView')
+      .classList.add('hidden');
+
+    document.getElementById('appView')
+      .classList.remove('hidden');
+
+    document.getElementById('userLabel')
+      .textContent = currentUser.email;
+
+    await loadPayments();
+  }
+
+
+  /* =====================================================
+     CARICAMENTO PAGAMENTI
+     ===================================================== */
+
+  async function loadPayments() {
+
+    const { data, error } =
+      await client
+        .from('payments_calendar')
+        .select('*')
+        .eq('household_id', householdId)
+        .order('due_date');
+
+    if (error) {
+      console.error(error);
+      alert('Errore nel caricamento delle scadenze.');
+      return;
+    }
+
+    payments = data || [];
+
+    renderCalendar();
+    updateStats();
+  }
+
+
+  /* =====================================================
+     CALENDARIO
+     ===================================================== */
+
+  function renderCalendar() {
+
+    const calendar =
+      document.getElementById('calendar');
+
+    calendar.innerHTML = '';
+
+    const year = viewDate.getFullYear();
+    const month = viewDate.getMonth();
+
+    document.getElementById('monthTitle')
+      .textContent =
+      new Intl.DateTimeFormat(
+        'it-IT',
+        {
+          month: 'long',
+          year: 'numeric'
+        }
+      ).format(viewDate);
+
+    const firstDay =
+      new Date(year, month, 1);
+
+    const lastDay =
+      new Date(year, month + 1, 0);
+
+    let startOffset =
+      firstDay.getDay() - 1;
+
+    if (startOffset < 0)
+      startOffset = 6;
+
+    for (let i=0; i<startOffset; i++) {
+      const blank = document.createElement('div');
+      blank.className = 'day empty';
+      calendar.appendChild(blank);
+    }
+
+    const today = localISODate();
+
+    for (
+      let day=1;
+      day<=lastDay.getDate();
+      day++
+    ) {
+
+      const cell =
+        document.createElement('div');
+
+      cell.className = 'day';
+
+      const date =
+        `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+
+      if (date === today)
+        cell.classList.add('today');
+
+      const number =
+        document.createElement('div');
+
+      number.className = 'day-number';
+      number.textContent = day;
+
+      cell.appendChild(number);
+
+      const dayPayments =
+        payments.filter(
+          p => p.due_date === date
+        );
+
+      dayPayments.forEach(p => {
+
+        const event =
+          document.createElement('div');
+
+        event.className =
+          `payment ${p.status}`;
+
+        event.innerHTML =
+          `<div class="payment-title">${escapeHTML(p.title)}</div>
+           <div class="amount">${money(p.amount_due)}</div>`;
+
+        event.onclick =
+          () => openPayment(p.id);
+
+        cell.appendChild(event);
+      });
+
+      calendar.appendChild(cell);
+    }
+  }
+
+
+  function changeMonth(delta) {
+    viewDate.setMonth(
+      viewDate.getMonth() + delta
+    );
+
+    renderCalendar();
+    updateStats();
+  }
+
+
+  function goToday() {
+    viewDate = new Date();
+    viewDate.setDate(1);
+
+    renderCalendar();
+    updateStats();
+  }
+
+
+  function escapeHTML(str) {
+    return String(str || '')
+      .replaceAll('&','&amp;')
+      .replaceAll('<','&lt;')
+      .replaceAll('>','&gt;')
+      .replaceAll('"','&quot;')
+      .replaceAll("'","&#039;");
+  }
+
+
+  /* =====================================================
+     KPI
+     ===================================================== */
+
+  function updateStats() {
+
+    const year = viewDate.getFullYear();
+    const month = viewDate.getMonth();
+
+    const monthPayments =
+      payments.filter(p => {
+        const d =
+          new Date(p.due_date + 'T12:00:00');
+
+        return (
+          d.getFullYear() === year &&
+          d.getMonth() === month
+        );
+      });
+
+    const toPay =
+      monthPayments
+        .filter(p =>
+          p.status === 'unpaid'
+        )
+        .reduce(
+          (s,p) =>
+            s + Number(p.amount_due),
+          0
+        );
+
+    const paid =
+      monthPayments
+        .filter(p =>
+          p.status === 'paid' ||
+          p.status === 'paid_late'
+        )
+        .reduce(
+          (s,p) =>
+            s + Number(
+              p.amount_paid ??
+              p.amount_due
+            ),
+          0
+        );
+
+    const overdue =
+      payments
+        .filter(p =>
+          p.status === 'overdue'
+        )
+        .reduce(
+          (s,p) =>
+            s + Number(p.amount_due),
+          0
+        );
+
+    document.getElementById('toPay')
+      .textContent = money(toPay);
+
+    document.getElementById('paidTotal')
+      .textContent = money(paid);
+
+    document.getElementById('overdueTotal')
+      .textContent = money(overdue);
+  }
+
+
+  /* =====================================================
+     NUOVA SCADENZA / RICORRENZE
+     ===================================================== */
+
+  function openNewPayment() {
+
+    document.getElementById('newTitle').value = '';
+    document.getElementById('newAmount').value = '';
+    document.getElementById('newDate').value =
+      localISODate();
+
+    document.getElementById('newRecurrence').value =
+      'monthly';
+
+    document.getElementById('newCount').value = 1;
+    document.getElementById('newNotes').value = '';
+
+    document.getElementById('newModal')
+      .classList.remove('hidden');
+  }
+
+
+  async function createSeries() {
+
+    const title =
+      document.getElementById('newTitle')
+        .value.trim();
+
+    const amount =
+      Number(
+        document.getElementById('newAmount')
+          .value
+      );
+
+    const date =
+      document.getElementById('newDate')
+        .value;
+
+    const recurrence =
+      document.getElementById('newRecurrence')
+        .value;
+
+    let count =
+      Number(
+        document.getElementById('newCount')
+          .value
+      );
+
+    const notes =
+      document.getElementById('newNotes')
+        .value.trim();
+
+    if (!title || !amount || !date) {
+      alert('Compila cosa paghi, importo e scadenza.');
+      return;
+    }
+
+    if (recurrence === 'once')
+      count = 1;
+
+    if (!Number.isInteger(count) ||
+        count < 1 ||
+        count > 120) {
+      alert('Numero ricorrenze non valido.');
+      return;
+    }
+
+    const { data: series, error } =
+      await client
+        .from('payment_series')
+        .insert({
+          household_id: householdId,
+          title: title,
+          description: notes || null,
+          default_amount: amount,
+          first_due_date: date,
+          recurrence_type: recurrence,
+          recurrence_count: count,
+          created_by: currentUser.id
+        })
+        .select()
+        .single();
+
+    if (error) {
+      console.error(error);
+      alert('Errore: ' + error.message);
+      return;
+    }
+
+    /* Copia le note sulle singole rate generate */
+
+    if (notes && series) {
+      await client
+        .from('payments')
+        .update({ notes })
+        .eq('series_id', series.id);
+    }
+
+    closeModal('newModal');
+
+    showMessage(
+      count === 1
+        ? 'Scadenza creata'
+        : `${count} scadenze create`
+    );
+
+    await loadPayments();
+  }
+
+
+  /* =====================================================
+     DETTAGLIO PAGAMENTO
+     ===================================================== */
+
+  async function openPayment(id) {
+
+    selectedPayment =
+      payments.find(p => p.id === id);
+
+    if (!selectedPayment)
+      return;
+
+    document.getElementById('detailTitle')
+      .textContent =
+      selectedPayment.title;
+
+    document.getElementById('detailDue')
+      .textContent =
+      formatDate(selectedPayment.due_date);
+
+    document.getElementById('detailAmount')
+      .textContent =
+      money(selectedPayment.amount_due);
+
+    document.getElementById('detailPaid')
+      .textContent =
+      formatDate(selectedPayment.paid_at);
+
+    const labels = {
+      unpaid: 'DA PAGARE',
+      overdue: 'SCADUTA',
+      paid: 'PAGATA',
+      paid_late: 'PAGATA IN RITARDO'
+    };
+
+    document.getElementById('detailStatus')
+      .innerHTML =
+      `<span class="status ${selectedPayment.status}">
+        ${labels[selectedPayment.status]}
+       </span>`;
+
+    document.getElementById('paidDate')
+      .value = localISODate();
+
+    document.getElementById('paidAmount')
+      .value = selectedPayment.amount_due;
+
+    document.getElementById('receiptFile')
+      .value = '';
+
+    if (
+      selectedPayment.status === 'paid' ||
+      selectedPayment.status === 'paid_late'
+    ) {
+      document.getElementById('paymentArea')
+        .classList.add('hidden');
+    } else {
+      document.getElementById('paymentArea')
+        .classList.remove('hidden');
+    }
+
+    const { data } =
+      await client
+        .from('payment_receipts')
+        .select('*')
+        .eq('payment_id', selectedPayment.id)
+        .order('created_at', {
+          ascending: false
+        })
+        .limit(1);
+
+    selectedPayment.receipt =
+      data && data.length
+        ? data[0]
+        : null;
+
+    document.getElementById('receiptArea')
+      .classList.toggle(
+        'hidden',
+        !selectedPayment.receipt
+      );
+
+    document.getElementById('detailModal')
+      .classList.remove('hidden');
+  }
+
+
+  /* =====================================================
+     SEGNA PAGATO + RICEVUTA
+     ===================================================== */
+
+  async function markPaid() {
+
+    if (!selectedPayment)
+      return;
+
+    const paidDate =
+      document.getElementById('paidDate').value;
+
+    const amount =
+      Number(
+        document.getElementById('paidAmount')
+          .value
+      );
+
+    const file =
+      document.getElementById('receiptFile')
+        .files[0];
+
+    if (!paidDate || !amount) {
+      alert('Inserisci data e importo pagato.');
+      return;
+    }
+
+    const { error } =
+      await client
+        .from('payments')
+        .update({
+          paid_at: paidDate,
+          amount_paid: amount
+        })
+        .eq('id', selectedPayment.id);
+
+    if (error) {
+      alert('Errore: ' + error.message);
+      return;
+    }
+
+    if (file) {
+      const ok =
+        await uploadReceipt(
+          selectedPayment,
+          file
+        );
+
+      if (!ok) {
+        alert(
+          'Pagamento salvato, ma la ricevuta non è stata caricata.'
+        );
+      }
+    }
+
+    closeModal('detailModal');
+
+    showMessage('Pagamento registrato');
+
+    await loadPayments();
+  }
+
+
+  async function uploadReceipt(payment, file) {
+
+    const safeName =
+      file.name.replace(
+        /[^a-zA-Z0-9._-]/g,
+        '_'
+      );
+
+    const path =
+      `${householdId}/${payment.id}/${Date.now()}_${safeName}`;
+
+    const { error: uploadError } =
+      await client.storage
+        .from('receipts')
+        .upload(
+          path,
+          file,
+          {
+            upsert: false,
+            contentType: file.type
+          }
+        );
+
+    if (uploadError) {
+      console.error(uploadError);
+      return false;
+    }
+
+    const { error: dbError } =
+      await client
+        .from('payment_receipts')
+        .insert({
+          payment_id: payment.id,
+          household_id: householdId,
+          file_path: path,
+          original_filename: file.name,
+          mime_type: file.type,
+          file_size: file.size,
+          uploaded_by: currentUser.id
+        });
+
+    if (dbError) {
+      console.error(dbError);
+
+      await client.storage
+        .from('receipts')
+        .remove([path]);
+
+      return false;
+    }
+
+    return true;
+  }
+
+
+  /* =====================================================
+     APRI RICEVUTA PRIVATA
+     ===================================================== */
+
+  async function openReceipt() {
+
+    if (
+      !selectedPayment ||
+      !selectedPayment.receipt
+    )
+      return;
+
+    const { data, error } =
+      await client.storage
+        .from('receipts')
+        .createSignedUrl(
+          selectedPayment.receipt.file_path,
+          60
+        );
+
+    if (error) {
+      alert(
+        'Impossibile aprire la ricevuta.'
+      );
+      return;
+    }
+
+    window.open(
+      data.signedUrl,
+      '_blank',
+      'noopener'
+    );
+  }
+
+
+  /* =====================================================
+     MODIFICA IMPORTO
+     ===================================================== */
+
+  async function editPaymentAmount() {
+
+    if (!selectedPayment)
+      return;
+
+    const value =
+      prompt(
+        'Nuovo importo della singola rata:',
+        selectedPayment.amount_due
+      );
+
+    if (value === null)
+      return;
+
+    const amount =
+      Number(
+        value.replace(',', '.')
+      );
+
+    if (
+      !Number.isFinite(amount) ||
+      amount < 0
+    ) {
+      alert('Importo non valido.');
+      return;
+    }
+
+    const { error } =
+      await client
+        .from('payments')
+        .update({
+          amount_due: amount
+        })
+        .eq('id', selectedPayment.id);
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    closeModal('detailModal');
+
+    showMessage('Importo aggiornato');
+
+    await loadPayments();
+  }
+
+
+  /* =====================================================
+     ELIMINA SINGOLA SCADENZA
+     ===================================================== */
+
+  async function deletePayment() {
+
+    if (!selectedPayment)
+      return;
+
+    if (
+      !confirm(
+        `Eliminare la scadenza "${selectedPayment.title}" del ${formatDate(selectedPayment.due_date)}?`
+      )
+    )
+      return;
+
+    if (selectedPayment.receipt) {
+
+      await client.storage
+        .from('receipts')
+        .remove([
+          selectedPayment.receipt.file_path
+        ]);
+    }
+
+    const { error } =
+      await client
+        .from('payments')
+        .delete()
+        .eq('id', selectedPayment.id);
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    closeModal('detailModal');
+
+    showMessage('Scadenza eliminata');
+
+    await loadPayments();
+  }
+
+
+  /* =====================================================
+     START
+     ===================================================== */
+
+  checkSession();
+
+</script>
+
+</body>
+</html>
