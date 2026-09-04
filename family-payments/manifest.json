@@ -2,7 +2,7 @@
   "name": "Pagamenti Familiari",
   "short_name": "Pagamenti",
   "description": "Calendario delle scadenze e dei pagamenti familiari",
-  "start_url": "/family-payments/",
+  "start_url": "/family-payments/?v=5",
   "scope": "/family-payments/",
   "display": "standalone",
   "background_color": "#07101d",
