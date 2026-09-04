@@ -1299,10 +1299,7 @@
 
   async function openReceipt() {
 
-    if (
-      !selectedPayment ||
-      !selectedPayment.receipt
-    )
+    if (!selectedPayment || !selectedPayment.receipt)
       return;
 
     const { data, error } =
@@ -1310,21 +1307,18 @@
         .from('receipts')
         .createSignedUrl(
           selectedPayment.receipt.file_path,
-          60
+          300
         );
 
-    if (error) {
-      alert(
-        'Impossibile aprire la ricevuta.'
-      );
+    if (error || !data?.signedUrl) {
+      console.error(error);
+      alert('Impossibile aprire la ricevuta.');
       return;
     }
 
-    window.open(
-      data.signedUrl,
-      '_blank',
-      'noopener'
-    );
+    /* Safari/iOS può bloccare window.open() dopo una chiamata async.
+       Apriamo quindi la ricevuta nella stessa finestra. */
+    window.location.href = data.signedUrl;
   }
 
 
