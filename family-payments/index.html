@@ -46,10 +46,14 @@
     .hidden { display: none !important; }
 
     .container {
-      max-width: 1050px;
-      margin: auto;
-      padding: 22px 18px 100px;
-    }
+  max-width: 1050px;
+  margin: auto;
+  padding:
+    calc(22px + env(safe-area-inset-top))
+    calc(18px + env(safe-area-inset-right))
+    calc(100px + env(safe-area-inset-bottom))
+    calc(18px + env(safe-area-inset-left));
+}
 
     /* LOGIN */
 
@@ -420,8 +424,13 @@
     }
 
     @media(max-width: 700px) {
-      .container { padding: 15px 9px 90px; }
-
+.container {
+  padding:
+    calc(15px + env(safe-area-inset-top))
+    calc(9px + env(safe-area-inset-right))
+    calc(90px + env(safe-area-inset-bottom))
+    calc(9px + env(safe-area-inset-left));
+}
       header h1 { font-size: 21px; }
 
       .stats {
