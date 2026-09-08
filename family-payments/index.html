@@ -5,15 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#0b1220">
   <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="Pagamenti">
+
   <link rel="manifest" href="./manifest.json">
+
   <title>Pagamenti Familiari</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     :root {
       --bg: #07101d;
@@ -37,23 +41,30 @@
       min-height: 100vh;
     }
 
-    button, input, select, textarea {
+    button,
+    input,
+    select,
+    textarea {
       font: inherit;
     }
 
-    button { cursor: pointer; }
+    button {
+      cursor: pointer;
+    }
 
-    .hidden { display: none !important; }
+    .hidden {
+      display: none !important;
+    }
 
     .container {
-  max-width: 1050px;
-  margin: auto;
-  padding:
-    calc(22px + env(safe-area-inset-top))
-    calc(18px + env(safe-area-inset-right))
-    calc(100px + env(safe-area-inset-bottom))
-    calc(18px + env(safe-area-inset-left));
-}
+      max-width: 1050px;
+      margin: auto;
+      padding:
+        calc(22px + env(safe-area-inset-top))
+        calc(18px + env(safe-area-inset-right))
+        calc(100px + env(safe-area-inset-bottom))
+        calc(18px + env(safe-area-inset-left));
+    }
 
     /* LOGIN */
 
@@ -93,7 +104,9 @@
       margin: 15px 0 7px;
     }
 
-    input, select, textarea {
+    input,
+    select,
+    textarea {
       width: 100%;
       background: #0b1422;
       color: white;
@@ -103,7 +116,9 @@
       outline: none;
     }
 
-    input:focus, select:focus, textarea:focus {
+    input:focus,
+    select:focus,
+    textarea:focus {
       border-color: var(--blue);
     }
 
@@ -154,7 +169,9 @@
       margin: 0;
     }
 
-    header small { color: var(--muted); }
+    header small {
+      color: var(--muted);
+    }
 
     /* KPI */
 
@@ -179,7 +196,9 @@
       margin-bottom: 7px;
     }
 
-    .stat strong { font-size: 22px; }
+    .stat strong {
+      font-size: 22px;
+    }
 
     /* CALENDAR */
 
@@ -218,7 +237,8 @@
       border-radius: 9px;
     }
 
-    .weekdays, .calendar {
+    .weekdays,
+    .calendar {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
     }
@@ -239,9 +259,13 @@
       overflow: hidden;
     }
 
-    .day:nth-child(7n) { border-right: 0; }
+    .day:nth-child(7n) {
+      border-right: 0;
+    }
 
-    .day.empty { opacity: .3; }
+    .day.empty {
+      opacity: .3;
+    }
 
     .day-number {
       font-size: 12px;
@@ -271,16 +295,36 @@
       overflow: hidden;
     }
 
-    .payment.unpaid { background: var(--red); }
-    .payment.overdue { background: #991b1b; }
-    .payment.paid { background: var(--green); }
-    .payment.paid_late { background: var(--yellow); color: #111827; }
+    .payment.unpaid {
+      background: var(--red);
+    }
+
+    .payment.overdue {
+      background: #991b1b;
+    }
+
+    .payment.paid {
+      background: var(--green);
+    }
+
+    .payment.paid_late {
+      background: var(--yellow);
+      color: #111827;
+    }
 
     .payment-title {
       font-weight: 700;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+
+    .payment-installment {
+      margin-top: 2px;
+      font-size: 9px;
+      font-weight: 700;
+      opacity: .95;
+      white-space: nowrap;
     }
 
     /* FAB */
@@ -330,7 +374,9 @@
       align-items: center;
     }
 
-    .modal-top h2 { margin: 0; }
+    .modal-top h2 {
+      margin: 0;
+    }
 
     .close {
       border: 0;
@@ -347,7 +393,9 @@
       padding: 12px 0;
     }
 
-    .detail-row span { color: var(--muted); }
+    .detail-row span {
+      color: var(--muted);
+    }
 
     .status {
       display: inline-block;
@@ -358,10 +406,22 @@
       font-weight: bold;
     }
 
-    .status.unpaid { background: var(--red); }
-    .status.overdue { background: #991b1b; }
-    .status.paid { background: var(--green); }
-    .status.paid_late { background: var(--yellow); color:#111827; }
+    .status.unpaid {
+      background: var(--red);
+    }
+
+    .status.overdue {
+      background: #991b1b;
+    }
+
+    .status.paid {
+      background: var(--green);
+    }
+
+    .status.paid_late {
+      background: var(--yellow);
+      color: #111827;
+    }
 
     .actions {
       display: flex;
@@ -424,14 +484,18 @@
     }
 
     @media(max-width: 700px) {
-.container {
-  padding:
-    calc(15px + env(safe-area-inset-top))
-    calc(9px + env(safe-area-inset-right))
-    calc(90px + env(safe-area-inset-bottom))
-    calc(9px + env(safe-area-inset-left));
-}
-      header h1 { font-size: 21px; }
+
+      .container {
+        padding:
+          calc(15px + env(safe-area-inset-top))
+          calc(9px + env(safe-area-inset-right))
+          calc(90px + env(safe-area-inset-bottom))
+          calc(9px + env(safe-area-inset-left));
+      }
+
+      header h1 {
+        font-size: 21px;
+      }
 
       .stats {
         grid-template-columns: 1fr;
@@ -445,10 +509,17 @@
         padding: 12px 14px;
       }
 
-      .stat span { margin: 0; }
-      .stat strong { font-size: 18px; }
+      .stat span {
+        margin: 0;
+      }
 
-      .calendar-header { padding: 13px; }
+      .stat strong {
+        font-size: 18px;
+      }
+
+      .calendar-header {
+        padding: 13px;
+      }
 
       .day {
         min-height: 83px;
@@ -460,9 +531,17 @@
         padding: 4px;
       }
 
-      .payment .amount { display: none; }
+      .payment-installment {
+        font-size: 7px;
+      }
 
-      .weekday { font-size: 9px; }
+      .payment .amount {
+        display: none;
+      }
+
+      .weekday {
+        font-size: 9px;
+      }
 
       .fab {
         width: 58px;
@@ -477,70 +556,167 @@
 <body>
 
   <!-- LOGIN -->
+
   <section id="loginView">
+
     <div class="login-card">
+
       <h1>💳 Pagamenti Familiari</h1>
-      <p>Accedi per visualizzare scadenze, pagamenti e ricevute.</p>
+
+      <p>
+        Accedi per visualizzare scadenze,
+        pagamenti e ricevute.
+      </p>
 
       <label>Email</label>
-      <input id="email" type="email" autocomplete="email">
+
+      <input
+        id="email"
+        type="email"
+        autocomplete="email"
+      >
 
       <label>Password</label>
-      <input id="password" type="password" autocomplete="current-password">
 
-      <button class="primary" onclick="login()">Accedi</button>
+      <input
+        id="password"
+        type="password"
+        autocomplete="current-password"
+      >
+
+      <button
+        class="primary"
+        onclick="login()"
+      >
+        Accedi
+      </button>
+
     </div>
+
   </section>
 
+
   <!-- APP -->
-  <main id="appView" class="hidden">
+
+  <main
+    id="appView"
+    class="hidden"
+  >
+
     <div class="container">
 
       <header>
+
         <div>
-          <h1>Pagamenti Familiari</h1>
+
+          <h1>
+            Pagamenti Familiari
+          </h1>
+
           <small id="userLabel"></small>
+
         </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">
-          <button id="notificationButton"
-                  class="secondary"
-                  onclick="enableNotifications()">
+
+        <div
+          style="
+            display:flex;
+            gap:8px;
+            flex-wrap:wrap;
+            justify-content:flex-end;
+          "
+        >
+
+          <button
+            id="notificationButton"
+            class="secondary"
+            onclick="enableNotifications()"
+          >
             🔔 Attiva notifiche
           </button>
-          <button class="secondary" onclick="logout()">Esci</button>
+
+          <button
+            class="secondary"
+            onclick="logout()"
+          >
+            Esci
+          </button>
+
         </div>
+
       </header>
 
+
+      <!-- KPI -->
+
       <section class="stats">
+
         <div class="stat">
-          <span>Da pagare questo mese</span>
-          <strong id="toPay">€0,00</strong>
+
+          <span>
+            Da pagare questo mese
+          </span>
+
+          <strong id="toPay">
+            €0,00
+          </strong>
+
         </div>
 
         <div class="stat">
-          <span>Pagato questo mese</span>
-          <strong id="paidTotal">€0,00</strong>
+
+          <span>
+            Pagato questo mese
+          </span>
+
+          <strong id="paidTotal">
+            €0,00
+          </strong>
+
         </div>
 
         <div class="stat">
-          <span>Scaduto</span>
-          <strong id="overdueTotal">€0,00</strong>
+
+          <span>
+            Scaduto
+          </span>
+
+          <strong id="overdueTotal">
+            €0,00
+          </strong>
+
         </div>
+
       </section>
+
+
+      <!-- CALENDARIO -->
 
       <section class="calendar-card">
 
         <div class="calendar-header">
+
           <h2 id="monthTitle"></h2>
 
           <div class="nav-buttons">
-            <button onclick="changeMonth(-1)">‹</button>
-            <button onclick="goToday()">●</button>
-            <button onclick="changeMonth(1)">›</button>
+
+            <button onclick="changeMonth(-1)">
+              ‹
+            </button>
+
+            <button onclick="goToday()">
+              ●
+            </button>
+
+            <button onclick="changeMonth(1)">
+              ›
+            </button>
+
           </div>
+
         </div>
 
         <div class="weekdays">
+
           <div class="weekday">LUN</div>
           <div class="weekday">MAR</div>
           <div class="weekday">MER</div>
@@ -548,151 +724,349 @@
           <div class="weekday">VEN</div>
           <div class="weekday">SAB</div>
           <div class="weekday">DOM</div>
+
         </div>
 
-        <div id="calendar" class="calendar"></div>
+        <div
+          id="calendar"
+          class="calendar"
+        ></div>
 
       </section>
+
     </div>
 
-    <button class="fab" onclick="openNewPayment()">+</button>
+
+    <button
+      class="fab"
+      onclick="openNewPayment()"
+    >
+      +
+    </button>
+
   </main>
 
+
   <!-- NUOVA RATA -->
-  <div id="newModal" class="modal-bg hidden">
+
+  <div
+    id="newModal"
+    class="modal-bg hidden"
+  >
+
     <div class="modal">
 
       <div class="modal-top">
-        <h2>Nuova scadenza</h2>
-        <button class="close" onclick="closeModal('newModal')">×</button>
+
+        <h2>
+          Nuova scadenza
+        </h2>
+
+        <button
+          class="close"
+          onclick="closeModal('newModal')"
+        >
+          ×
+        </button>
+
       </div>
 
-      <label>Cosa pago</label>
-      <input id="newTitle" placeholder="Es. Abbanoa">
+      <label>
+        Cosa pago
+      </label>
 
-      <label>Importo €</label>
-      <input id="newAmount" type="number" min="0" step="0.01" placeholder="84,50">
+      <input
+        id="newTitle"
+        placeholder="Es. Abbanoa"
+      >
 
-      <label>Prima scadenza</label>
-      <input id="newDate" type="date">
+      <label>
+        Importo €
+      </label>
 
-      <label>Ricorrenza</label>
+      <input
+        id="newAmount"
+        type="number"
+        min="0"
+        step="0.01"
+        placeholder="84,50"
+      >
+
+      <label>
+        Prima scadenza
+      </label>
+
+      <input
+        id="newDate"
+        type="date"
+      >
+
+      <label>
+        Ricorrenza
+      </label>
+
       <select id="newRecurrence">
-        <option value="once">Una sola volta</option>
-        <option value="monthly" selected>Mensile</option>
-        <option value="bimonthly">Ogni 2 mesi</option>
-        <option value="quarterly">Trimestrale</option>
-        <option value="semiannual">Semestrale</option>
-        <option value="annual">Annuale</option>
+
+        <option value="once">
+          Una sola volta
+        </option>
+
+        <option
+          value="monthly"
+          selected
+        >
+          Mensile
+        </option>
+
+        <option value="bimonthly">
+          Ogni 2 mesi
+        </option>
+
+        <option value="quarterly">
+          Trimestrale
+        </option>
+
+        <option value="semiannual">
+          Semestrale
+        </option>
+
+        <option value="annual">
+          Annuale
+        </option>
+
       </select>
 
-      <label>Numero ricorrenze</label>
-      <input id="newCount" type="number" min="1" max="120" value="1">
+      <label>
+        Numero ricorrenze
+      </label>
 
-      <label>Note (facoltative)</label>
+      <input
+        id="newCount"
+        type="number"
+        min="1"
+        max="120"
+        value="1"
+      >
+
+      <label>
+        Note (facoltative)
+      </label>
+
       <textarea id="newNotes"></textarea>
 
-      <button class="primary" onclick="createSeries()">Crea scadenza</button>
+      <button
+        class="primary"
+        onclick="createSeries()"
+      >
+        Crea scadenza
+      </button>
+
     </div>
+
   </div>
 
+
   <!-- DETTAGLIO -->
-  <div id="detailModal" class="modal-bg hidden">
+
+  <div
+    id="detailModal"
+    class="modal-bg hidden"
+  >
+
     <div class="modal">
 
       <div class="modal-top">
+
         <h2 id="detailTitle"></h2>
-        <button class="close" onclick="closeModal('detailModal')">×</button>
+
+        <button
+          class="close"
+          onclick="closeModal('detailModal')"
+        >
+          ×
+        </button>
+
       </div>
+
 
       <div id="detailStatus"></div>
 
+
       <div class="detail-row">
-        <span>Scadenza</span>
+
+        <span>
+          Scadenza
+        </span>
+
         <strong id="detailDue"></strong>
+
       </div>
 
+
+      <div
+        id="detailInstallmentRow"
+        class="detail-row hidden"
+      >
+
+        <span>
+          Piano
+        </span>
+
+        <strong id="detailInstallment"></strong>
+
+      </div>
+
+
       <div class="detail-row">
-        <span>Importo</span>
+
+        <span>
+          Importo
+        </span>
+
         <strong id="detailAmount"></strong>
+
       </div>
 
+
       <div class="detail-row">
-        <span>Pagato il</span>
-        <strong id="detailPaid">—</strong>
+
+        <span>
+          Pagato il
+        </span>
+
+        <strong id="detailPaid">
+          —
+        </strong>
+
       </div>
+
 
       <div id="paymentArea">
 
-        <label>Data effettiva pagamento</label>
-        <input id="paidDate" type="date">
+        <label>
+          Data effettiva pagamento
+        </label>
 
-        <label>Importo pagato</label>
-        <input id="paidAmount" type="number" min="0" step="0.01">
+        <input
+          id="paidDate"
+          type="date"
+        >
 
-        <label>Ricevuta (PDF o foto)</label>
-        <input id="receiptFile"
-               type="file"
-               accept=".pdf,image/jpeg,image/png,image/heic,image/webp">
+        <label>
+          Importo pagato
+        </label>
 
-        <button class="primary" onclick="markPaid()">
+        <input
+          id="paidAmount"
+          type="number"
+          min="0"
+          step="0.01"
+        >
+
+        <label>
+          Ricevuta (PDF o foto)
+        </label>
+
+        <input
+          id="receiptFile"
+          type="file"
+          accept=".pdf,image/jpeg,image/png,image/heic,image/webp"
+        >
+
+        <button
+          class="primary"
+          onclick="markPaid()"
+        >
           Segna come pagato
         </button>
 
       </div>
 
-      <div id="receiptArea" class="hidden">
-        <button class="secondary" style="width:100%;margin-top:15px"
-                onclick="openReceipt()">
+
+      <div
+        id="receiptArea"
+        class="hidden"
+      >
+
+        <button
+          class="secondary"
+          style="
+            width:100%;
+            margin-top:15px
+          "
+          onclick="openReceipt()"
+        >
           📎 Visualizza ricevuta
         </button>
 
-        <div id="receiptPreview" class="receipt-preview hidden"></div>
+        <div
+          id="receiptPreview"
+          class="receipt-preview hidden"
+        ></div>
+
       </div>
 
+
       <div class="actions">
-        <button class="secondary" onclick="editPaymentAmount()">
+
+        <button
+          class="secondary"
+          onclick="editPaymentAmount()"
+        >
           Modifica importo
         </button>
 
-        <button class="danger" onclick="deletePayment()">
+        <button
+          class="danger"
+          onclick="deletePayment()"
+        >
           Elimina scadenza
         </button>
+
       </div>
 
     </div>
+
   </div>
 
-  <div id="message" class="hidden"></div>
+
+  <div
+    id="message"
+    class="hidden"
+  ></div>
+
 
 <script>
 
   /* =====================================================
-     INSERISCI QUI I 2 DATI SUPABASE
+     CONFIGURAZIONE SUPABASE
      ===================================================== */
 
-  const SUPABASE_URL = 'https://lhclscufctjhcuzhbjpp.supabase.co';
+  const SUPABASE_URL =
+    'https://lhclscufctjhcuzhbjpp.supabase.co';
 
-  const SUPABASE_KEY = 'sb_publishable_BJSdakRk5w9EufXGK1FysA_RANZbBvm';
+  const SUPABASE_KEY =
+    'sb_publishable_BJSdakRk5w9EufXGK1FysA_RANZbBvm';
 
-  /* La chiave PUBBLICA VAPID verrà inserita nel prossimo passaggio.
-     La chiave PRIVATA non deve mai essere messa su GitHub. */
-  const VAPID_PUBLIC_KEY = 'BK83BR3CTsoiMI99hId9ciV9j4s8kxN79f8tET5MkW8IaSRojWwHczL3zJPYypGeCnqZEA5Q5eQsIwuFSc9fc2k';
+  const VAPID_PUBLIC_KEY =
+    'BK83BR3CTsoiMI99hId9ciV9j4s8kxN79f8tET5MkW8IaSRojWwHczL3zJPYypGeCnqZEA5Q5eQsIwuFSc9fc2k';
 
 
-  /* ===================================================== */
+  const client =
+    supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
 
-  const client = supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  );
 
   let currentUser = null;
   let householdId = null;
   let payments = [];
   let selectedPayment = null;
 
-  let viewDate = new Date();
+  let viewDate =
+    new Date();
+
   viewDate.setDate(1);
 
 
@@ -701,44 +1075,81 @@
      ===================================================== */
 
   function money(value) {
+
     return new Intl.NumberFormat(
       'it-IT',
       {
         style: 'currency',
         currency: 'EUR'
       }
-    ).format(Number(value || 0));
+    ).format(
+      Number(value || 0)
+    );
   }
 
-  function formatDate(date) {
-    if (!date) return '—';
 
-    const [y,m,d] = date.split('-');
+  function formatDate(date) {
+
+    if (!date)
+      return '—';
+
+    const [y, m, d] =
+      date.split('-');
 
     return `${d}/${m}/${y}`;
   }
 
-  function localISODate(date = new Date()) {
-    const y = date.getFullYear();
-    const m = String(date.getMonth()+1).padStart(2,'0');
-    const d = String(date.getDate()).padStart(2,'0');
+
+  function localISODate(
+    date = new Date()
+  ) {
+
+    const y =
+      date.getFullYear();
+
+    const m =
+      String(
+        date.getMonth() + 1
+      ).padStart(2, '0');
+
+    const d =
+      String(
+        date.getDate()
+      ).padStart(2, '0');
 
     return `${y}-${m}-${d}`;
   }
 
+
   function showMessage(text) {
-    const el = document.getElementById('message');
+
+    const el =
+      document.getElementById(
+        'message'
+      );
 
     el.textContent = text;
-    el.classList.remove('hidden');
+
+    el.classList.remove(
+      'hidden'
+    );
 
     setTimeout(() => {
-      el.classList.add('hidden');
+
+      el.classList.add(
+        'hidden'
+      );
+
     }, 3000);
   }
 
+
   function closeModal(id) {
-    document.getElementById(id).classList.add('hidden');
+
+    document
+      .getElementById(id)
+      .classList
+      .add('hidden');
   }
 
 
@@ -746,40 +1157,69 @@
      NOTIFICHE PUSH / SERVICE WORKER
      ===================================================== */
 
-  function urlBase64ToUint8Array(base64String) {
+  function urlBase64ToUint8Array(
+    base64String
+  ) {
+
     const padding =
-      '='.repeat((4 - base64String.length % 4) % 4);
+      '='.repeat(
+        (
+          4 -
+          base64String.length % 4
+        ) % 4
+      );
 
     const base64 =
-      (base64String + padding)
-        .replace(/-/g, '+')
-        .replace(/_/g, '/');
+      (
+        base64String +
+        padding
+      )
+      .replace(/-/g, '+')
+      .replace(/_/g, '/');
 
-    const rawData = window.atob(base64);
+    const rawData =
+      window.atob(base64);
 
     return Uint8Array.from(
-      [...rawData].map(char => char.charCodeAt(0))
+      [...rawData].map(
+        char =>
+          char.charCodeAt(0)
+      )
     );
   }
 
 
-  async function getServiceWorkerRegistration() {
+  async function
+  getServiceWorkerRegistration() {
 
-    if (!('serviceWorker' in navigator))
+    if (
+      !(
+        'serviceWorker'
+        in navigator
+      )
+    )
       return null;
 
     try {
-      const registration =
-        await navigator.serviceWorker.register(
-          './sw.js',
-          { scope: './' }
-        );
 
-      await navigator.serviceWorker.ready;
+      const registration =
+        await navigator
+          .serviceWorker
+          .register(
+            './sw.js',
+            {
+              scope: './'
+            }
+          );
+
+      await navigator
+        .serviceWorker
+        .ready;
 
       return registration;
 
     } catch (error) {
+
       console.error(
         'Errore registrazione Service Worker:',
         error
@@ -790,41 +1230,65 @@
   }
 
 
-  async function updateNotificationButton() {
+  async function
+  updateNotificationButton() {
 
     const button =
-      document.getElementById('notificationButton');
+      document.getElementById(
+        'notificationButton'
+      );
 
     if (!button)
       return;
 
+
     if (
-      !('Notification' in window) ||
-      !('serviceWorker' in navigator) ||
-      !('PushManager' in window)
+      !(
+        'Notification'
+        in window
+      ) ||
+      !(
+        'serviceWorker'
+        in navigator
+      ) ||
+      !(
+        'PushManager'
+        in window
+      )
     ) {
+
       button.textContent =
         '🔕 Push non supportate';
 
       button.disabled = true;
+
       return;
     }
 
+
     try {
+
       const registration =
-        await getServiceWorkerRegistration();
+        await
+        getServiceWorkerRegistration();
 
       if (!registration)
         return;
 
+
       const subscription =
-        await registration.pushManager
+        await registration
+          .pushManager
           .getSubscription();
 
+
       if (
-        Notification.permission === 'granted' &&
+        Notification.permission
+          === 'granted'
+        &&
         subscription
       ) {
+
         button.textContent =
           '🔔 Notifiche attive';
 
@@ -832,78 +1296,121 @@
       }
 
     } catch (error) {
+
       console.error(error);
     }
   }
 
 
-  async function enableNotifications() {
+  async function
+  enableNotifications() {
 
-    if (!currentUser || !householdId) {
-      alert('Accedi prima di attivare le notifiche.');
+    if (
+      !currentUser ||
+      !householdId
+    ) {
+
+      alert(
+        'Accedi prima di attivare le notifiche.'
+      );
+
       return;
     }
 
+
     if (
-      !('Notification' in window) ||
-      !('serviceWorker' in navigator) ||
-      !('PushManager' in window)
+      !(
+        'Notification'
+        in window
+      ) ||
+      !(
+        'serviceWorker'
+        in navigator
+      ) ||
+      !(
+        'PushManager'
+        in window
+      )
     ) {
+
       alert(
         'Questo dispositivo non supporta le notifiche Web Push.'
       );
+
       return;
     }
 
+
     if (
-      !VAPID_PUBLIC_KEY ||
-      VAPID_PUBLIC_KEY ===
-        'INCOLLA_QUI_VAPID_PUBLIC_KEY'
+      !VAPID_PUBLIC_KEY
     ) {
+
       alert(
         'Configurazione notifiche non ancora completata.'
       );
+
       return;
     }
 
-    const permission =
-      await Notification.requestPermission();
 
-    if (permission !== 'granted') {
+    const permission =
+      await Notification
+        .requestPermission();
+
+
+    if (
+      permission !== 'granted'
+    ) {
+
       alert(
         'Permesso notifiche non concesso.'
       );
+
       return;
     }
 
+
     const registration =
-      await getServiceWorkerRegistration();
+      await
+      getServiceWorkerRegistration();
+
 
     if (!registration) {
+
       alert(
         'Impossibile registrare il servizio notifiche.'
       );
+
       return;
     }
 
+
     let subscription =
-      await registration.pushManager
+      await registration
+        .pushManager
         .getSubscription();
+
 
     if (!subscription) {
 
       try {
+
         subscription =
-          await registration.pushManager
+          await registration
+            .pushManager
             .subscribe({
+
               userVisibleOnly: true,
+
               applicationServerKey:
                 urlBase64ToUint8Array(
                   VAPID_PUBLIC_KEY
                 )
+
             });
 
       } catch (error) {
+
         console.error(
           'Errore sottoscrizione Push:',
           error
@@ -912,57 +1419,92 @@
         alert(
           'Impossibile attivare le notifiche push.'
         );
+
         return;
       }
     }
 
+
     const json =
       subscription.toJSON();
+
 
     if (
       !json.endpoint ||
       !json.keys?.p256dh ||
       !json.keys?.auth
     ) {
+
       alert(
         'Dati della sottoscrizione push incompleti.'
       );
+
       return;
     }
 
+
     const { error } =
       await client
-        .from('push_subscriptions')
-        .upsert({
-          user_id: currentUser.id,
-          household_id: householdId,
-          endpoint: json.endpoint,
-          p256dh: json.keys.p256dh,
-          auth: json.keys.auth,
-          user_agent: navigator.userAgent,
-          updated_at:
-            new Date().toISOString()
-        }, {
-          onConflict: 'endpoint'
-        });
+        .from(
+          'push_subscriptions'
+        )
+        .upsert(
+          {
+
+            user_id:
+              currentUser.id,
+
+            household_id:
+              householdId,
+
+            endpoint:
+              json.endpoint,
+
+            p256dh:
+              json.keys.p256dh,
+
+            auth:
+              json.keys.auth,
+
+            user_agent:
+              navigator.userAgent,
+
+            updated_at:
+              new Date()
+                .toISOString()
+
+          },
+          {
+            onConflict:
+              'endpoint'
+          }
+        );
+
 
     if (error) {
+
       console.error(error);
 
       alert(
         'Notifiche abilitate sul telefono, ma registrazione sul server non riuscita: ' +
         error.message
       );
+
       return;
     }
 
+
     const button =
-      document.getElementById('notificationButton');
+      document.getElementById(
+        'notificationButton'
+      );
+
 
     button.textContent =
       '🔔 Notifiche attive';
 
     button.disabled = true;
+
 
     showMessage(
       'Notifiche push attivate'
@@ -977,30 +1519,57 @@
   async function login() {
 
     const email =
-      document.getElementById('email').value.trim();
+      document.getElementById(
+        'email'
+      )
+      .value
+      .trim();
+
 
     const password =
-      document.getElementById('password').value;
+      document.getElementById(
+        'password'
+      )
+      .value;
 
-    const { data, error } =
-      await client.auth.signInWithPassword({
-        email,
-        password
-      });
+
+    const {
+      data,
+      error
+    } =
+      await client
+        .auth
+        .signInWithPassword({
+          email,
+          password
+        });
+
 
     if (error) {
-      alert('Accesso non riuscito: ' + error.message);
+
+      alert(
+        'Accesso non riuscito: ' +
+        error.message
+      );
+
       return;
     }
 
-    currentUser = data.user;
+
+    currentUser =
+      data.user;
+
 
     await startApp();
   }
 
 
   async function logout() {
-    await client.auth.signOut();
+
+    await client
+      .auth
+      .signOut();
+
     location.reload();
   }
 
@@ -1008,10 +1577,16 @@
   async function checkSession() {
 
     const { data } =
-      await client.auth.getSession();
+      await client
+        .auth
+        .getSession();
+
 
     if (data.session) {
-      currentUser = data.session.user;
+
+      currentUser =
+        data.session.user;
+
       await startApp();
     }
   }
@@ -1019,32 +1594,74 @@
 
   async function startApp() {
 
-    const { data, error } =
+    const {
+      data,
+      error
+    } =
       await client
-        .from('household_members')
-        .select('household_id')
-        .eq('user_id', currentUser.id)
+        .from(
+          'household_members'
+        )
+        .select(
+          'household_id'
+        )
+        .eq(
+          'user_id',
+          currentUser.id
+        )
         .limit(1)
         .single();
 
-    if (error || !data) {
-      alert('Nucleo familiare non trovato.');
+
+    if (
+      error ||
+      !data
+    ) {
+
+      alert(
+        'Nucleo familiare non trovato.'
+      );
+
       return;
     }
 
-    householdId = data.household_id;
 
-    document.getElementById('loginView')
-      .classList.add('hidden');
+    householdId =
+      data.household_id;
 
-    document.getElementById('appView')
-      .classList.remove('hidden');
 
-    document.getElementById('userLabel')
-      .textContent = currentUser.email;
+    document
+      .getElementById(
+        'loginView'
+      )
+      .classList
+      .add(
+        'hidden'
+      );
+
+
+    document
+      .getElementById(
+        'appView'
+      )
+      .classList
+      .remove(
+        'hidden'
+      );
+
+
+    document
+      .getElementById(
+        'userLabel'
+      )
+      .textContent =
+      currentUser.email;
+
 
     await loadPayments();
-    await updateNotificationButton();
+
+    await
+      updateNotificationButton();
   }
 
 
@@ -1054,22 +1671,42 @@
 
   async function loadPayments() {
 
-    const { data, error } =
+    const {
+      data,
+      error
+    } =
       await client
-        .from('payments_calendar')
+        .from(
+          'payments_calendar'
+        )
         .select('*')
-        .eq('household_id', householdId)
-        .order('due_date');
+        .eq(
+          'household_id',
+          householdId
+        )
+        .order(
+          'due_date'
+        );
+
 
     if (error) {
+
       console.error(error);
-      alert('Errore nel caricamento delle scadenze.');
+
+      alert(
+        'Errore nel caricamento delle scadenze.'
+      );
+
       return;
     }
 
-    payments = data || [];
+
+    payments =
+      data || [];
+
 
     renderCalendar();
+
     updateStats();
   }
 
@@ -1081,14 +1718,25 @@
   function renderCalendar() {
 
     const calendar =
-      document.getElementById('calendar');
+      document.getElementById(
+        'calendar'
+      );
+
 
     calendar.innerHTML = '';
 
-    const year = viewDate.getFullYear();
-    const month = viewDate.getMonth();
 
-    document.getElementById('monthTitle')
+    const year =
+      viewDate.getFullYear();
+
+    const month =
+      viewDate.getMonth();
+
+
+    document
+      .getElementById(
+        'monthTitle'
+      )
       .textContent =
       new Intl.DateTimeFormat(
         'it-IT',
@@ -1096,107 +1744,260 @@
           month: 'long',
           year: 'numeric'
         }
-      ).format(viewDate);
+      )
+      .format(
+        viewDate
+      );
+
 
     const firstDay =
-      new Date(year, month, 1);
+      new Date(
+        year,
+        month,
+        1
+      );
+
 
     const lastDay =
-      new Date(year, month + 1, 0);
+      new Date(
+        year,
+        month + 1,
+        0
+      );
+
 
     let startOffset =
       firstDay.getDay() - 1;
 
-    if (startOffset < 0)
+
+    if (
+      startOffset < 0
+    )
       startOffset = 6;
 
-    for (let i=0; i<startOffset; i++) {
-      const blank = document.createElement('div');
-      blank.className = 'day empty';
-      calendar.appendChild(blank);
-    }
-
-    const today = localISODate();
 
     for (
-      let day=1;
-      day<=lastDay.getDate();
+      let i = 0;
+      i < startOffset;
+      i++
+    ) {
+
+      const blank =
+        document
+          .createElement(
+            'div'
+          );
+
+      blank.className =
+        'day empty';
+
+      calendar
+        .appendChild(
+          blank
+        );
+    }
+
+
+    const today =
+      localISODate();
+
+
+    for (
+      let day = 1;
+      day <= lastDay.getDate();
       day++
     ) {
 
       const cell =
-        document.createElement('div');
+        document
+          .createElement(
+            'div'
+          );
 
-      cell.className = 'day';
+
+      cell.className =
+        'day';
+
 
       const date =
-        `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+        `${year}-${String(
+          month + 1
+        ).padStart(
+          2,
+          '0'
+        )}-${String(
+          day
+        ).padStart(
+          2,
+          '0'
+        )}`;
 
-      if (date === today)
-        cell.classList.add('today');
+
+      if (
+        date === today
+      )
+        cell.classList
+          .add(
+            'today'
+          );
+
 
       const number =
-        document.createElement('div');
+        document
+          .createElement(
+            'div'
+          );
 
-      number.className = 'day-number';
-      number.textContent = day;
 
-      cell.appendChild(number);
+      number.className =
+        'day-number';
+
+      number.textContent =
+        day;
+
+
+      cell.appendChild(
+        number
+      );
+
 
       const dayPayments =
         payments.filter(
-          p => p.due_date === date
+          p =>
+            p.due_date ===
+            date
         );
 
-      dayPayments.forEach(p => {
 
-        const event =
-          document.createElement('div');
+      dayPayments
+        .forEach(
+          p => {
 
-        event.className =
-          `payment ${p.status}`;
+            const event =
+              document
+                .createElement(
+                  'div'
+                );
 
-        event.innerHTML =
-          `<div class="payment-title">${escapeHTML(p.title)}</div>
-           <div class="amount">${money(p.amount_due)}</div>`;
 
-        event.onclick =
-          () => openPayment(p.id);
+            event.className =
+              `payment ${p.status}`;
 
-        cell.appendChild(event);
-      });
 
-      calendar.appendChild(cell);
+            const installmentLabel =
+              p.installment_number &&
+              p.installment_total &&
+              Number(
+                p.installment_total
+              ) > 1
+
+              ? `
+                <div class="payment-installment">
+                  Rata ${p.installment_number} di ${p.installment_total}
+                </div>
+                `
+
+              : '';
+
+
+            event.innerHTML =
+              `
+              <div class="payment-title">
+                ${escapeHTML(
+                  p.title
+                )}
+              </div>
+
+              ${installmentLabel}
+
+              <div class="amount">
+                ${money(
+                  p.amount_due
+                )}
+              </div>
+              `;
+
+
+            event.onclick =
+              () =>
+                openPayment(
+                  p.id
+                );
+
+
+            cell.appendChild(
+              event
+            );
+          }
+        );
+
+
+      calendar.appendChild(
+        cell
+      );
     }
   }
 
 
-  function changeMonth(delta) {
+  function changeMonth(
+    delta
+  ) {
+
     viewDate.setMonth(
-      viewDate.getMonth() + delta
+      viewDate.getMonth()
+      +
+      delta
     );
 
+
     renderCalendar();
+
     updateStats();
   }
 
 
   function goToday() {
-    viewDate = new Date();
-    viewDate.setDate(1);
+
+    viewDate =
+      new Date();
+
+
+    viewDate.setDate(
+      1
+    );
+
 
     renderCalendar();
+
     updateStats();
   }
 
 
   function escapeHTML(str) {
-    return String(str || '')
-      .replaceAll('&','&amp;')
-      .replaceAll('<','&lt;')
-      .replaceAll('>','&gt;')
-      .replaceAll('"','&quot;')
-      .replaceAll("'","&#039;");
+
+    return String(
+      str || ''
+    )
+    .replaceAll(
+      '&',
+      '&amp;'
+    )
+    .replaceAll(
+      '<',
+      '&lt;'
+    )
+    .replaceAll(
+      '>',
+      '&gt;'
+    )
+    .replaceAll(
+      '"',
+      '&quot;'
+    )
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
   }
 
 
@@ -1206,65 +2007,128 @@
 
   function updateStats() {
 
-    const year = viewDate.getFullYear();
-    const month = viewDate.getMonth();
+    const year =
+      viewDate.getFullYear();
+
+    const month =
+      viewDate.getMonth();
+
 
     const monthPayments =
-      payments.filter(p => {
-        const d =
-          new Date(p.due_date + 'T12:00:00');
+      payments.filter(
+        p => {
 
-        return (
-          d.getFullYear() === year &&
-          d.getMonth() === month
-        );
-      });
+          const d =
+            new Date(
+              p.due_date +
+              'T12:00:00'
+            );
+
+
+          return (
+            d.getFullYear()
+              === year
+            &&
+            d.getMonth()
+              === month
+          );
+        }
+      );
+
 
     const toPay =
       monthPayments
-        .filter(p =>
-          p.status === 'unpaid'
+        .filter(
+          p =>
+            p.status ===
+            'unpaid'
         )
         .reduce(
-          (s,p) =>
-            s + Number(p.amount_due),
-          0
-        );
-
-    const paid =
-      monthPayments
-        .filter(p =>
-          p.status === 'paid' ||
-          p.status === 'paid_late'
-        )
-        .reduce(
-          (s,p) =>
-            s + Number(
-              p.amount_paid ??
-              p.amount_due
+          (
+            sum,
+            payment
+          ) =>
+            sum +
+            Number(
+              payment.amount_due
             ),
           0
         );
 
-    const overdue =
-      payments
-        .filter(p =>
-          p.status === 'overdue'
+
+    const paid =
+      monthPayments
+        .filter(
+          p =>
+            p.status ===
+              'paid'
+            ||
+            p.status ===
+              'paid_late'
         )
         .reduce(
-          (s,p) =>
-            s + Number(p.amount_due),
+          (
+            sum,
+            payment
+          ) =>
+            sum +
+            Number(
+              payment.amount_paid
+              ??
+              payment.amount_due
+            ),
           0
         );
 
-    document.getElementById('toPay')
-      .textContent = money(toPay);
 
-    document.getElementById('paidTotal')
-      .textContent = money(paid);
+    const overdue =
+      payments
+        .filter(
+          p =>
+            p.status ===
+            'overdue'
+        )
+        .reduce(
+          (
+            sum,
+            payment
+          ) =>
+            sum +
+            Number(
+              payment.amount_due
+            ),
+          0
+        );
 
-    document.getElementById('overdueTotal')
-      .textContent = money(overdue);
+
+    document
+      .getElementById(
+        'toPay'
+      )
+      .textContent =
+      money(
+        toPay
+      );
+
+
+    document
+      .getElementById(
+        'paidTotal'
+      )
+      .textContent =
+      money(
+        paid
+      );
+
+
+    document
+      .getElementById(
+        'overdueTotal'
+      )
+      .textContent =
+      money(
+        overdue
+      );
   }
 
 
@@ -1274,105 +2138,250 @@
 
   function openNewPayment() {
 
-    document.getElementById('newTitle').value = '';
-    document.getElementById('newAmount').value = '';
-    document.getElementById('newDate').value =
+    document
+      .getElementById(
+        'newTitle'
+      )
+      .value =
+      '';
+
+
+    document
+      .getElementById(
+        'newAmount'
+      )
+      .value =
+      '';
+
+
+    document
+      .getElementById(
+        'newDate'
+      )
+      .value =
       localISODate();
 
-    document.getElementById('newRecurrence').value =
+
+    document
+      .getElementById(
+        'newRecurrence'
+      )
+      .value =
       'monthly';
 
-    document.getElementById('newCount').value = 1;
-    document.getElementById('newNotes').value = '';
 
-    document.getElementById('newModal')
-      .classList.remove('hidden');
+    document
+      .getElementById(
+        'newCount'
+      )
+      .value =
+      1;
+
+
+    document
+      .getElementById(
+        'newNotes'
+      )
+      .value =
+      '';
+
+
+    document
+      .getElementById(
+        'newModal'
+      )
+      .classList
+      .remove(
+        'hidden'
+      );
   }
 
 
   async function createSeries() {
 
     const title =
-      document.getElementById('newTitle')
-        .value.trim();
+      document
+        .getElementById(
+          'newTitle'
+        )
+        .value
+        .trim();
+
 
     const amount =
       Number(
-        document.getElementById('newAmount')
+        document
+          .getElementById(
+            'newAmount'
+          )
           .value
       );
 
+
     const date =
-      document.getElementById('newDate')
+      document
+        .getElementById(
+          'newDate'
+        )
         .value;
 
+
     const recurrence =
-      document.getElementById('newRecurrence')
+      document
+        .getElementById(
+          'newRecurrence'
+        )
         .value;
+
 
     let count =
       Number(
-        document.getElementById('newCount')
+        document
+          .getElementById(
+            'newCount'
+          )
           .value
       );
 
-    const notes =
-      document.getElementById('newNotes')
-        .value.trim();
 
-    if (!title || !amount || !date) {
-      alert('Compila cosa paghi, importo e scadenza.');
+    const notes =
+      document
+        .getElementById(
+          'newNotes'
+        )
+        .value
+        .trim();
+
+
+    if (
+      !title ||
+      !amount ||
+      !date
+    ) {
+
+      alert(
+        'Compila cosa paghi, importo e scadenza.'
+      );
+
       return;
     }
 
-    if (recurrence === 'once')
+
+    if (
+      recurrence ===
+      'once'
+    )
       count = 1;
 
-    if (!Number.isInteger(count) ||
-        count < 1 ||
-        count > 120) {
-      alert('Numero ricorrenze non valido.');
+
+    if (
+      !Number.isInteger(
+        count
+      )
+      ||
+      count < 1
+      ||
+      count > 120
+    ) {
+
+      alert(
+        'Numero ricorrenze non valido.'
+      );
+
       return;
     }
 
-    const { data: series, error } =
+
+    const {
+      data: series,
+      error
+    } =
       await client
-        .from('payment_series')
-        .insert({
-          household_id: householdId,
-          title: title,
-          description: notes || null,
-          default_amount: amount,
-          first_due_date: date,
-          recurrence_type: recurrence,
-          recurrence_count: count,
-          created_by: currentUser.id
-        })
+        .from(
+          'payment_series'
+        )
+        .insert(
+          {
+
+            household_id:
+              householdId,
+
+            title:
+              title,
+
+            description:
+              notes || null,
+
+            default_amount:
+              amount,
+
+            first_due_date:
+              date,
+
+            recurrence_type:
+              recurrence,
+
+            recurrence_count:
+              count,
+
+            created_by:
+              currentUser.id
+
+          }
+        )
         .select()
         .single();
 
+
     if (error) {
-      console.error(error);
-      alert('Errore: ' + error.message);
+
+      console.error(
+        error
+      );
+
+      alert(
+        'Errore: ' +
+        error.message
+      );
+
       return;
     }
 
-    /* Copia le note sulle singole rate generate */
 
-    if (notes && series) {
+    if (
+      notes &&
+      series
+    ) {
+
       await client
-        .from('payments')
-        .update({ notes })
-        .eq('series_id', series.id);
+        .from(
+          'payments'
+        )
+        .update(
+          {
+            notes
+          }
+        )
+        .eq(
+          'series_id',
+          series.id
+        );
     }
 
-    closeModal('newModal');
+
+    closeModal(
+      'newModal'
+    );
+
 
     showMessage(
       count === 1
-        ? 'Scadenza creata'
-        : `${count} scadenze create`
+      ?
+      'Scadenza creata'
+      :
+      `${count} scadenze create`
     );
+
 
     await loadPayments();
   }
@@ -1385,87 +2394,242 @@
   async function openPayment(id) {
 
     selectedPayment =
-      payments.find(p => p.id === id);
+      payments.find(
+        p =>
+          p.id === id
+      );
 
-    if (!selectedPayment)
+
+    if (
+      !selectedPayment
+    )
       return;
 
-    document.getElementById('detailTitle')
+
+    document
+      .getElementById(
+        'detailTitle'
+      )
       .textContent =
       selectedPayment.title;
 
-    document.getElementById('detailDue')
+
+    document
+      .getElementById(
+        'detailDue'
+      )
       .textContent =
-      formatDate(selectedPayment.due_date);
+      formatDate(
+        selectedPayment.due_date
+      );
 
-    document.getElementById('detailAmount')
-      .textContent =
-      money(selectedPayment.amount_due);
 
-    document.getElementById('detailPaid')
-      .textContent =
-      formatDate(selectedPayment.paid_at);
+    const installmentRow =
+      document
+        .getElementById(
+          'detailInstallmentRow'
+        );
 
-    const labels = {
-      unpaid: 'DA PAGARE',
-      overdue: 'SCADUTA',
-      paid: 'PAGATA',
-      paid_late: 'PAGATA IN RITARDO'
-    };
-
-    document.getElementById('detailStatus')
-      .innerHTML =
-      `<span class="status ${selectedPayment.status}">
-        ${labels[selectedPayment.status]}
-       </span>`;
-
-    document.getElementById('paidDate')
-      .value = localISODate();
-
-    document.getElementById('paidAmount')
-      .value = selectedPayment.amount_due;
-
-    document.getElementById('receiptFile')
-      .value = '';
 
     if (
-      selectedPayment.status === 'paid' ||
-      selectedPayment.status === 'paid_late'
+      selectedPayment.installment_number
+      &&
+      selectedPayment.installment_total
+      &&
+      Number(
+        selectedPayment.installment_total
+      ) > 1
     ) {
-      document.getElementById('paymentArea')
-        .classList.add('hidden');
+
+      document
+        .getElementById(
+          'detailInstallment'
+        )
+        .textContent =
+        `Rata ${selectedPayment.installment_number} di ${selectedPayment.installment_total}`;
+
+
+      installmentRow
+        .classList
+        .remove(
+          'hidden'
+        );
+
     } else {
-      document.getElementById('paymentArea')
-        .classList.remove('hidden');
+
+      installmentRow
+        .classList
+        .add(
+          'hidden'
+        );
     }
 
-    const { data } =
+
+    document
+      .getElementById(
+        'detailAmount'
+      )
+      .textContent =
+      money(
+        selectedPayment.amount_due
+      );
+
+
+    document
+      .getElementById(
+        'detailPaid'
+      )
+      .textContent =
+      formatDate(
+        selectedPayment.paid_at
+      );
+
+
+    const labels = {
+
+      unpaid:
+        'DA PAGARE',
+
+      overdue:
+        'SCADUTA',
+
+      paid:
+        'PAGATA',
+
+      paid_late:
+        'PAGATA IN RITARDO'
+
+    };
+
+
+    document
+      .getElementById(
+        'detailStatus'
+      )
+      .innerHTML =
+      `
+      <span class="status ${selectedPayment.status}">
+        ${labels[selectedPayment.status]}
+      </span>
+      `;
+
+
+    document
+      .getElementById(
+        'paidDate'
+      )
+      .value =
+      localISODate();
+
+
+    document
+      .getElementById(
+        'paidAmount'
+      )
+      .value =
+      selectedPayment.amount_due;
+
+
+    document
+      .getElementById(
+        'receiptFile'
+      )
+      .value =
+      '';
+
+
+    if (
+      selectedPayment.status
+        === 'paid'
+      ||
+      selectedPayment.status
+        === 'paid_late'
+    ) {
+
+      document
+        .getElementById(
+          'paymentArea'
+        )
+        .classList
+        .add(
+          'hidden'
+        );
+
+    } else {
+
+      document
+        .getElementById(
+          'paymentArea'
+        )
+        .classList
+        .remove(
+          'hidden'
+        );
+    }
+
+
+    const {
+      data
+    } =
       await client
-        .from('payment_receipts')
+        .from(
+          'payment_receipts'
+        )
         .select('*')
-        .eq('payment_id', selectedPayment.id)
-        .order('created_at', {
-          ascending: false
-        })
+        .eq(
+          'payment_id',
+          selectedPayment.id
+        )
+        .order(
+          'created_at',
+          {
+            ascending: false
+          }
+        )
         .limit(1);
 
-    selectedPayment.receipt =
-      data && data.length
-        ? data[0]
-        : null;
 
-    document.getElementById('receiptArea')
-      .classList.toggle(
+    selectedPayment.receipt =
+      data &&
+      data.length
+      ?
+      data[0]
+      :
+      null;
+
+
+    document
+      .getElementById(
+        'receiptArea'
+      )
+      .classList
+      .toggle(
         'hidden',
         !selectedPayment.receipt
       );
 
-    const preview = document.getElementById('receiptPreview');
-    preview.innerHTML = '';
-    preview.classList.add('hidden');
 
-    document.getElementById('detailModal')
-      .classList.remove('hidden');
+    const preview =
+      document.getElementById(
+        'receiptPreview'
+      );
+
+
+    preview.innerHTML = '';
+
+    preview.classList.add(
+      'hidden'
+    );
+
+
+    document
+      .getElementById(
+        'detailModal'
+      )
+      .classList
+      .remove(
+        'hidden'
+      );
   }
 
 
@@ -1475,64 +2639,122 @@
 
   async function markPaid() {
 
-    if (!selectedPayment)
+    if (
+      !selectedPayment
+    )
       return;
 
+
     const paidDate =
-      document.getElementById('paidDate').value;
+      document
+        .getElementById(
+          'paidDate'
+        )
+        .value;
+
 
     const amount =
       Number(
-        document.getElementById('paidAmount')
+        document
+          .getElementById(
+            'paidAmount'
+          )
           .value
       );
 
+
     const file =
-      document.getElementById('receiptFile')
+      document
+        .getElementById(
+          'receiptFile'
+        )
         .files[0];
 
-    if (!paidDate || !amount) {
-      alert('Inserisci data e importo pagato.');
+
+    if (
+      !paidDate ||
+      !amount
+    ) {
+
+      alert(
+        'Inserisci data e importo pagato.'
+      );
+
       return;
     }
 
-    const { error } =
+
+    const {
+      error
+    } =
       await client
-        .from('payments')
-        .update({
-          paid_at: paidDate,
-          amount_paid: amount
-        })
-        .eq('id', selectedPayment.id);
+        .from(
+          'payments'
+        )
+        .update(
+          {
+
+            paid_at:
+              paidDate,
+
+            amount_paid:
+              amount
+
+          }
+        )
+        .eq(
+          'id',
+          selectedPayment.id
+        );
+
 
     if (error) {
-      alert('Errore: ' + error.message);
+
+      alert(
+        'Errore: ' +
+        error.message
+      );
+
       return;
     }
 
+
     if (file) {
+
       const ok =
         await uploadReceipt(
           selectedPayment,
           file
         );
 
+
       if (!ok) {
+
         alert(
           'Pagamento salvato, ma la ricevuta non è stata caricata.'
         );
       }
     }
 
-    closeModal('detailModal');
 
-    showMessage('Pagamento registrato');
+    closeModal(
+      'detailModal'
+    );
+
+
+    showMessage(
+      'Pagamento registrato'
+    );
+
 
     await loadPayments();
   }
 
 
-  async function uploadReceipt(payment, file) {
+  async function uploadReceipt(
+    payment,
+    file
+  ) {
 
     const safeName =
       file.name.replace(
@@ -1540,48 +2762,104 @@
         '_'
       );
 
+
     const path =
       `${householdId}/${payment.id}/${Date.now()}_${safeName}`;
 
-    const { error: uploadError } =
-      await client.storage
-        .from('receipts')
+
+    const {
+      error: uploadError
+    } =
+      await client
+        .storage
+        .from(
+          'receipts'
+        )
         .upload(
           path,
           file,
           {
+
             upsert: false,
-            contentType: file.type
+
+            contentType:
+              file.type
+
           }
         );
 
-    if (uploadError) {
-      console.error(uploadError);
+
+    if (
+      uploadError
+    ) {
+
+      console.error(
+        uploadError
+      );
+
       return false;
     }
 
-    const { error: dbError } =
+
+    const {
+      error: dbError
+    } =
       await client
-        .from('payment_receipts')
-        .insert({
-          payment_id: payment.id,
-          household_id: householdId,
-          file_path: path,
-          original_filename: file.name,
-          mime_type: file.type,
-          file_size: file.size,
-          uploaded_by: currentUser.id
-        });
+        .from(
+          'payment_receipts'
+        )
+        .insert(
+          {
 
-    if (dbError) {
-      console.error(dbError);
+            payment_id:
+              payment.id,
 
-      await client.storage
-        .from('receipts')
-        .remove([path]);
+            household_id:
+              householdId,
+
+            file_path:
+              path,
+
+            original_filename:
+              file.name,
+
+            mime_type:
+              file.type,
+
+            file_size:
+              file.size,
+
+            uploaded_by:
+              currentUser.id
+
+          }
+        );
+
+
+    if (
+      dbError
+    ) {
+
+      console.error(
+        dbError
+      );
+
+
+      await client
+        .storage
+        .from(
+          'receipts'
+        )
+        .remove(
+          [
+            path
+          ]
+        );
+
 
       return false;
     }
+
 
     return true;
   }
@@ -1593,71 +2871,158 @@
 
   async function openReceipt() {
 
-    if (!selectedPayment || !selectedPayment.receipt)
+    if (
+      !selectedPayment ||
+      !selectedPayment.receipt
+    )
       return;
 
-    const preview = document.getElementById('receiptPreview');
 
-    preview.classList.remove('hidden');
-    preview.innerHTML = '<div style="padding:16px;color:#94a3b8">Caricamento ricevuta…</div>';
+    const preview =
+      document.getElementById(
+        'receiptPreview'
+      );
 
-    const { data, error } =
-      await client.storage
-        .from('receipts')
+
+    preview.classList.remove(
+      'hidden'
+    );
+
+
+    preview.innerHTML =
+      `
+      <div style="padding:16px;color:#94a3b8">
+        Caricamento ricevuta…
+      </div>
+      `;
+
+
+    const {
+      data,
+      error
+    } =
+      await client
+        .storage
+        .from(
+          'receipts'
+        )
         .createSignedUrl(
-          selectedPayment.receipt.file_path,
+          selectedPayment
+            .receipt
+            .file_path,
           300
         );
 
-    if (error || !data?.signedUrl) {
-      console.error('Errore createSignedUrl:', error);
+
+    if (
+      error ||
+      !data?.signedUrl
+    ) {
+
+      console.error(
+        'Errore createSignedUrl:',
+        error
+      );
+
+
       preview.innerHTML =
-        '<div style="padding:16px;color:#ef4444">Impossibile generare il link della ricevuta.</div>';
+        `
+        <div style="padding:16px;color:#ef4444">
+          Impossibile generare il link della ricevuta.
+        </div>
+        `;
+
+
       return;
     }
 
+
     const mime =
-      selectedPayment.receipt.mime_type || '';
+      selectedPayment
+        .receipt
+        .mime_type
+      ||
+      '';
 
-    const url = data.signedUrl;
 
-    if (mime.startsWith('image/')) {
+    const url =
+      data.signedUrl;
 
-      preview.innerHTML = `
-        <img src="${url}" alt="Ricevuta">
+
+    if (
+      mime.startsWith(
+        'image/'
+      )
+    ) {
+
+      preview.innerHTML =
+        `
+        <img
+          src="${url}"
+          alt="Ricevuta"
+        >
+
         <div class="receipt-preview-actions">
-          <button class="secondary" onclick="openReceiptExternal()">
+
+          <button
+            class="secondary"
+            onclick="openReceiptExternal()"
+          >
             Apri a schermo intero
           </button>
+
         </div>
-      `;
+        `;
 
-    } else if (mime === 'application/pdf') {
+    } else if (
+      mime ===
+      'application/pdf'
+    ) {
 
-      preview.innerHTML = `
-        <iframe src="${url}" title="Ricevuta PDF"></iframe>
+      preview.innerHTML =
+        `
+        <iframe
+          src="${url}"
+          title="Ricevuta PDF"
+        ></iframe>
+
         <div class="receipt-preview-actions">
-          <button class="secondary" onclick="openReceiptExternal()">
+
+          <button
+            class="secondary"
+            onclick="openReceiptExternal()"
+          >
             Apri PDF
           </button>
+
         </div>
-      `;
+        `;
 
     } else {
 
-      preview.innerHTML = `
+      preview.innerHTML =
+        `
         <div style="padding:16px;color:#94a3b8">
           Anteprima non disponibile per questo tipo di file.
         </div>
+
         <div class="receipt-preview-actions">
-          <button class="secondary" onclick="openReceiptExternal()">
+
+          <button
+            class="secondary"
+            onclick="openReceiptExternal()"
+          >
             Apri file
           </button>
+
         </div>
-      `;
+        `;
     }
 
-    selectedPayment.receiptSignedUrl = url;
+
+    selectedPayment
+      .receiptSignedUrl =
+      url;
   }
 
 
@@ -1669,16 +3034,34 @@
     )
       return;
 
-    /* Prima proviamo un link HTML reale: su iPhone è più affidabile
-       di window.open() dopo una chiamata async. */
-    const a = document.createElement('a');
 
-    a.href = selectedPayment.receiptSignedUrl;
-    a.target = '_blank';
-    a.rel = 'noopener noreferrer';
+    const a =
+      document.createElement(
+        'a'
+      );
 
-    document.body.appendChild(a);
+
+    a.href =
+      selectedPayment
+        .receiptSignedUrl;
+
+
+    a.target =
+      '_blank';
+
+
+    a.rel =
+      'noopener noreferrer';
+
+
+    document.body
+      .appendChild(
+        a
+      );
+
+
     a.click();
+
     a.remove();
   }
 
@@ -1687,49 +3070,92 @@
      MODIFICA IMPORTO
      ===================================================== */
 
-  async function editPaymentAmount() {
+  async function
+  editPaymentAmount() {
 
-    if (!selectedPayment)
+    if (
+      !selectedPayment
+    )
       return;
+
 
     const value =
       prompt(
         'Nuovo importo della singola rata:',
-        selectedPayment.amount_due
+        selectedPayment
+          .amount_due
       );
 
-    if (value === null)
+
+    if (
+      value === null
+    )
       return;
+
 
     const amount =
       Number(
-        value.replace(',', '.')
+        value.replace(
+          ',',
+          '.'
+        )
       );
 
+
     if (
-      !Number.isFinite(amount) ||
+      !Number.isFinite(
+        amount
+      )
+      ||
       amount < 0
     ) {
-      alert('Importo non valido.');
+
+      alert(
+        'Importo non valido.'
+      );
+
       return;
     }
 
-    const { error } =
+
+    const {
+      error
+    } =
       await client
-        .from('payments')
-        .update({
-          amount_due: amount
-        })
-        .eq('id', selectedPayment.id);
+        .from(
+          'payments'
+        )
+        .update(
+          {
+            amount_due:
+              amount
+          }
+        )
+        .eq(
+          'id',
+          selectedPayment.id
+        );
+
 
     if (error) {
-      alert(error.message);
+
+      alert(
+        error.message
+      );
+
       return;
     }
 
-    closeModal('detailModal');
 
-    showMessage('Importo aggiornato');
+    closeModal(
+      'detailModal'
+    );
+
+
+    showMessage(
+      'Importo aggiornato'
+    );
+
 
     await loadPayments();
   }
@@ -1741,8 +3167,11 @@
 
   async function deletePayment() {
 
-    if (!selectedPayment)
+    if (
+      !selectedPayment
+    )
       return;
+
 
     if (
       !confirm(
@@ -1751,29 +3180,59 @@
     )
       return;
 
-    if (selectedPayment.receipt) {
 
-      await client.storage
-        .from('receipts')
-        .remove([
-          selectedPayment.receipt.file_path
-        ]);
+    if (
+      selectedPayment.receipt
+    ) {
+
+      await client
+        .storage
+        .from(
+          'receipts'
+        )
+        .remove(
+          [
+            selectedPayment
+              .receipt
+              .file_path
+          ]
+        );
     }
 
-    const { error } =
+
+    const {
+      error
+    } =
       await client
-        .from('payments')
+        .from(
+          'payments'
+        )
         .delete()
-        .eq('id', selectedPayment.id);
+        .eq(
+          'id',
+          selectedPayment.id
+        );
+
 
     if (error) {
-      alert(error.message);
+
+      alert(
+        error.message
+      );
+
       return;
     }
 
-    closeModal('detailModal');
 
-    showMessage('Scadenza eliminata');
+    closeModal(
+      'detailModal'
+    );
+
+
+    showMessage(
+      'Scadenza eliminata'
+    );
+
 
     await loadPayments();
   }
